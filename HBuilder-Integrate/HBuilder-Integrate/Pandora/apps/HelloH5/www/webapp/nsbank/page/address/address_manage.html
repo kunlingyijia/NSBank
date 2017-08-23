@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+				<link href="../../css/address_manage.css" rel="stylesheet" />
+	</head>
+
+	<body style="background: #f5f5f5;font-size: 14px;">
+		<div id="headLayout" class="mui-bar  home-head " style="background: white;">
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+
+			<img class="head-lefticon" id="back" style="width: 13px; top: 12px;" src="../../img/back.png" />
+			<h3 id="title" class="mytitle">地址管理</h1>
+		
+		</div>
+		<div style="height: 44px;"></div>
+		<div id="content">
+		<div class="address-item" v-for="(item, index)  in address" v-bind:addressId='item.id'  v-bind:indexs='index' style="margin-top: 10px;">
+			<div class="one" onclick="selectAddress(this)"  v-bind:addressId='item.id'>
+				<div class="left">{{item.consignee}}</div>
+				<div class="right">{{item.contact_phone}}</div>
+			</div>
+			<div class="address" onclick="selectAddress(this)"  v-bind:addressId='item.id'>
+				{{item.province}}{{item.city}}{{item.area}}{{item.address}}
+			</div>
+			<div class="bottom-layout" v-bind:addressId='item.id' v-bind:indexs='index'>
+				<img src="../../img/checkenable.png" class="select" v-if="item.default_condition==0" />
+				<img src="../../img/jfxq.png" class="select" v-if="item.default_condition==1" />
+				<div class="normal" onclick="setNormalAddr(this)">默认地址</div>
+				<img src="../../img/edit.png" class="edit-img"  />
+				<div class="edit-text" onclick="editAddress(this)" v-bind:addressId='item.id'>编辑</div>
+				<img src="../../img/del.png" class="del-img" />
+				<div class="del-text" onclick="delAddress(this)">删除</div>
+			</div>
+		</div>
+		</div>
+	
+		<!--<div class="address-item" style="margin-top: 10px;">
+			<div class="one">
+				<div class="left">张三</div>
+				<div class="right">15005046164</div>
+			</div>
+			<div class="address">
+				福建省福州市仓山区车库咖啡5009
+			</div>
+			<div class="bottom-layout">
+				<img src="../../img/checkenable.png" class="select" />
+				<div class="normal">默认地址</div>
+				<img src="../../img/edit.png" class="edit-img" />
+				<div class="edit-text">编辑</div>
+				<img src="../../img/del.png" class="del-img" />
+				<div class="del-text">删除</div>
+			</div>
+		</div>-->
+		
+			<div class="btn-layout" style="margin-top: 30px; margin-bottom: 20px;">
+				<button class="btn" id="addNewAddress" >添加地址</button>
+			</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+			<script src="../../js/utils.js"></script>
+			<script src="../../js/jquery-3.2.1.min.js"></script>
+				<script src="../../js/vue.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			var dataVue = new Vue({
+			  el: '#content',
+			  data: {
+			    address: []
+			  }
+			})
+			getAddressData();
+			function getAddressData()
+			{
+//						dialog.showDialog();
+						var obj = new Object();
+						obj.phone = localStorage.getItem(utils.phoneNum);
+						obj.userid = localStorage.getItem(utils.userId);
+					
+				
+						utils.ajax(utils.getUrl("queryReceiverAddress"), obj, function(data) {		
+							dialog.closeDialog();
+							
+							if(data.code == utils.SCUESS) {
+								var address = JSON.parse(data.data)
+								dataVue.address = address;
+								//寻找默认地址 保存本地
+								$(address).each(function(index,val){
+									if(val.default_condition==1)
+									{
+										localStorage.setItem(utils.receiverAddress,utils.obj2Str(val));
+									}
+								});
+								
+					
+							} else {
+								mui.toast(data.msg);
+							}
+					
+						}, function(xhr, type, errorThrown) {
+								dialog.closeDialog();
+							mui.toast(errorThrown);
+						})	
+			}
+			
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});	
+			/**
+			 * 新增地址
+			 */
+			document.getElementById("addNewAddress").addEventListener("tap", function() {
+				 mui.openWindow({
+					      id:'add_address',
+					      url:'add_address.html',
+					    
+				 });
+			});	
+			
+			/**
+			 * 编辑地址
+			 * @param {Object} dom
+			 */
+			function editAddress(dom)
+			{
+				var addressId = $(dom).attr("addressId");
+				$(dataVue.address).each(function(index,val){
+					if(val.id==addressId)
+					{
+						//设置当前编辑的地址传给编辑页面回填
+						localStorage.setItem(utils.receiverAddressEdit,utils.obj2Str(val));					
+						 mui.openWindow({
+					      id:'add_address',
+					      url:'add_address.html?addressId='+addressId,
+					    
+						 });
+					}
+				});
+				
+				
+				
+			}
+			/**
+			 * 设置默认地址
+			 * @param {Object} dom
+			 */
+			function setNormalAddr(dom)
+			{
+				var addressId = $(dom).parent().attr("addressId");
+					var index = $(dom).parent().attr("indexs");
+				dialog.showDialog();
+						var obj = new Object();
+						obj.phone = localStorage.getItem(utils.phoneNum);
+						obj.userid = localStorage.getItem(utils.userId);
+						obj.receiver_id = addressId;
+						obj.consignee =dataVue.address[index].consignee
+						obj.contact_phone =dataVue.address[index].contact_phone		
+						obj.province =dataVue.address[index].province
+						obj.city =dataVue.address[index].city
+						obj.area =dataVue.address[index].area
+						obj.address =dataVue.address[index].address
+						obj.postcode =dataVue.address[index].postcode				
+						obj.default_condition =1;//默认地址
+						utils.ajax(utils.getUrl("disposeReceiverAddress"), obj, function(data) {		
+							dialog.closeDialog();
+							
+							if(data.code == utils.SCUESS) {
+//									mui.toast(data.msg);
+									$(".bottom-layout .select").attr('src','../../img/checkenable.png');
+									$(dom).prev().attr('src','../../img/jfxq.png');
+					
+							} else {
+								mui.toast(data.msg);
+							}
+					
+						}, function(xhr, type, errorThrown) {
+								dialog.closeDialog();
+							mui.toast(errorThrown);
+						})	
+			}
+			/**
+			 * 删除地址
+			 * @param {Object} dom
+			 */
+			function delAddress(dom)
+			{
+				var addressId = $(dom).parent().attr("addressId");
+				dialog.showDialog();
+						var obj = new Object();
+						obj.phone = localStorage.getItem(utils.phoneNum);
+						obj.userid = localStorage.getItem(utils.userId);
+						obj.receiver_id = addressId;
+			
+						utils.ajax(utils.getUrl("deleteReceiverAddress"), obj, function(data) {		
+							dialog.closeDialog();
+							
+							if(data.code == utils.SCUESS) {
+//								mui.toast(data.msg);
+								getAddressData();
+					
+							} else {
+								mui.toast(data.msg);
+							}
+					
+						}, function(xhr, type, errorThrown) {
+								dialog.closeDialog();
+							mui.toast(errorThrown);
+						})	
+			}
+			
+			/**
+			 * 选择地址
+			 * @param {Object} dom
+			 */
+			function selectAddress(dom)
+			{
+				var addressId = $(dom).attr('addressId');				
+				//查看选择哪个地址
+				$(dataVue.address).each(function(index,val){
+					if(val.id==addressId)
+					{
+						localStorage.setItem(utils.receiverAddress,utils.obj2Str(val));					
+						var order_submit = plus.webview.getWebviewById('order_submit');
+						if(order_submit!=null)
+                			order_submit.reload();
+                			mui.back();
+					}
+				});
+				
+			}
+			
+				document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+		</script>
+	</body>
+
+</html>

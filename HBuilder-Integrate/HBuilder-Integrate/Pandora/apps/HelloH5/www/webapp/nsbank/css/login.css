@@ -1,0 +1,175 @@
+
+body{
+	background: white;
+	color: #aaaaaa;
+}
+
+.banner{
+	/*background: url(../img/login_banner.jpg);
+	width: 100%;
+	height: 200px;*/
+	position: relative;
+	height: 200px;
+	text-align: center;
+	background: url(../img/login_banner.png) no-repeat;
+	  background-size:100% 100%;
+	  
+	
+}
+/*.banner .bg{
+	width: 100%;
+	
+	position: absolute;
+}*/
+.banner  .logo
+{
+	width: 80px;
+	margin-top: 60px;
+	
+}
+.content{
+	text-align: center;
+}
+.input-layout{
+	margin: 0 auto;
+	width: 80%;
+/*	height: 50px;*/
+	position: relative;
+	overflow: hidden;
+	height: 50px;
+}
+.input-layout img{
+	float: left;
+	width: 30px;
+	margin-top: 5px;
+}
+.input-layout input{
+	border: none;
+/*	position: absolute;*/
+	float: left;
+	width: 80%;
+	left: 30px;
+}
+.input-layout{
+	border-bottom: 1px solid #EEEEEE;
+	font-size: 15px;
+}
+
+
+.input-layout .pwd{
+	float: left;
+	width: 20px;
+	margin-top: 17px;
+}
+.input-layout  .code
+{
+	width: 50%;
+	border: none;
+	float: left;
+	left: 30px;
+	margin-top: 10px;}
+
+.input-layout .cutting
+{
+	width: 1px;
+	height: 30px;
+	background: #EEEEEE;
+	float: left;
+	margin-top: 15px;
+
+}
+
+.input-layout  .forget{
+	color: #4391e3;
+	margin-top: 12px;
+	border: none;
+}
+
+
+.login{
+	background: #4391e3;
+	height: 50px;
+	border-radius:20px ;
+	width: 80%;
+	color: white;
+	margin-top: 30px;
+	font-size: 15px;
+}
+
+.reg-layout{
+	font-size: 13px;
+	position: relative;
+    overflow: hidden;
+	width: 100%;
+	margin-top: 20px;
+}
+.reg-layout .left{
+	float: left;
+	width: 50%;
+	text-align: right;
+}
+.reg-layout .right{
+	float: left;
+	width: 50%;text-align: left;
+}
+
+.open-login-layout{
+	position: relative;
+	/*bottom: 80px;*/
+	margin-top: 10px;
+	width: 100%;
+	font-size: 13px;
+}
+.open-login-layout .text{
+	position: relative;
+}
+.open-login-layout .text .one{
+	float: left;
+	width: 30.33%;
+	height: 1px;
+	background: #EEEEEE;
+	margin-left: 3%;
+	margin-top: 8px;
+}
+.open-login-layout .text .two{
+	float: left;
+	width: 33.33%;
+	height: 30px;
+	text-align: center;
+}
+
+.open-login-layout .text .three{
+		float: left;
+	width: 30.33%;
+	height: 1px;
+	background: #EEEEEE;
+		margin-top: 8px;
+			margin-right: 3%;
+}
+.open-login{
+	position: relative;
+}
+.open-login img{
+	width: 30px;
+	
+}
+.open-login .wechat
+{
+	float: left;
+	width: 50%;
+	text-align: right;
+	padding-right: 20px;
+}
+.open-login .alipay
+{
+	float: left;
+	width: 50%;
+	text-align: left;
+	padding-left: 20px;
+}
+
+.xy{
+	text-align: center;
+	font-size: 14px;
+	margin-top: 50px;
+}

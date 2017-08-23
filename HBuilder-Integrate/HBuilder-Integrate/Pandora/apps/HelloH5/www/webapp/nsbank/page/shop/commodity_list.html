@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link href="../../css/commdity.css" rel="stylesheet" />
+		<link href="../../css/pullrefresh.css" rel="stylesheet" />
+	</head>
+
+	<body style="background: #f5f5f5;">
+		<div id="headLayout" class="mui-bar  home-head" style="background: white;">
+			<img class="back-icon" id="back" src="../../img/back.png" />
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+
+
+			<h1 id="title" class="mytitle">商品列表</h1>
+
+		</div>
+
+		<div id="content" style="padding-top: 45px;padding-bottom: 40px;">
+			<div id="">
+
+				<div class="commodity-item" v-for="item in commodity" v-bind:commodityId='item.id' v-bind:shopId='item.shop_id' onclick="turnDetail(this)">
+					<div class="left">
+						<img v-bind:src='item.show_imgs' />
+					</div>
+					<div class="right">
+						<div class="title">{{item.name}}</div>
+						<div class="intergal"><label>{{item.integral_price}}</label>积分</div>
+						<div class="mark-price">市场参考价：{{item.market_price}}元</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/dialog/mydialog.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/vue.min.js"></script>
+
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+
+		<script type="text/javascript">
+			mui.init();
+			var smallId = utils.GetQueryString('smallId'); //分类id
+			var page = 0; //请求的第几页数
+			var pageSize = 20; //每页请求多少条
+			var dataVue = new Vue({
+				el: '#content',
+				data: {
+					commodity: []
+				}
+			})
+
+			//						getData();
+
+			function getData(pullRefresh) {
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.page = page;
+				obj.pageSize = pageSize;
+				obj.smClassifyID = smallId;
+
+				utils.ajax(utils.getUrl("getCommodityListByClassity"), obj, function(data) {
+
+					if(data.code == utils.SCUESS) {
+						var arr = JSON.parse(data.data);
+						if(arr.length == 0) {
+							mui.toast('该条目下无数据');
+						}
+						if(page == 0) {
+							//结束上啦刷新
+							if(pullRefresh != null) {
+								pullRefresh.endPullDownToRefresh();
+							}
+							dataVue.commodity = arr;
+						} else {
+
+							$(arr).each(function(index, val) {
+								dataVue.commodity.push(val);
+							});
+							if(arr.length < pageSize) //没有数据了
+							{
+								mui.toast("没有更多数据了");
+								if(pullRefresh != null) {
+									pullRefresh.endPullUpToRefresh(false);
+								}
+							} else {
+								if(pullRefresh != null) {
+									pullRefresh.endPullUpToRefresh(false);
+								}
+							}
+						}
+						++page;
+						console.info(data.data)
+
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+
+					if(pullRefresh != null)
+						pullRefresh.endPullDownToRefresh();
+					mui.toast(errorThrown);
+				})
+			}
+
+			(function($) {
+				//阻尼系数
+				var deceleration = mui.os.ios ? 0.003 : 0.0009;
+				$('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration: deceleration
+				});
+				$.ready(function() {
+
+					pull = $("#content").pullToRefresh({
+						down: {
+							callback: function() {
+								var self = this;
+								page = 0;
+								//								mui('#content').pullRefresh().refresh(true);
+								getData(self);
+							}
+						},
+						up: {
+							callback: function() {
+								var self = this;
+								getData(self);
+							}
+						}
+					});
+					pull.pullDownLoading();
+				});
+			})(mui);
+
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+			//				document.getElementById("ommodityItem").addEventListener("tap", function() {
+			//					//打开详情页面          
+			//				  mui.openWindow({
+			//				      id:'commodityDetail',
+			//				      url:'commodity_detail.html'
+			//				    
+			//				  });
+			//			});
+			/**
+			 * 跳转商品详细
+			 * @param {Object} dom
+			 */
+			function turnDetail(dom) {
+				var id = $(dom).attr('commodityId');
+				var shopId = $(dom).attr('shopId');
+				mui.openWindow({
+					id: 'commodityDetail',
+					url: 'commodity_detail.html?commodityId=' + id + '&shopId=' + shopId,
+
+				});
+			}
+			
+			
+	
+			document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+		</script>
+	</body>
+
+</html>

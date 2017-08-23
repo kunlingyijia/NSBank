@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>城市选择</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../css/mui.min.css" rel="stylesheet" />		
+		<link href="../css/common.css" rel="stylesheet" />
+		<link href="../css/city_select.css" rel="stylesheet" />
+	</head>
+
+	<body style="background: white; font-size: 14px;">
+		<header class="mui-bar mui-bar-nav  home-head" style="background: white;">
+			<img class="back-icon" id="back" src="../img/back.png" />	
+			<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+			<h1 class="mui-title">选择城市</h1>
+		</header>
+
+		<div class="content">
+			<div class="tips">
+				<div class="oneline"></div>
+				<div class="two">定位当前城市</div>
+				<div class="threeline"></div>
+			</div>
+			<div class="location">
+				<div class="item-layout ">
+					<div class="item "  id="locationCity" >正在定位</div>
+				</div>
+			</div>
+
+			<div style="margin-left: 5%;margin-top: 20px;">可选城市</div>
+			<div style="background: #E5E5E5; height: 1px; margin-top: 20px;margin-bottom: 10px;"></div>
+			<div id="addressLayout">
+				
+			</div>
+			<!--<div class="item-layout">
+				<div class="item">福州市</div>
+			</div>
+			<div class="item-layout">
+				<div class="item">厦门市</div>
+			</div>
+			<div class="item-layout">
+				<div class="item">南平市</div>
+			</div>-->
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.2.1.min.js"></script>
+		<script src="../js/utils.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			var currentCity;
+			initNormalCity();
+			
+			/**
+			 * 初始化默认城市
+			 */
+			function initNormalCity()
+			{
+				
+
+				var supportCityList = JSON.parse(localStorage.getItem(utils.supportCityList));
+				var str='';
+				$(supportCityList).each(function(index,val){
+					str+='	<div class="item-layout">'+
+							'<div class="item">'+val.cityName+'</div>'+
+							'</div>'	;
+				});
+				$("#addressLayout").append(str);
+			}
+
+			function plusReady() {
+				// 查找应用首页窗口对象
+				var main_frame = plus.webview.getWebviewById("main_frame");
+
+				mui(".content").on('tap', '.item', function() {
+					$(".item").removeClass("item-active");
+					$(this).addClass("item-active");
+					currentCity = $(this).text() + "";
+					console.info(currentCity)
+					console.info(main_frame);
+
+					//传值给详情页面，通知加载新数据
+					mui.fire(main_frame, 'getCity', {
+						city: currentCity
+					});
+					main_frame.show();
+				});
+
+			}
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener("plusready", plusReady, false);
+			}
+
+			// 扩展API加载完毕后调用onPlusReady回调函数 
+			document.addEventListener("plusready", onPlusReady, false);
+			// 扩展API加载完毕，现在可以正常调用扩展API
+			function onPlusReady() {
+				// 使用百度地图地位模块获取位置信息
+				plus.geolocation.getCurrentPosition(geoInf, function(e) {
+					alert("获取定位位置信息失败：" + e.message);
+				}, {
+					geocode: true
+				});
+			}
+
+			/**
+			 * 获取百度地图经纬度信息
+			 * @param {Object} position
+			 */
+			function geoInf(position) {
+
+				console.info(JSON.stringify(position));
+				currentCity = position.address.city;
+				console.info(currentCity)
+				$("#locationCity").text(currentCity);
+			}
+			
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+			
+			
+			document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+		</script>
+	</body>
+
+</html>

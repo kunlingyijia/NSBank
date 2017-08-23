@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>指纹识别</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/login.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		
+		
+		
+		<script src="../../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				
+			});
+			var isplusReady = false;
+			mui.plusReady(function(){
+			   isplusReady = true;
+			   testFinger();
+			});
+			
+			
+			
+			function testFinger()
+			{
+				
+				
+   				var REQUESTCODE = 1000;
+   				main = plus.android.runtimeMainActivity();
+				var Intent = plus.android.importClass('android.content.Intent');
+				var FingerprintMainActivity = plus.android.importClass("io.dcloud.dw.FingerprintMainActivity");
+				var intent = new Intent(main, FingerprintMainActivity.class);
+				main.onActivityResult = function(requestCode, resultCode, data) { 
+				  if (REQUESTCODE == requestCode) {
+				      var code =  data.getIntExtra("code",0);  
+				      alert(code)
+				  }
+				};
+				main.startActivityForResult(intent, REQUESTCODE);
+				
+			}
+			
+			
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" href="../css/pullrefresh.css">
+		<link rel="stylesheet" href="../css/main_frame.css">
+		<link rel="stylesheet" href="../css/common.css">
+		<style>
+			.title {
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			
+			.oa-contact-cell.mui-table .mui-table-cell {
+				padding: 11px 0;
+				vertical-align: middle;
+			}
+			
+			.oa-contact-cell {
+				position: relative;
+				margin: -11px 0;
+			}
+			
+			.oa-contact-avatar {
+				width: 75px;
+			}
+			
+			.oa-contact-avatar img {
+				border-radius: 50%;
+			}
+			
+			.oa-contact-content {
+				width: 100%;
+			}
+			
+			.oa-contact-name {
+				margin-right: 20px;
+			}
+			
+			.oa-contact-name,
+			oa-contact-position {
+				float: left;
+			}
+			/*重置mui框架*/
+			
+			.mui-content {
+				padding-top: 0px;
+				padding-bottom: 0px !important;
+				/*background-color: #e5e5e5 !important;*/
+			}
+			
+			.mui-bar {
+				-webkit-box-shadow: none;
+				box-shadow: none;
+			}
+		</style>
+	</head>
+
+	<body style="height: 100%;line-height: none ;">
+		<div id="headLayout" class="mui-bar  home-head">
+			<img id="location" class="head-lefticon" src="../img/citylocation.png" />
+			<div id="citySelect2" class="head-lefticon-text">城市选择</div>
+			<h1 id="title" class="mytitle">首 页</h1>
+			<img id="headMyMsg" class="head-righticon" src="../img/msg.png" />
+		</div>
+		<nav class="mui-bar mui-bar-tab" style="background: white;border-top:1px solid #EEEEEE;">
+			<a id="homeTab" class="mui-tab-item mui-active " href="#home">
+				<img id="homeImg" class="home-icon" src="../img/home.png" />
+				<span class="mui-tab-label" style="font-size: 12px;">首页</span>
+			</a>
+			<a id="shopTab" class="mui-tab-item " href="#shop">
+				<img id="shopImg" class="home-icon shop-img" src="../img/shop_tab_nor.png" />
+				<span class="mui-tab-label" style="font-size: 12px;">积分商城</span>
+			</a>
+			<a id="xyscTab" class="mui-tab-item" href="#xyjf">
+				<img id="xyscImg" class="home-icon  xysc-img" src="../img/xysc_tab_nor.png" />
+				<span class="mui-tab-label" style="font-size: 12px;">信用商城</span>
+			</a>
+			<a id="mineTab" class="mui-tab-item" href="#mine">
+				<img id="mineImg" class="home-icon" src="../img/mine_tab_nor.png" />
+				<span class="mui-tab-label" style="font-size: 12px;">我的</span>
+			</a>
+		</nav>
+		<div class="mui-content">
+			<div id="home" class="mui-control-content  mui-slider mui-active " style="background: #e5e5e5;">
+				<div class="home-content">
+					<div id="citySelect" class="banner-ad1">APP用户专享借款利率9.8折</div>
+					<!--没有百合卡状态的布局-->
+					<div id="noCardLayout" class="no-card-layout" style="">
+						<img src="../img/nocard.png" class="bankcard" />
+						<div id="cardTips" class="tips"></div>
+						<div class="button-group">
+							<div class="left"><button id="recommendByCard">推荐办卡</button></div>
+							<div id="applyCard" class="right"><button>我要办卡</button></div>
+						</div>
+						<!--全平台申请卡状态-->
+						<div class="cardtips-statue-layout">
+							<div class="left">您已成功推荐&nbsp;<label id="recommendNum1">0</label>&nbsp;人</div>
+							<div class="right">平台已办理&nbsp;<label id="successNum1">0</label>&nbsp;张百合卡</div>
+						</div>
+					</div>
+					<!--有百合卡状态-->
+					<div id="haveCardLayout" class="have-card-layout" style="display: none;">
+						<div class="cards">
+
+							<div id="oneCard">
+								<div class="card-intro">
+									<img src="../img/logo_min.png" class="icon-bank" />
+									<label>南平农商银行百合卡</label>
+									<!--<img src="../img/VIP.png" class="vip" />
+									<p>加入></p>-->
+								</div>
+
+								<div class="card-grade">
+
+									<div class="bank-card">
+										<img src="../img/have_card.png" class="card-img" />
+										<div class="card-num">{{item.CARD_NO}}</div>
+									</div>
+									<div class="bankcark-info">
+										<div class="item">
+											<div class="left">姓名</div>
+											<div class="right">{{item.NAME}}</div>
+										</div>
+										<div class="item">
+											<div class="left">额度（元）</div>
+											<div class="right">¥&nbsp;<span>{{item.CREDIT_LIMIT}}</span></div>
+										</div>
+										<div class="item">
+											<div class="left">利率</div>
+											<div class="right">{{item.INTEREST_TYPE}}%</div>
+										</div>
+
+									</div>
+								</div>
+
+							</div>
+							<div id="themore_layout" style="display: none;">
+								<div class="card-grade" style="margin-top: 10px;" v-for="item in items">
+
+									<div class="bank-card">
+										<img src="../img/have_card.png" class="card-img" />
+										<div class="card-num">{{item.CARD_NO}}</div>
+									</div>
+									<div class="bankcark-info">
+										<div class="item">
+											<div class="left">姓名</div>
+											<div class="right">{{item.NAME}}</div>
+										</div>
+										<div class="item">
+											<div class="left">额度（元）</div>
+											<div class="right">¥&nbsp;<span>{{item.CREDIT_LIMIT}}</span></div>
+										</div>
+										<div class="item">
+											<div class="left">利率</div>
+											<div class="right">{{item.INTEREST_TYPE}}%</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+							<div id="themoreClick" class="themore">
+								<div class="gray-line"></div>
+								<div id="themoreText">查看更多</div>
+								<div class="right"><img src="../img/jiantou.jpg" class="jt" /></div>
+							</div>
+						</div>
+
+						<div class="button-group">
+							<div class="left"><button id="recommendByCard2">推荐办卡</button></div>
+							<div class="right"><button id="toIncrease">我要提额</button></div>
+						</div>
+
+						<!--全平台申请卡状态-->
+						<div class="cardtips-statue-layout" style="position: relative; bottom: 0px; margin-top: 40px;">
+							<div class="left">您已成功推荐&nbsp;<label id="recommendNum">0</label>&nbsp;人</div>
+							<div class="right">平台已办理&nbsp;<label id="successNum">0</label>&nbsp;张百合卡</div>
+						</div>
+						<div style="height: 60px;"></div>
+
+					</div>
+
+				</div>
+			</div>
+
+			<div id="shop" class="mui-control-content   mui-slider  " style="margin-bottom: 70px;background: #f5f5f5;">
+				<div id="shopLayout" class="shop-layout">
+
+					<div class="search-layout" id="shopSearch"  >
+						<img src="../img/location_nor.png" />
+						<div class="text" >搜索关键字，如"杯"</div>
+					</div>
+
+					<div id="shopClassLayout" style="margin-top: 10px;">
+						<div class="shop-classify-grid" v-for="item in items">
+							<div class="left">
+								<img v-bind:src="item.clsfImge" />
+								<!--<div class="text">{{item.clsfName}}</div>-->
+							</div>
+							<div class="right" v-if="item.template == 1">
+								<div class="hor-layouy">
+									<div class="hor-item" v-for="item2 in item.scList" v-bind:smallId="item2.smallId" onclick="commodityClick(this)">
+										<img v-bind:src="item2.smallImge" />
+										<div class="text">{{item2.smallName}}</div>
+									</div>
+
+								</div>
+							</div>
+							<div class="right" v-else-if="item.template == 2">
+								<div class="hor-layouy ">
+									<div class="hor-item-img-large" onclick="commodityClick(this)" v-if="item2.smallOrder == 1" v-for="item2 in item.scList" v-bind:smallId="item2.smallId">
+										<img v-bind:src="item2.smallImge" />
+									</div>
+									<div class="hor-item-smart" onclick="commodityClick(this)" v-if="item2.smallOrder == 2" v-for="item2 in item.scList" v-bind:smallId="item2.smallId">
+										<img v-bind:src="item2.smallImge" />
+									</div>
+									<div class="hor-item-img-large" onclick="commodityClick(this)" v-if="item2.smallOrder == 3" v-for="item2 in item.scList" v-bind:smallId="item2.smallId">
+										<img v-bind:src="item2.smallImge" />
+									</div>
+									<div class="hor-item-smart" onclick="commodityClick(this)" v-if="item2.smallOrder == 4" v-for="item2 in item.scList" v-bind:smallId="item2.smallId">
+										<img v-bind:src="item2.smallImge" />
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+			<!--信用商城-->
+			<div id="xyjf" class="mui-control-content   mui-slider " style="padding-top: 45px; background: #f5f5f5; ">
+				<div style="text-align: center;margin-top: 30%;">
+					<img src="../img/online.png" style="width: 30%;" />
+				</div>
+				<div style="color: #ababab;text-align: center; margin-top: 20px;">即将上线，尽请期待</div>
+
+			</div>
+			<div id="mine" class="mui-control-content   mui-slider ">
+				<div class="me-layout" style="margin-bottom: 60px;">
+					<div class="banner">
+						<img src="../img/login_banner.png" class="banner-bg" />
+						<img id="headurl" src="../img/head-normal.png" class="head-img" />
+						<div id="username" class="username">用户</div>
+						<div id="userPhone" class="phone">123*23232323</div>
+						<div id="integral" class="integral">当前积分:0</div>
+						<img id="integralDetailImg" class="integral-detail " src="../img/intergal.png" />
+						<div id="integralDetail" class="integral-detail-text ">积分明细</div>
+					</div>
+					<div class="order-layout">
+
+						<div class="all-order" id="allOrder">
+							<div class="left">我的订单</div>
+							<div class="right">全部订单></div>
+						</div>
+						<div class="statue-order">
+							<div class="item" id="dfk"><img src="../img/dfk.png" /> 待付款</div>
+							<div class="item" id="dfh"><img src="../img/dfh.png" />待发货</div>
+							<div class="item" id="dsh"><img src="../img/dsh.png" />待收货</div>
+							<div class="item" id="dpj"><img src="../img/dpj.png" />待评价</div>
+						</div>
+					</div>
+
+					<div style="background: white; margin-top: 10px; ">
+						<div class="row-item" id="myApplyCard">
+							<img class="left-icon" src="../img/wybk.png" />
+							<div class="text">我要办卡</div>
+							<img class="right-icon" src="../img/jt.png" />
+						</div>
+						<div class="row-item" id="myRedPakge">
+							<img class="left-icon" src="../img/myredpack.png" />
+							<div class="text">我的红包</div>
+							<img class="right-icon" src="../img/jt.png" />
+						</div>
+						<div class="row-item" id="singned">
+							<img class="left-icon" src="../img/sigined.png" />
+							<div class="text">每日签到</div>
+							<img class="right-icon" src="../img/jt.png" />
+						</div>
+					</div>
+					<div style="background: white; margin-top: 10px; ">
+						<div class="row-item" id="discount">
+							<img class="left-icon" src="../img/wdyhq.png" />
+							<div class="text">我的优惠券</div>
+							<img class="right-icon" src="../img/jt.png" />
+						</div>
+						<div class="row-item" id="inviteFriends">
+							<img class="left-icon" src="../img/yqhy.png" />
+							<div class="text">邀请好友</div>
+							<img class="right-icon" src="../img/jt.png" />
+						</div>
+
+					</div>
+
+					<div style="background: white; margin-top: 10px; ">
+						<div class="row-item" id="records">
+							<img class="left-icon" src="../img/record.png" />
+							<div class="text">申请记录</div>
+							<img class="right-icon" src="../img/jt.png" />
+						</div>
+						<div class="row-item" id="myMsg">
+							<img class="left-icon" style="top: 12px;" src="../img/mymsg.png" />
+							<div class="text">我的消息</div>
+							<img class="right-icon" src="../img/jt.png" />
+						</div>
+
+					</div>
+
+					<div style="background: white; margin-top: 10px; ">
+						<div class="row-item" id="setting">
+							<img class="left-icon" style="top: 12px;" src="../img/setting.png" />
+							<div class="text">设置</div>
+							<img class="right-icon" src="../img/jt.png" />
+						</div>
+						<div class="row-item">
+							<img class="left-icon" src="../img/help.png" />
+							<div class="text">帮助中心</div>
+							<img class="right-icon" src="../img/jt.png" />
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+			
+		
+			
+
+		</div>
+		
+		<div id="showcontent" style="display: none;">
+			<div style="position: absolute;background: #4a4a4a; width: 100%;height: 200%;top: 0px;z-index: 20; opacity: 0.8;">	
+			</div>
+			<div  style="position: absolute;width: 100%;height: 200%;top: 0px;z-index: 21; ">
+				
+				<img src="../img/redpackage.png" style="position: absolute; width: 85%; margin-left: 5%;margin-top: 30%; " >
+				<div id="moneyTips" style="position: absolute;color: #fceb55; margin-top: 80%;  margin-left: 25%;    width: 45%; text-align: center; ">恭喜获得红包</div>
+				<div id="okTips" style="position: absolute;color: #a2290a; margin-top: 97%;    width: 95%; text-align: center; ">OK</div>
+				
+				<img id="redPackageClose" src="../img/redpackage_close.png" style="position: absolute; width: 30px; margin-left: 65%;margin-top: 115%; " >
+			</div>
+		</div>	
+			
+		<div id="sharelayout" style="display: none;" >
+				<div id="shareBg" style="position: absolute;background: #4a4a4a; width: 100%;height: 200%;top: 0px;z-index: 20; opacity: 0.8;">		
+				</div>
+					<div class="shareContent" style="height: 200px; background: white;position: absolute;bottom: -200px;width: 100% ; z-index: 21;">
+						<div id="shareWeChat" style=" float: left; width: 25%;text-align: center;margin-top: 20px;">
+							<img src="../img/umeng_socialize_wechat.png" style="width: 50px;"/>
+							<div>微信好友</div>
+						</div>
+							<div id="shareFriends" style="float: left; width: 25%;text-align: center;margin-top: 20px;">
+							<img src="../img/umeng_socialize_wxcircle.png" style="width: 50px;"/>
+							<div>朋友圈</div>
+						</div>
+							<div id="shareQQ" style="float: left; width: 25%;text-align: center;margin-top: 20px;">
+							<img src="../img/umeng_socialize_qq.png" style="width: 50px;"/>
+							<div>QQ</div>
+						</div>
+						<button id="shareCancel" style="height: 45px; left:0px; border: 1px solid #E5E5E5; width: 100%; position: absolute; bottom: 0px;">取  消</button>
+					</div>
+		</div>	
+			
+			
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/mui.pullToRefresh.js"></script>
+	<script src="../js/mui.pullToRefresh.material.js"></script>
+	<script src="../js/vue.min.js"></script>
+	<script src="../js/jquery-3.2.1.min.js"></script>
+	<script src="../js/DES3.js"></script>
+	<script src="../js/utils.js"></script>
+<script src="../js/njsNotify.js"></script>
+	<script>
+		mui.init({
+			swipeBack: false, //启用右滑关闭功能
+			statusBarBackground: '#56b4f2', //设置状态栏颜色,仅iOS可用
+
+		});
+
+		var currentCity = null; //当前城市
+
+		mui.plusReady(function() {
+				initPush();
+		});
+		mui.ready(function() {
+
+			initTab(); //初始化监听
+			$("body").css("background", "#f5f5f5");
+			//					$("#headLayout").hide();
+		});
+
+		
+		
+		//		$("#home").show();
+		/**
+		 * 初始化监听
+		 */
+		function initTab() {
+
+			//		主页监听
+			document.getElementById('homeTab').addEventListener('tap', function() {
+				clearTab();
+				$("#homeImg").attr("src", "../img/home.png");
+				$("#headLayout").show();
+				//标题栏变化
+				$("#citySelect2").show();
+				$("#location").show();
+				$("#headMyMsg").show();
+				$("#title").text("首页")
+			});
+			document.getElementById('shopTab').addEventListener('tap', function() {
+				clearTab();
+				$("#shopImg").attr("src", "../img/shop_tab.png");
+				$("#headLayout").show();
+				//标题栏变化
+				$("#citySelect2").hide();
+				$("#location").hide();
+				$("#headMyMsg").hide();
+				$("#title").text("积分商城")
+			});
+			document.getElementById('xyscTab').addEventListener('tap', function() {
+				clearTab();
+				$("#xyscImg").attr("src", "../img/xysc_tab.png");
+				$("#headLayout").show();
+				//标题栏变化
+				$("#citySelect2").hide();
+				$("#location").hide();
+				$("#headMyMsg").hide();
+				$("#title").text("信用商城")
+			});
+			document.getElementById('mineTab').addEventListener('tap', function() {
+				clearTab();
+				$("#mineImg").attr("src", "../img/mine_tab.png");
+				$("#headLayout").hide();
+			});
+			//我的消息
+			document.getElementById('headMyMsg').addEventListener('tap', function() {
+				mui.openWindow({
+					id: 'headMyMsg',
+					url: 'User/mine_message.html'
+
+				});
+			});
+			/**
+			 * 分享取消
+			 */
+			document.getElementById('shareCancel').addEventListener('tap', function() {
+					$("#sharelayout").hide();
+					
+					  $(".shareContent").animate({
+							   bottom:'-200px',
+						 },500);
+			});
+			document.getElementById('shareBg').addEventListener('tap', function() {
+					$("#sharelayout").hide();
+					
+					  $(".shareContent").animate({
+							   bottom:'-200px',
+						 },500);
+			});
+			
+		}
+
+		function clearTab() {
+			$("#homeImg").attr("src", "../img/home_nor.png");
+			$("#shopImg").attr("src", "../img/shop_tab_nor.png");
+			$("#xyscImg").attr("src", "../img/xysc_tab_nor.png");
+			$("#mineImg").attr("src", "../img/mine_tab_nor.png");
+		}
+
+		var backButtonPress = 0;
+		mui.back = function(event) {
+			backButtonPress++;
+			if(backButtonPress > 1) {
+				plus.runtime.quit();
+			} else {
+				plus.nativeUI.toast('再按一次退出应用');
+			}
+			setTimeout(function() {
+				backButtonPress = 0;
+			}, 1000);
+			return false;
+		};
+		(function($) {
+			//阻尼系数
+			var deceleration = mui.os.ios ? 0.003 : 0.0009;
+			$('.mui-scroll-wrapper').scroll({
+				bounce: false,
+				indicators: true, //是否显示滚动条
+				deceleration: deceleration
+			});
+		})(mui);
+
+		function initPush() {
+
+			// 监听点击消息事件
+			plus.push.addEventListener("click", function(msg) {
+				// 判断是从本地创建还是离线推送的消息
+				alert(utils.obj2Str(msg))
+				switch(msg.payload) {
+					case "LocalMSG":
+//						alert("点击本地创建消息启动：");
+						mui.openWindow({
+							id: 'mine_message',
+							url: 'User/mine_message.html'
+				
+						});
+						
+						break;
+					default:
+//						alert("点击离线推送消息启动：");
+							mui.openWindow({
+							id: 'mine_message',
+							url: 'User/mine_message.html'
+				
+						});
+						break;
+				}
+				// 提示点击的内容
+				plus.ui.alert(msg.content);
+
+			}, false);
+			// 监听在线消息事件
+			plus.push.addEventListener("receive", function(msg) {
+				alert("receive" + utils.obj2Str(msg))
+				if(msg.aps) { // Apple APNS message
+//					alert("接收到在线APNS消息：");
+						mui.openWindow({
+							id: 'mine_message',
+							url: 'User/mine_message.html'
+				
+						});
+				} else {
+//					alert("接收到在线透传消息：");
+						mui.openWindow({
+							id: 'mine_message',
+							url: 'User/mine_message.html'
+				
+						});
+				}
+
+			}, false);
+
+		}
+		
+		
+	</script>
+	<!--主页js-->
+	<script src="../js/home.js"></script>
+	<!--积分商城js-->
+	<script src="../js/shop.js"></script>
+	<!--我的js-->
+	<script src="../js/mine.js"></script>
+
+</html>

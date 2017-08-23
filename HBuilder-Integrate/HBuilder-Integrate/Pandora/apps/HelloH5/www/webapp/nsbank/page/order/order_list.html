@@ -1,0 +1,394 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link href="../../css/commdity.css" rel="stylesheet" />
+		<link href="../../css/pullrefresh.css" rel="stylesheet" />
+	</head>
+
+	<body style="background: #f5f5f5;">
+		<div id="headLayout" class="mui-bar  home-head" style="background: white;">
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+			<img class="back-icon" id="back" src="../../img/back.png" />
+
+			<h1 id="title" class="mytitle">我的订单</h1>
+
+		</div>
+
+		<div id="content" style="padding-top: 45px;">
+			<div class="leader-tab">
+				<div id="allTab" class="item active">全部</div>
+				<div id="paymentTab" class="item">待付款</div>
+				<div id="consignmentTab" class="item">待发货</div>
+				<div id="deliveryTab" class="item">待收货</div>
+				<div id="evaluateTab" class="item">待评价</div>
+			</div>
+			<div style="height: 50px;"></div>
+
+			<div id="allOrder">
+				<div id="" class="commodity-item" style="border-bottom: none;padding-bottom: 50px; margin-top: 10px;" v-for="(item, index)  in items" >
+					<div class="left">
+						<img v-bind:src="item.commodity_imgs" />
+					</div>
+					<div class="right" v-bind:commId="item.commodity_id" v-bind:shopId="item.shop_id"   onclick="turnCommdity(this)">
+						<div class="title">{{item.commodity_name}}</div>
+						<div class="intergal"><label>{{item.buy_intergal}}</label>积分</div>
+						<div class="mark-price">市场参考价：{{item.market_price}}元</div>
+					</div>
+					<div class="status-layout">
+						<div class="item" v-if="item.status ==1" v-bind:orderId="item.id" onclick="paymentBtn(this)">付款</div>
+						<div class="item" style="border: none;" v-if="item.status ==2">买家已付款</div>
+						<div class="item" v-if="item.status ==3" v-bind:orderId="item.id" onclick="countersign(this)">确认收货</div>
+						<div class="item" v-if="item.status ==4" v-bind:orderId="item.id" onclick="evaluateBtn(this)">评价</div>
+						<div class="item" style="border: none;" v-if="item.status ==5">交易成功</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+	
+		<script type="text/javascript">
+			mui.init();
+			//订单类型：0-全部；1-已下单（待付款）；2-已付款（待发货）；3-已发货（待收货）；4-确认收货（待评价）；5-已评价（订单完成）
+			var currentOrderStatus = 0;
+			var page = 0;
+			var pageSize = 20;
+
+			var pull; //刷新插件
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+		
+			/**
+			 * 初始化
+			 */
+			function initData()
+			{
+				var type= utils.GetQueryString("type");
+				if(type==0)
+				{
+					currentOrderStatus = 0;
+					clearTab();
+					$("#allTab").addClass("active");
+				}
+				else if(type==1)
+				{
+					currentOrderStatus = 1;
+					clearTab();
+					$("#paymentTab").addClass("active");
+				}
+				else if(type==2)
+				{
+					currentOrderStatus = 2;
+					clearTab();
+					$("#consignmentTab").addClass("active");
+				}
+				else if(type==3)
+				{
+					currentOrderStatus = 3
+					clearTab();
+					$("#deliveryTab").addClass("active");
+				}
+				else if(type==4)
+				{
+					currentOrderStatus = 4
+					clearTab();
+					$("#evaluateTab").addClass("active");
+				}
+				else
+				{
+					currentOrderStatus = 0;
+					clearTab();
+					$("#allTab").addClass("active");
+				}
+			}
+			/**
+			 * 各选项卡点击事件
+			 */
+			document.getElementById("allTab").addEventListener("tap", function() {
+				currentOrderStatus = 0;
+				clearTab();
+				$("#allTab").addClass("active");
+
+			});
+			document.getElementById("paymentTab").addEventListener("tap", function() {
+				currentOrderStatus = 1;
+				clearTab();
+				$("#paymentTab").addClass("active");
+			});
+			document.getElementById("consignmentTab").addEventListener("tap", function() {
+				currentOrderStatus = 2;
+				clearTab();
+				$("#consignmentTab").addClass("active");
+			});
+			document.getElementById("deliveryTab").addEventListener("tap", function() {
+				currentOrderStatus = 3
+				clearTab();
+				$("#deliveryTab").addClass("active");
+			});
+			document.getElementById("evaluateTab").addEventListener("tap", function() {
+				currentOrderStatus = 4;
+				clearTab();
+				$("#evaluateTab").addClass("active");
+			});
+
+			function clearTab() {
+				$(".leader-tab .item").removeClass("active");
+				page = 0;
+				pull.pullDownLoading();
+			}
+
+			(function($) {
+				//阻尼系数
+				var deceleration = mui.os.ios ? 0.003 : 0.0009;
+				$('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration: deceleration
+				});
+				$.ready(function() {
+
+					pull = $("#content").pullToRefresh({
+						down: {
+							callback: function() {
+								var self = this;
+								page = 0;
+								getData(self);
+
+							}
+						},
+						up: {
+							callback: function() {
+								var self = this;
+								getData(self);
+							}
+						}
+					});
+					initData();
+					pull.pullDownLoading();
+				});
+			})(mui);
+
+			//定义五个菜单的vue数据绑定
+			var allOrderVue = new Vue({
+				el: '#allOrder',
+				data: {
+					items: []
+				}
+			})
+			//			var paymentOrderVue = new Vue({
+			//					  el: '#paymentOrder',
+			//					  data: {
+			//					    items: []
+			//					  }
+			//			})
+			//			var consignmentOrderVue = new Vue({
+			//					  el: '#consignmentOrder',
+			//					  data: {
+			//					    items: []
+			//					  }
+			//			})
+			//			var deliveryOrderVue = new Vue({
+			//					  el: '#deliveryOrder',
+			//					  data: {
+			//					    items: []
+			//					  }
+			//			})
+			//			var evaluateOrderVue = new Vue({
+			//					  el: '#evaluateOrder',
+			//					  data: {
+			//					    items: []
+			//					  }
+			//			})
+
+			//				document.getElementById("ommodityItem").addEventListener("tap", function() {
+			//					//打开详情页面          
+			//				  mui.openWindow({
+			//				      id:'commodityDetail',
+			//				      url:'commodity_detail.html'
+			//				    
+			//				  });
+			//			});
+			/**
+			 * 获取数据
+			 */
+			function getData(pullRefresh) {
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.orderStatus = currentOrderStatus;
+				obj.page = page;
+				obj.pageSize = pageSize
+				utils.ajax(utils.getUrl("getCommodityOrderList"), obj, function(data) {
+
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg);
+						var result = JSON.parse(data.data);
+						if(page == 0) {
+							//结束上啦刷新
+							if(pullRefresh != null)
+								pullRefresh.endPullDownToRefresh();
+							allOrderVue.items = result;
+
+						} else {
+
+							$(result).each(function(index, val) {
+								allOrderVue.items.push(val);
+							});
+							if(result.length < pageSize) //没有数据了
+							{
+								mui.toast("没有更多数据了");
+								if(pullRefresh != null)
+									pullRefresh.endPullUpToRefresh(true); //参数为true代表没有更多数据了。
+							} else {
+								if(pullRefresh != null)
+									pullRefresh.endPullUpToRefresh(false); //refresh completed
+							}
+						}
+						page++;
+
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					if(pullRefresh != null)
+						pullRefresh.endPullDownToRefresh();
+					mui.toast(errorThrown);
+				})
+			}
+			
+			/**
+			 * 付款
+			 * @param {Object} dom
+			 */
+			function paymentBtn(dom)
+			{
+				var orderId = $(dom).attr("orderId");
+				mui.confirm("是否立即支付积分","提示",['确定','取消'],function(e) {
+					if(e.index ==0) //确定
+					{
+						dialog.showDialog();
+						var obj = new Object();
+						obj.phone = localStorage.getItem(utils.phoneNum);
+						obj.userid = localStorage.getItem(utils.userId);
+						obj.order_id = orderId;
+			
+						utils.ajax(utils.getUrl("OrderPaying"), obj, function(data) {	
+							dialog.closeDialog();
+							if(data.code == utils.SCUESS) {
+								mui.toast(data.msg);
+//								$(dom).parent().parent().remove();
+									pull.pullDownLoading();
+		
+							} else {
+								mui.toast(data.msg);
+							}
+		
+						}, function(xhr, type, errorThrown) {
+								dialog.closeDialog();
+							mui.toast(errorThrown);
+						})
+					}
+									
+				});
+			}
+			/**
+			 * 确认收货
+			 * @param {Object} dom
+			 */
+			function countersign(dom)
+			{
+				var orderId = $(dom).attr("orderId");
+				mui.confirm("是否确认收货","提示",['确定','取消'],function(e) {
+					if(e.index ==0) //确定
+					{
+						postReceiveOrEstimate(orderId,1,'');
+					}
+									
+				});
+			}
+			/**
+			 * 评价
+			 * @param {Object} dom
+			 */
+			function evaluateBtn(dom)
+			{
+				var orderId = $(dom).attr("orderId");
+				var btnArray = ['确定', '取消'];
+				mui.prompt('请输入你对商品的评价：', '评价', '提示', btnArray, function(e) {
+					if (e.index == 0) {
+						postReceiveOrEstimate(orderId,2,e.value)
+					}
+				})
+			}
+			
+			/**
+			 * 确认收货和评论提交
+			 * @param {Object} type
+			 * @param {Object} estimate_content
+			 */
+			function postReceiveOrEstimate(orderId,type,estimate_content)
+			{
+						dialog.showDialog();
+						var obj = new Object();
+						obj.phone = localStorage.getItem(utils.phoneNum);
+						obj.userid = localStorage.getItem(utils.userId);
+						obj.order_id = orderId;
+						obj.type = type;
+						obj.estimate_content = estimate_content;
+						utils.ajax(utils.getUrl("receiveOrEstimate"), obj, function(data) {	
+							dialog.closeDialog();
+							if(data.code == utils.SCUESS) {
+								mui.toast(data.msg);
+								pull.pullDownLoading();
+		
+							} else {
+								mui.toast(data.msg);
+							}
+		
+						}, function(xhr, type, errorThrown) {
+								dialog.closeDialog();
+							mui.toast(errorThrown);
+						})
+			}
+			
+				/**
+			 * 购买商品跳转
+			 * @param {Object} dom
+			 */
+			function turnCommdity(dom)
+			{
+				mui.openWindow({
+				      id:'commodityDetail',
+				      url:'../shop/commodity_detail.html?commodityId='+$(dom).attr("commId")+"&shopId="+$(dom).attr("shopId")
+				    
+				  });
+
+			}
+			
+			
+
+	
+			document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+		</script>
+	</body>
+
+</html>

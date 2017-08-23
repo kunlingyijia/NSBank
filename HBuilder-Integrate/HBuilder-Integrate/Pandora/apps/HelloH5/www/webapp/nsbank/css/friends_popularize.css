@@ -1,0 +1,53 @@
+.reword-info {
+/*	height: 150px;*/
+	background: #fff1b8;
+	overflow: hidden;
+}
+
+.reword-info .item {
+	float: left;
+	width: 33.33%;
+	padding: 10px;
+	font-size: 14px;
+}
+
+.reword-info .title {
+	text-align: center;
+	color: #631f20;
+	margin-bottom: 5px;
+}
+
+.reword-info .content {
+	text-align: center;
+	color: #bb403b;
+		margin-bottom: 5px;
+}
+
+.pwd-layout{
+	    height: 50px;
+    line-height: 50px;
+    overflow: hidden;
+    background: #fff1b8; border-bottom: 1px solid #E5E5E5;
+}
+.pwd-layout .left{
+	width: 70%;
+	 line-height: 50px;
+	float: left;
+	padding-left: 10px;
+
+}
+.pwd-layout .left input{
+		margin: 0px;
+	padding: 0px;
+	 background: #fff1b8;
+	 border: none;
+}
+.pwd-layout .right{
+	color: #bf3f3c;
+	width: 30%;
+	float: left;
+	text-align: center;
+	height: 100%;
+	border: none;
+	background: #fff1b8;
+}

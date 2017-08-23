@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>手势解锁</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<!--App自定义的css-->
+		<!--<link rel="stylesheet" type="text/css" href="../css/app.css" />-->
+				<link href="../../css/dialog/mydialog.css" rel="stylesheet" />
+			<script src="../../js/dialog/mydialog.js"></script>
+		<style>
+			html,
+			body {
+				width: 100%;
+				height: 100%;
+				margin: 0px;
+				padding: 0px;
+				overflow: hidden;
+				/*background-color: #efeff4;*/
+				/*background-color: #5778c7;*/
+				background: url(../../img/gradual_change_bg.png);
+				background-size:100% 100% ;
+				
+			}
+			#holder {
+				width: 300px;
+				height: 300px;
+				/*border: solid 1px #bbb;
+				border-radius: 5px;*/
+				margin: 50px auto;
+				/*background-color: #fff;*/
+			}
+			#alert {
+				text-align: center;
+				padding: 20px 10px;
+				color: white;
+			}
+			
+			.title {
+				position: absolute;
+				height: 50px;
+				z-index: 10;
+				width: 100%;
+				line-height: 50px;
+				text-align: center;
+			}
+			
+			.title .content {
+				/*	font-size: ;*/
+				color: white;
+				margin: 0 auto;
+			}
+			#turnNext {
+				position: absolute;
+				right: 15px;
+				top: 0px;
+				color: white;
+		
+			}
+		</style>
+	</head>
+
+	<body style="position: relative;">
+		<!--<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">手势解锁</h1>
+			<label id="turnNext">跳过</label>
+		</header>-->
+		<div class="title">
+			<div class="content">手势密码</div>
+				<label id="turnNext">跳过</label>
+		</div>
+		<div class="mui-content" style="background: #5778c7;height: 100%; opacity: 1;padding-top: 105px;">
+			<!--<div id='holder' class="mui-locker" data-locker-options='{"ringColor":"rgba(210,210,210,1)","fillColor":"#ffffff","pointColor":"rgba(0,136,204,1)","lineColor":"rgba(0,136,204,1)"}' data-locker-width='300' data-locker-height='300'></div>-->
+			<div id='holder' class="mui-locker" data-locker-options='{"ringColor":"rgba(210,210,210,1)","fillColor":"#5778c7","pointColor":"#ffffff","lineColor":"#ffffff"}' data-locker-width='300' data-locker-height='300'></div>
+			
+			
+		</div>
+		<div id='alert' style="position: absolute;bottom: 40px;width: 100%; text-align: center;"></div>
+			
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.locker.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script>
+			(function($, doc) {
+				$.init({
+					statusBarBackground: '#6198d0', //设置状态栏颜色,仅iOS可用
+				});
+				var holder = doc.querySelector('#holder'),
+					alert = doc.querySelector('#alert'),
+					record = [];
+				//处理事件
+				holder.addEventListener('done', function(event) {
+					var rs = event.detail;
+					var localGesture =  localStorage.getItem(utils.keyGesture);
+					if (!utils.isNone(localGesture)) //判断是否有手势密码在本地
+					{
+						var newGesture = rs.points.join('');
+						console.log(newGesture);
+						if(localGesture == newGesture)
+						{
+							alert.innerText = '认证成功';
+							postLogin();
+							
+						}
+						else{
+							alert.innerText = '手势密码错误！请重新解锁';
+						}
+						rs.sender.clear();
+						return;
+					}
+										
+					
+					
+//					if (rs.points.length < 4) {
+//						alert.innerText = '设定的手势太简单了';
+//						record = [];
+//						rs.sender.clear();
+//						return;
+//					}
+//					console.log(rs.points.join(''));
+//					record.push(rs.points.join(''));
+//					if (record.length >= 2) {
+//						if (record[0] == record[1]) {
+//							alert.innerText = '手势设定完成';
+//							localStorage.setItem(utils.keyGesture,record[1]);
+//							localStorage.setItem(utils.switchGesture,1) ;//设置开启手势密码
+//							
+//						} else {
+//							alert.innerText = '两次手势设定不一致,请重新设置';
+//						}
+//						rs.sender.clear();
+//						record = [];
+//					} else {
+//						alert.innerText = '请确认手势设定';
+//						rs.sender.clear();
+//					}
+				});
+			}(mui, document));
+			
+			//跳过
+			document.getElementById('turnNext').addEventListener('tap', function() {
+				 mui.openWindow({
+				      id:'login',
+				      url:'login.html'
+				    
+				  });
+			});
+			
+				var backButtonPress = 0;
+			mui.back = function(event) {
+				backButtonPress++;
+				if(backButtonPress > 1) {
+					plus.runtime.quit();
+				} else {
+					plus.nativeUI.toast('再按一次退出应用');
+				}
+				setTimeout(function() {
+					backButtonPress = 0;
+				}, 1000);
+				return false;
+			};
+			
+			
+			 /**
+			  * 登录系统
+			  */
+			function postLogin()
+			{
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.pwd = DES3.decrypt(utils.key,localStorage.getItem(utils.pwd));
+				obj.qqOpenid =  utils.notNone(localStorage.getItem(utils.qqOpenId));
+				obj.wechatOpenid =  utils.notNone(localStorage.getItem(utils.wechatOpenId));
+//				alert(utils.obj2Str(plus.push.getClientInfo()) )
+				obj.clientid = plus.push.getClientInfo().clientid;
+				dialog.showDialog()
+				utils.ajax(utils.getUrl("Login"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg);
+						var result = JSON.parse(data.data);
+						
+						localStorage.setItem(utils.userId,result.userid);
+						localStorage.setItem(utils.headImg,result.headImg);
+						localStorage.setItem(utils.phoneNum,result.phone);
+						localStorage.setItem(utils.blacklist_user,result.blacklist_user);
+						localStorage.setItem(utils.integral,result.integral);
+						localStorage.setItem(utils.username,result.username);
+						localStorage.setItem(utils.bankcard_id, result.bankcard_id);
+						localStorage.setItem(utils.bankcard_statue, result.bankcard_statue);
+						localStorage.setItem(utils.idcard_status, result.idcard_status);
+						localStorage.setItem(utils.credit_status, result.credit_status);
+						localStorage.setItem(utils.invite_code, result.invite_code);
+				
+						 mui.openWindow({
+							      id:'main_frame',
+							      url:'../main_frame.html',
+							      createNew: true,
+							  });
+						
+
+					} else {
+						mui.toast(data.msg);
+						 mui.openWindow({
+							      id:'login',
+							      url:'login.html'
+							    
+							  });
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+					mui.openWindow({
+							      id:'login',
+							      url:'login.html'
+							    
+							  });
+				})
+			}
+			
+		</script>
+	</body>
+
+</html>

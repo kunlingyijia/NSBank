@@ -1,0 +1,61 @@
+.banner-layout {
+	height: 100px;
+	background: url(../img/integral_bg.png);
+	background-size: 100% 100%;
+}
+
+.banner-layout .left {
+	width: 25%;
+	float: left;
+	text-align: center;
+	padding-top: 20px;
+}
+
+.banner-layout .left img {
+	width: 60px;
+}
+
+.banner-layout .right {
+	width: 65%;
+	float: left;
+	color: white;
+	padding-left: 10px;
+	padding-top: 30px;
+}
+
+.banner-tips {
+	overflow: hidden;
+	background: white;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #E5E5E5;
+	font-size: 13px;
+}
+
+.banner-tips  .item{
+	width: 33.33%;
+	float: left;
+	text-align: center;
+	border-right: 1px solid #E5E5E5;
+}
+.banner-tips  .item .two{
+	color: #999999;
+}
+
+#itemlist .item{
+	height: 50px;
+	line-height: 50px;
+	background: white;
+	position: relative;
+	border-bottom: 1px solid #E5E5E5;
+}
+#itemlist .item .left{
+	position: absolute;
+	left: 15px;
+	top: 2px;
+}
+#itemlist .item .right{
+	position: absolute;
+	right: 15px;
+	top: 2px;
+}

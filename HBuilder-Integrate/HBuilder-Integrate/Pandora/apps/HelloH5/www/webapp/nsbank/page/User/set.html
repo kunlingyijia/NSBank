@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>个人信息</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link href="../../css/set.css" rel="stylesheet" />
+
+	</head>
+
+	<body style="background: #f5f5f5; text-align: center;">
+
+		<div id="headLayout" class="mui-bar  home-head" style="background: white;">
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+
+			<img class="back-icon" id="back" src="../../img/back.png" />
+
+			<h1 id="title" class="mytitle">设置</h1>
+
+		</div>
+
+		<div id="content" style="padding-top: 45px;">
+			<div class="set_layout" id="personInfo">
+				<div class="set_left_text"> 个人信息</div>
+				<!--<div class="user_name"  >用户1234</div>-->
+				<img class="set_next_img" src="../../img/jt.png" />
+			</div>
+
+			<div class="set_layout" id="accountSafe">
+				<div class="set_left_text"> 账号安全</div>
+				<!--<div class="user_name"  >用户1234</div>-->
+				<img class="set_next_img" src="../../img/jt.png" />
+			</div>
+			<div style="height: 10px;"></div>
+			<div class="set_layout" id="recicerAddress">
+				<div class="set_left_text"> 收货地址管理</div>
+				<!--<div class="user_name"  >用户1234</div>-->
+				<img class="set_next_img" src="../../img/jt.png" />
+			</div>
+
+			<div class="set_layout" id="bankManage">
+				<div class="set_left_text"> 银行卡管理</div>
+				<!--<div class="user_name"  >用户1234</div>-->
+				<img class="set_next_img" src="../../img/jt.png" />
+			</div>
+			<div style="height: 10px;"></div>
+			<div class="set_layout" id="myMsg" style="display: none;">
+				<div class="set_left_text"> 我的消息</div>
+				<!--<div class="user_name"  >用户1234</div>-->
+				<img class="set_next_img" src="../../img/jt.png" />
+			</div>
+
+			<div class="set_layout" style="display: none;">
+				<div class="set_left_text"> 关注微信</div>
+				<!--<div class="user_name"  >用户1234</div>-->
+				<img class="set_next_img" src="../../img/jt.png" />
+			</div>
+
+			<div style="height: 10px;"></div>
+			<div class="set_layout" id="suggestion">
+				<div class="set_left_text"> 意见反馈</div>
+				<!--<div class="user_name"  >用户1234</div>-->
+				<img class="set_next_img" src="../../img/jt.png" />
+			</div>
+
+			<div class="set_layout">
+				<div class="set_left_text"> 服务协议模板</div>
+				<!--<div class="user_name"  >用户1234</div>-->
+				<img class="set_next_img" src="../../img/jt.png" />
+			</div>
+
+			<!--<div style="height: 10px;"></div>-->
+			<div class="set_layout" id="about">
+				<div class="set_left_text"> 关于我们</div>
+				<!--<div class="user_name"  >用户1234</div>-->
+				<img class="set_next_img" src="../../img/jt.png" />
+			</div>
+
+			<div class="set_layout" style="display: none;">
+				<div class="set_left_text"> 清除缓存</div>
+				<div class="user_name">2.6M</div>
+				<img class="set_next_img" src="../../img/jt.png" />
+			</div>
+
+			<button id="loginOut" class="login-out">退出登录</button>
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script>
+			mui.init({
+				swipeBack: false, //启用右滑关闭功能
+				statusBarBackground: '#ffffff', //设置状态栏颜色,仅iOS可用
+
+			});
+
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+			/**
+			 * 退出登录
+			 */
+			document.getElementById("loginOut").addEventListener("tap", function() {
+				utils.loginOut();
+				mui.openWindow({
+					id: 'login',
+					url: 'login.html'
+
+				});
+			});
+
+			/**
+			 * 个人信息
+			 */
+			document.getElementById("personInfo").addEventListener("tap", function() {
+
+				mui.openWindow({
+					id: 'personInfo',
+					url: 'mine_data.html'
+
+				});
+			});
+			/**
+			 * 收货地址
+			 */
+			document.getElementById("recicerAddress").addEventListener("tap", function() {
+
+				mui.openWindow({
+					id: 'address_manage',
+					url: '../address/address_manage.html'
+
+				});
+			});
+
+			/**
+			 * 银行卡管理
+			 */
+			document.getElementById("bankManage").addEventListener("tap", function() {
+
+				mui.openWindow({
+					id: 'bankManage',
+					url: '../User/bank_data.html'
+//					url: '../User/bind_bank_data.html'
+
+				});
+			});
+
+			/**
+			 * 我的消息
+			 */
+			document.getElementById("myMsg").addEventListener("tap", function() {
+
+				mui.openWindow({
+					id: 'myMsg',
+					url: '../User/mine_message.html'
+
+				});
+			});
+			/**
+			 * 账户安全
+			 */
+			document.getElementById("accountSafe").addEventListener("tap", function() {
+
+				mui.openWindow({
+					id: 'accountSafe',
+					url: 'account_safe.html'
+
+				});
+			});
+			/**
+			 * 意见建议
+			 */
+			document.getElementById("suggestion").addEventListener("tap", function() {
+
+				mui.openWindow({
+					id: 'suggestion',
+					url: 'suggestion.html'
+
+				});
+			});
+			/**
+			 * 关于
+			 */
+			document.getElementById("about").addEventListener("tap", function() {
+
+				mui.openWindow({
+					id: 'about',
+					url: 'about.html'
+
+				});
+			});
+			
+					document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+		</script>
+	</body>
+
+</html>

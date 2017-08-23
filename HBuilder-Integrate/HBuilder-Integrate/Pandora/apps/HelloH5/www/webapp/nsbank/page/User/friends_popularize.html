@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>百合卡推荐好友</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link href="../../css/friends_popularize.css" rel="stylesheet" />
+	</head>
+
+	<body style="background: #ffe787; font-size: 14px;">
+
+		<img src="../../img/share_bg.png" style="width: 100%;" />
+		<div class="reword-info">
+			<div class="item">
+				<div class="title">奖励类型</div>
+				<div class="content">好友注册</div>
+				<div class="content">推荐办卡</div>
+			</div>
+			<div class="item">
+				<div class="title">一级好友</div>
+				<div class="content">100积分</div>
+				<div class="content">150积分</div>
+			</div>
+			<div class="item">
+				<div class="title">二级好友</div>
+				<div class="content">80积分</div>
+				<div class="content">100积分</div>
+			</div>
+		</div>
+		<div class="input-layout1" style="margin-top: 10PX; background: #fff1b8; border-bottom: 1px solid #E5E5E5;">
+			<div class="left" style="color: #631f20;">手机号</div>
+			<input id="phoneNum" class="right" type="number" style="background: #fff1b8;" placeholder="请输入手机号码" />
+		</div>
+		<div class="pwd-layout">
+			<div class="left"><input id="qcode" type="number" placeholder="请输入验证码" /></div>
+
+			<button class="right" onclick="sendCode(this)">发送验证码</button>
+		</div>
+		<div class="input-layout1" style="background: #fff1b8; border-bottom: 1px solid #E5E5E5;">
+			<div class="left" style="color: #631f20;">用户密码</div>
+			<input id="pwd1" class="right" type="password" style="background: #fff1b8;" placeholder="请输入密码" />
+		</div>
+		<div class="input-layout1" style="background: #fff1b8;  border-bottom: 1px solid #E5E5E5;">
+			<div class="left" style="color: #631f20;">确认密码</div>
+			<input id="pwd2" class="right" type="password" style="background: #fff1b8;" placeholder="请再次输入密码" />
+		</div>
+
+		<div class="btn-layout" style="margin-top: 30px; margin-bottom: 20px;">
+			<button id="regBtn" class="btn" style="background: url(../../img/share_btn.png); background-size:100% 100% ; border-radius: 0px;border: none;">提交注册</button>
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+
+			var wait = 30;
+
+			function sendCode(dom) {
+				if(utils.isNone($("#phoneNum").val())) {
+					mui.toast("手机号码需填写");
+					return;
+				}
+
+				time(dom);
+				postCode();
+			}
+
+			function time(o) {
+				if(wait == 0) {
+					o.removeAttribute("disabled");
+					o.innerHTML = "发送验证码";
+					wait = 30;
+				} else {
+					o.setAttribute("disabled", true);
+					o.innerHTML = "重新发送(" + wait + ")";
+					wait--;
+					setTimeout(function() {
+							time(o)
+						},
+						1000)
+
+				}
+
+			}
+
+			/**
+			 * 注册
+			 */
+			document.getElementById("regBtn").addEventListener("tap", function() {
+
+				if(utils.isNone($("#phoneNum").val())) {
+					mui.toast("手机号码需填写");
+					return;
+				}
+				if(utils.isNone($("#qcode").val())) {
+					mui.toast("验证码需填写");
+					return;
+				}
+				if(utils.isNone($("#pwd2").val())) {
+					mui.toast("密码需填写");
+					return;
+				}
+				if($("#pwd1").val() != $("#pwd2").val()) {
+					mui.toast("两次密码需一致");
+					return;
+				}
+
+				var invite_code = utils.GetQueryString("invite_code");
+				var obj = new Object();
+				obj.phone = $("#phoneNum").val();
+				obj.verifyCode = $("#qcode").val();
+				obj.pwd = $("#pwd2").val();;
+				obj.wechatOpenid = '';
+				obj.qqOpenid = '';
+				obj.invite_code = invite_code;
+				obj.code_MAC='';
+				obj.name_MAC = '';
+				dialog.showDialog()
+				utils.ajax(utils.getUrl("RegUer"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg);
+
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+			});
+
+			/**
+			 * 发送验证码
+			 */
+			function postCode() {
+				var obj = new Object();
+				obj.phone = $("#phoneNum").val();
+				obj.type = 1;
+				utils.ajax(utils.getUrl("sendMobileCode"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg);
+
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+
+			}
+		</script>
+	</body>
+
+</html>

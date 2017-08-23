@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div id="signature" style="height: 200px;    margin-top: 100px;"></div>
+		<button id="clear">清除</button> <button id="output">输出</button>
+		
+		
+		<script src="../../js/mui.min.js"></script>
+				<script src="../../js/jquery-3.2.1.min.js"></script>
+					<script src="../../js/jSignature.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			$(document).ready(function() {
+                $("#signature").jSignature( { 'height': '200px',"width":"100%"})
+            });
+            
+            
+			document.getElementById('clear').addEventListener('tap', function() {
+			 	$("#signature").jSignature("reset")
+			});
+				document.getElementById('output').addEventListener('tap', function() {
+			  	var datapair = $("#signature").jSignature("getData", "svgbase64");
+			  	alert(datapair);
+			});
+			
+//          var datapair = $("#signature").jSignature("getData", "image");
+//              var array = datapair.splice(",");
+//              mui.toast(array[1]);
+		</script>
+	</body>
+
+</html>

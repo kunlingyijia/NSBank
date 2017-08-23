@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我的红包</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link href="../../css/my_redpage.css" rel="stylesheet" />
+	</head>
+
+	<body style="background: #f5f5f5;">
+
+		<div id="headLayout" class="mui-bar  home-head" style="background: white;">
+			<img class="back-icon" id="back" src="../../img/back.png" />
+	<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+
+			<h1 id="title" class="mytitle">我的红包</h1>
+
+		</div>
+
+		<div id="content" style="padding-top: 45px;">
+			<div class="redpakage-item" v-for="(item, index)  in items">
+				<div class="left">
+					<img src="../../img/redpage.png"  />
+					<div class="price">¥ <label>{{item.amount}}</label></div>
+					<div class="time">{{item.start_time}}至{{item.end_time}}</div>
+				</div>
+				<div class="right extracted" v-if="item.status==3">
+					已领取
+				</div>
+				<div class="right extracted" v-else-if="item.status==4">
+					已提现
+				</div>
+				<div class="right"  v-bind:redBagId="item.id"  onclick="getRedBag(this)"  v-else>
+					未领取
+				</div>
+			</div>
+			<!--<div class="redpakage-item">
+				<div class="left">
+					<img src="../../img/redpage.png"  />
+					<div class="price">¥ <label>6</label></div>
+					<div class="time">2017-04-25-2017-05-25</div>
+				</div>
+				<div class="right extracted">
+					已提取
+				</div>
+			</div>-->
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		
+		<script type="application/javascript">
+			mui.init({
+				swipeBack:true, //启用右滑关闭功能
+			})
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+			
+			var listVue = new Vue({
+				el: '#content',
+				data: {
+					items: []
+				}
+			})
+			getData();
+			function getData()
+			{
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.page = 0;
+				obj.pageSize = 1000;
+			
+				
+//				dialog.showDialog()
+				utils.ajax(utils.getUrl("queryRedPackets"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+//						mui.toast(data.msg);
+						var result =  JSON.parse(data.data)
+						$(result).each(function(index,val){
+							val.start_time = val.start_time.split(" ")[0]
+							val.end_time = val.end_time.split(" ")[0]
+						});
+						listVue.items = result;
+						
+						
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+			}
+			
+			/**
+			 * 领取红包
+			 * @param {Object} dom
+			 */
+			function getRedBag(dom)
+			{
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.redpacketid = $(dom).attr("redBagId");
+				obj.xxx = 'xx';
+				
+				dialog.showDialog()
+				utils.ajax(utils.getUrl("reapRedPacket"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg);					
+						getData();
+						
+					} else {
+						mui.toast(data.msg);
+						 mui.openWindow({
+						      id:'bank_data',
+						      url:'bank_data.html'
+						    
+						  });
+						
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+			}
+			
+			document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+			
+		</script>
+	</body>
+
+</html>

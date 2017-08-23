@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>修改手机密码</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/login.css" rel="stylesheet" />
+				<link href="../../css/dialog/mydialog.css" rel="stylesheet" />
+			<script src="../../js/dialog/mydialog.js"></script>
+	</head>
+
+	<body>
+		<div class="banner">
+			<img class="logo" src="../../img/nshicon.png" />
+				<img src="../../img/back_reg.png" id="back"  style="position: absolute; top: 15px; left: 15px;"/>
+		</div>
+		<div id="content" class="content">
+			<div class="input-layout" style="margin-top: 40px;">
+				<img class="pwd" src="../../img/phone.png" style="margin-top: 10px;" />
+				<input id="phoneNum" type="number" style="margin-bottom: 5px;margin-top: 7px;" placeholder="请输入手机号" />
+			</div>
+			
+		
+			<div class="input-layout" id="inputLayout">
+				<img class="pwd" src="../../img/pwd.png" style="margin-top: 15px;" />
+				<input  id="pwd" type="number" style="margin-top: 10px;margin-bottom: 5px;" placeholder="请输入旧密码" />
+			</div>
+
+		<div class="input-layout" id="inputLayout">
+				<img class="pwd" src="../../img/pwd.png" style="margin-top: 15px;" />
+				<input  id="pwdNew" type="number" style="margin-top: 10px;margin-bottom: 5px;" placeholder="请输入新密码" />
+			</div>
+			
+			<button id="editBtn" class="login" style="margin-top: 30px;">修  改</button>
+
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			init();
+			
+			function init()
+			{
+				
+				
+			}
+		
+			//修改
+			document.getElementById('editBtn').addEventListener('tap', function() {
+				var phoneNum = $("#phoneNum").val();			
+				var pwd = $("#pwd").val();
+				var pwdNew = $("#pwdNew").val();
+				if(utils.isNone(phoneNum)){
+						mui.toast("手机号码必填");
+						return;
+				}
+				if(utils.isNone(pwd)){
+						mui.toast("密码必填");
+						return;
+				}
+				if(utils.isNone(pwdNew)){
+						mui.toast("新密码必填");
+						return;
+				}
+				var obj = new Object();
+				obj.phone = phoneNum;
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.newPwd = pwdNew;
+				obj.pwd = pwd;
+				dialog.showDialog()
+				utils.ajax(utils.getUrl("alterPassWord"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg);
+						 mui.openWindow({
+						      id:'login',
+						      url:'login.html'						    
+						  });
+						
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+			});
+			
+			document.getElementById('back').addEventListener('tap', function() {
+				 mui.back()
+			});
+			
+    		
+		</script>
+	</body>
+
+</html>

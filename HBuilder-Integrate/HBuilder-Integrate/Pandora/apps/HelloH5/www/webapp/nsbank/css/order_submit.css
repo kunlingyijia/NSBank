@@ -1,0 +1,142 @@
+.add-address {
+	height: 45px;
+	background: #4391e3;
+	padding-top: 12px;
+	position: relative;
+	color: white;
+}
+
+.add-address .left {
+	margin-left: 10px;
+}
+
+.add-address img {
+	width: 10px;
+	position: absolute;
+	right: 15px;
+	top: 15px;
+}
+
+.commodity-item {
+	height: 120px;
+	background: white;
+	margin-top: 10px;
+}
+
+.commodity-item .left {
+	float: left;
+	width: 30%;
+	text-align: center;
+}
+
+.commodity-item .left img {
+	width: 60px;
+	    height: 70px;
+	margin-top: 20px;
+}
+
+.commodity-item .right {
+	float: left;
+	width: 70%;
+}
+
+.commodity-item .right .one {
+	margin-top: 20px;
+	font-size: 15px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.commodity-item .right .two label {
+	color: #f23031;
+	font-size: 16px;
+	margin-right: 5px;
+}
+
+.commodity-item .right .two {
+	color: #aaaaaa;
+	font-size: 13px;
+	margin-top: 5px;
+}
+
+.commodity-item .right .three {
+	color: #aaaaaa;
+	font-size: 13px;
+	margin-top: 5px;
+}
+
+.buy-layout {
+	position: fixed;
+	height:55px;
+	bottom: 0px;
+	width: 100%;
+	background: white;
+	color: #aaaaaa;
+	font-size: 14px;
+}
+
+.buy-layout .tips {
+	position: absolute;
+	left: 15px;
+	top: 15px;
+}
+
+.buy-layout label {
+	color: #f2302e;
+	font-size: 15px;
+}
+
+.buy-layout .buy-intergal {
+	position: absolute;
+	left: 65px;
+	top: 15px;
+}
+
+.buy-layout .buy {
+	position: absolute;
+	right: 10px;
+	background: #4391e3;
+	border-radius: 10px;
+	color: white;
+	top: 10px;
+	border: none;
+}
+
+
+.address-layout{
+	overflow: hidden;
+	background: white;
+	
+}
+.address-layout .left{
+	width: 90%;
+	float: left;
+}
+.address-layout .left .consignee{
+	position: relative;
+	height: 30px;
+	margin-top: 20px;
+}
+.address-layout .left .consignee .person{
+	position: absolute;
+	left: 20px;
+}
+.address-layout .left .address{
+	margin-left: 20px;
+	margin-bottom: 20px;
+}
+.address-layout .left .consignee .phone{
+	position: absolute;
+	right: 20px;
+}
+.address-layout .right{
+	width: 10%;
+	float: left;
+	position: relative;
+}
+.address-layout .right img{
+	width: 10px;
+	margin-top: 40px;
+	margin-left: 10px;
+}

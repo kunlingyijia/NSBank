@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<style>
+			.content {
+				padding: 10px;
+			}
+			
+			textarea {
+				height: 200px;
+				/*	margin: 10px;*/
+			}
+		</style>
+	</head>
+
+	<body style="background: #f5f5f5; text-align: center;">
+		<div id="headLayout" class="mui-bar  home-head" style="background: white;">
+			<img class="back-icon" id="back" src="../../img/back.png" />
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+
+			<h1 id="title" class="mytitle">意见反馈</h1>
+		</div>
+		<div style="height: 50px;"></div>
+		<div class="content">
+			<textarea id="suggestionContent" placeholder="请写下对我们的意见吧"></textarea>
+		</div>
+
+		<div class="btn-layout" style="margin-top: 30px; margin-bottom: 20px;">
+			<button id="submit" class="btn">确认提交</button>
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script type="text/javascript">
+			mui.init()
+
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+
+			//		主页监听
+			document.getElementById('submit').addEventListener('tap', function() {
+				var suggestion = $("#suggestionContent").val();
+				if(utils.isNone(suggestion)) {
+					mui.toast("请输入反馈内容");
+					return;
+				}
+				commitSuggestion(suggestion);
+			});
+
+			/**
+			 * 意见反馈
+			 * @param {Object} suggestion_content  
+			 */
+			function commitSuggestion(suggestion_content) {
+				
+				dialog.showDialog();
+				var obj = new Object();
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.suggestion_content = suggestion_content;
+				utils.ajax(utils.getUrl("commitSuggestion"), obj, function(data) {
+					dialog.closeDialog();
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg);
+						mui.back();
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog();
+					mui.toast(errorThrown);
+				})
+			}
+			
+			
+			document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,239 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body style="background: white;">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/DES3.js"></script>
+		<script src="../js/utils.js"></script>
+		<script src="../js/testplugin.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			//			if(utils.isWeb()){
+			//					console.info("isWeb")
+			//					turnMain();
+			//			}
+			mui.plusReady(function() {
+				//第一次开启需要引导页
+				console.info(localStorage.isGuide)
+
+				if(localStorage.isGuide == 'false' || localStorage.isGuide == undefined) {
+					mui.openWindow({
+						id: 'guide',
+						url: 'guide.html'
+					});
+				} else {
+
+					turnMain();
+
+				}
+
+			});
+
+			function turnMain() {
+				if(!utils.isNone(localStorage.getItem(utils.phoneNum))) //登录过
+				{
+					//如果开启指纹验证
+
+					if(localStorage.getItem(utils.fingerprint) == 1) {
+						launchFinger();
+					}
+					//是否开启手势
+					else if(localStorage.getItem(utils.switchGesture) == 1) {
+						mui.openWindow({
+							id: 'lockerLogin',
+							url: 'User/lockerLogin.html'
+
+						});
+					} else {
+
+						postLogin();
+					}
+
+				} else {
+					mui.openWindow({
+						id: 'login',
+						url: 'User/login.html'
+
+					});
+				}
+			}
+			/**
+			 * 登录系统
+			 */
+			function postLogin() {
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.pwd = DES3.decrypt(utils.key, localStorage.getItem(utils.pwd));
+				obj.qqOpenid = utils.notNone(localStorage.getItem(utils.qqOpenId));
+				obj.wechatOpenid = utils.notNone(localStorage.getItem(utils.wechatOpenId));
+				obj.clientid = plus.push.getClientInfo().clientid;
+				utils.ajax(utils.getUrl("Login"), obj, function(data) {
+
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg);
+						var result = JSON.parse(data.data);
+						localStorage.setItem(utils.userId, result.userid);
+						localStorage.setItem(utils.headImg, result.headImg);
+						localStorage.setItem(utils.phoneNum, result.phone);
+						localStorage.setItem(utils.blacklist_user, result.blacklist_user);
+						localStorage.setItem(utils.integral, result.integral);
+						localStorage.setItem(utils.username, result.username);
+						localStorage.setItem(utils.bankcard_id, result.bankcard_id);
+						localStorage.setItem(utils.bankcard_statue, result.bankcard_statue);
+						localStorage.setItem(utils.idcard_status, result.idcard_status);
+						localStorage.setItem(utils.credit_status, result.credit_status);
+						localStorage.setItem(utils.invite_code, result.invite_code);
+
+						mui.openWindow({
+							id: 'main_frame',
+							url: 'main_frame.html'
+
+						});
+
+					} else {
+						mui.toast(data.msg);
+						mui.openWindow({
+							id: 'login',
+							url: 'User/login.html'
+
+						});
+					}
+
+				}, function(xhr, type, errorThrown) {
+
+					mui.toast(errorThrown);
+					mui.openWindow({
+						id: 'login',
+						url: 'User/login.html'
+
+					});
+				})
+			}
+
+			/**
+			 * 调用ios  android 指纹识别
+			 * code 1 指纹识别成功  2指纹认证失败 3认证错误 4手动登录
+			 */
+			function launchFinger() {
+
+				if(mui.os.android) {
+					var REQUESTCODE = 1000;
+					main = plus.android.runtimeMainActivity();
+					var Intent = plus.android.importClass('android.content.Intent');
+					var FingerprintMainActivity = plus.android.importClass("io.dcloud.dw.FingerprintMainActivity");
+					var intent = new Intent(main, FingerprintMainActivity.class);
+					main.onActivityResult = function(requestCode, resultCode, data) {
+						if(REQUESTCODE == requestCode) {
+							var code = data.getIntExtra("code", 0);
+							if(code == 1) //指纹认证成功
+							{
+								//					      	  mui.openWindow({
+								//							      id:'main_frame',
+								//							      url:'main_frame.html'							    
+								//							  });
+								postLogin();
+							} else {
+								mui.openWindow({
+									id: 'login',
+									url: 'User/login.html'
+
+								});
+							}
+						} else {
+							mui.openWindow({
+								id: 'login',
+								url: 'User/login.html'
+
+							});
+						}
+					};
+					main.startActivityForResult(intent, REQUESTCODE);
+				} else if(mui.os.ios) {
+					setTimeout(function() {
+						toEvaluatePolicy()
+					}, 1000);
+
+				} else {
+					postLogin();
+				}
+
+			}
+
+			document.addEventListener("plusready", function() {
+				// 声明的JS“扩展插件别名”
+				var _BARCODE = 'plugintest',
+					B = window.plus.bridge;
+				var fingerprintIdent = {
+					AuthenticateUser: function(successCallback, errorCallback) {
+						var success = typeof successCallback !== 'function' ? null : function(args) {
+								successCallback(args);
+							},
+							fail = typeof errorCallback !== 'function' ? null : function(code) {
+								errorCallback(code);
+							};
+						callbackID = B.callbackId(success, fail);
+						return B.exec(_BARCODE, "AuthenticateUser", [callbackID]);
+					}
+				};
+				window.plus.fingerprintIdent = fingerprintIdent;
+			}, true);
+
+			// 是否支持指纹识别
+			function iscanEvaluatePolicy() {
+				plus.fingerprintIdent.canEvaluatePolicy(function(result) {
+						alert(result);
+					},
+					function(result) {
+						//alert(result)
+					});
+			}
+
+			// 是否支持指纹识别
+			function iscanEvaluatePolicy() {
+				plus.fingerprintIdent.canEvaluatePolicy(function(result) {
+						alert(result);
+					},
+					function(result) {
+						//alert(result)
+					});
+			}
+			// 校验指纹识别
+			function toEvaluatePolicy() {
+
+				//      plus.fingerprintIdent.evaluatePolicy('请校验指纹', function( result ) {
+				//          var data = mui.parseJSON(result);
+				//          if(!data.error) {
+				//              alert('校验成功');
+				//          } else {
+				//             alert( '错误原因：'+data.error);
+				//          }
+				//        },
+				//        function(result){
+				//          //alert(result)
+				//        });
+				plus.fingerprintIdent.AuthenticateUser(function(message) {
+						alert(message.state + '------' + message.message);
+						postLogin();
+						
+					},
+					function(message) {
+						alert(message.state + '------' + message.message);
+						mui.openWindow({
+									id: 'login',
+									url: 'User/login.html'
+
+								});
+					});
+			}
+
+		</script>
+	</body>
+
+</html>

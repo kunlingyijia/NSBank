@@ -1,0 +1,230 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link href="../../css/commodity_detail.css" rel="stylesheet" />
+		<style>
+			.mui-popover {
+				height: 300px;
+				width: 100%;
+				bottom: 0px;
+				position: absolute;
+			}
+		</style>
+	</head>
+
+	<body style="background: #f5f5f5;">
+		<div id="headLayout" class="mui-bar  home-head " style="background: white;">
+			<img id="back" class="head-lefticon" style="width: 10px; top: 15px;" src="../../img/back.png" />
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+			<h3 id="title" class="mytitle">商品详细</h1>
+			<!--<img class="head-righticon" style="width: 18px; top: 15px;" src="../../img/share.png" />-->
+		</div>
+
+		<img id="cmBanner" src="../../img/commimg.jpg" class="commodity-img" />
+		<div class="commodity-tips">
+			<div class="title" id="cmName"></div>
+			<div class="intergal"><img src="../../img/jfxq.png" /> <label id="integral">2890</label>积分</div>
+			<div class="mark-price" id="price">市场参考价：206.00元</div>
+		</div>
+		
+		<div id="discount" class="discount-layout2" style="display: none;" >
+			<img  class="left-icon" src="../../img/dfh.png"/>
+			<label>领取店铺优惠券</label>
+			<img class="right-icon" src="../../img/jt.png"/>
+		</div>
+		
+		
+		<div class="buy-layout">
+			<div class="tips">单价:</div>
+			<div class="buy-intergal"> <label id="buyIntegral" >2990 </label>积分</div>
+			<button  id="buy" class="buy">立即兑换</button>
+		</div>
+		
+		<div style="margin-top: 20px; margin-left: 10px; font-size: 13px; color: #888888;">商品描述</div>
+		<div id="commodityContent" class="commodity-content">
+			<!--<img src="https://img.alicdn.com/imgextra/i2/1968430150/TB2k_n7h1tTMeFjSZFOXXaTiVXa_!!1968430150.jpg" align="absmiddle">
+				<img src="https://img.alicdn.com/imgextra/i2/1968430150/TB2k_n7h1tTMeFjSZFOXXaTiVXa_!!1968430150.jpg" align="absmiddle">
+					<img src="https://img.alicdn.com/imgextra/i2/1968430150/TB2k_n7h1tTMeFjSZFOXXaTiVXa_!!1968430150.jpg" align="absmiddle">
+				-->
+		</div>
+
+		
+		<div id="discountDialog" class="alert-bg" style="display: none;">
+				
+			<div style="margin-top: 10px; text-align: center;">店铺优惠</div>
+		
+			<div id="discountContent" class="discount-layout" >
+				<div class="discount-item"  v-for="item in discount"  >
+					<div class="left">
+						<div class="one">￥{{item.discount_integral}}</div>
+							<div class="two">订单满{{item.limit_integral}}积分可使用</div>
+								<div class="three">有效期{{item.start_time}}至{{item.end_time}}</div>
+					</div>
+					<div v-if="item.is_get==0" v-bind:tickId='item.ticket_id' class="right" onclick="getDiscountTicket(this)">立即领取</div>
+					<div v-if="item.is_get==1" class="right active">已领取</div>
+					<div v-if="item.is_get==2" class="right active">已使用</div>
+				</div>
+				
+				<!--<div class="discount-item">
+					<div class="left">
+						<div class="one">￥20</div>
+							<div class="two">订单满100元可使用</div>
+								<div class="three">有效期2017.01.01-2017.10.30</div>
+					</div>
+					<div class="right active">立即领取</div>
+				</div>
+				-->
+			
+			
+			</div>
+	
+		<div style="position: absolute; padding-left: 20px; padding-right: 20px;bottom: 20px; width: 100%;"><button id="finished" class="finished">完成 </button> </div>
+			
+		</div>
+		<div id="muiBackdrop" class="mui-backdrop mui-active" style="display: none;"></div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+			<script src="../../js/dialog/mydialog.js"></script>
+			<script src="../../js/utils.js"></script>
+			<script src="../../js/jquery-3.2.1.min.js"></script>
+				<script src="../../js/vue.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			var commodityId;//商品id 
+			var shopId ;
+			var commodityInfo;
+			var dataVue = new Vue({
+			  el: '#discountContent',
+			  data: {
+			    discount: []
+			  }
+			})
+			
+			
+			initdData();
+			/**
+			 * 初始化数据
+			 */
+			function initdData()
+			{
+				commodityId= utils.GetQueryString('commodityId');//商品id
+				shopId= utils.GetQueryString('shopId');//店铺id
+//				dialog.showDialog();
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.shop_id =shopId;
+				obj.commodity_id = commodityId;
+				utils.ajax(utils.getUrl("getCommodityDetail"), obj, function(data) {		
+					dialog.closeDialog();
+					
+			
+					if(data.code == utils.SCUESS) {
+						var obj = JSON.parse(data.data);		
+						commodityInfo = obj;
+						$("#cmName").text(obj.cm_name)
+						$("#integral").text(obj.integral_price)
+						$("#price").text('市场参考价：'+obj.market_price)
+						$("#cmBanner").attr("src",obj.show_imgs)
+						$("#commodityContent").html(obj.description)
+						$("#buyIntegral").text(obj.integral_price)
+						var ticketList = obj.ticketList;
+						if(ticketList.length==0)
+						{
+							$("#discount").hide();
+						}
+						else{
+								$("#discount").show();
+							dataVue.discount = ticketList;
+						}
+						
+			
+					} else {
+						mui.toast(data.msg);
+					}
+			
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog();			
+					mui.toast(errorThrown);
+				})	
+				
+			}
+			document.getElementById('muiBackdrop').addEventListener('tap', function() {
+						$("#discountDialog").hide();
+						$("#muiBackdrop").hide();
+				});
+						document.getElementById('finished').addEventListener('tap', function() {
+						$("#discountDialog").hide();
+						$("#muiBackdrop").hide();
+				});
+				
+				document.getElementById('discount').addEventListener('tap', function() {
+						$("#discountDialog").show();
+						$("#muiBackdrop").show();
+				});
+				
+				document.getElementById('buy').addEventListener('tap', function() {
+					//讲商品信息存在缓存
+					
+					localStorage.setItem(utils.commodityInfo,utils.obj2Str(commodityInfo));
+					
+						 mui.openWindow({
+					      id:'order_submit',
+					      url:'order_submit.html?shopId='+shopId+'&commodityId='+commodityId,
+					    
+					  });
+				});
+				document.getElementById("back").addEventListener("tap", function() {
+					mui.back();
+				});
+			/**
+			 * 领取优惠券
+			 * @param {Object} dom
+			 */
+			function getDiscountTicket(dom)
+			{
+				var tickeid=$(dom).attr("tickId");
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.shop_id =shopId;
+				obj.ticket_id = tickeid;
+				utils.ajax(utils.getUrl("getDiscountTicket"), obj, function(data) {		
+					dialog.closeDialog();
+					
+			
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg);					
+						$(dataVue.discount).each(function(index,val){
+							if(val.ticket_id==tickeid)
+							{
+								dataVue.discount[index].is_get=1;//设置成已领取
+							}
+						});
+			
+					} else {
+						mui.toast(data.msg);
+					}
+			
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog();			
+					mui.toast(errorThrown);
+				})	
+			}
+				
+	
+			document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+		
+		</script>
+	</body>
+
+</html>

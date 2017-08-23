@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>资道 - 引导页</title>
+<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="stylesheet" href="./css/mui.min.css">
+<style>
+html, body, #cycleBox {
+	height: 100%;
+}
+body {
+	overflow: hidden;
+}
+#close {
+    position: absolute;
+    width: 160px;
+    left: 50%;
+    margin-left: -80px;
+    bottom: 9%;
+    padding: 10px;
+    color: #fff;
+    border-color: #fff;
+    background-color: #fcce54;
+        height: 100px;
+    opacity: 0;
+}
+/*cycle box*/
+.cycle-box ul{list-style:none;padding:0;position:relative;margin: 0;overflow: hidden;}
+.cycle-box li{position:absolute;}
+.cycle-box-item{background-color: #fff;width:100%;height:100%;background-size:contain;background-repeat:no-repeat;background-position:center center;}
+.cycle-box-caption{position:absolute;background-color:rgba(0,0,0,.5);color:#fff;bottom:0;width:100%;padding:10px 15px;}
+.cycle-box-caption h4{margin-top:0;margin-bottom:5px;}
+.cycle-box-caption p{margin-bottom:0;}
+.cycle-box .cycle-box-caption p{width:70%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+</style>
+</head>
+<body>
+<div id="cycleBox" class="cycle-box" style="height: 100%;">
+
+</div>
+<script type="text/javascript" src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/islider/islider.min.js"></script>
+<script type="text/javascript" src="../js/islider/islider.min.js"></script>
+<script type="text/javascript">
+(function ($) {
+    $.init({
+        gestureConfig: {
+            swipe: false,
+            drag: false
+        },
+        swipeBack: false
+    });
+    $.back = $.noop;
+
+    var loginPage = $.preload({
+		 id:'login',
+		url:'User/login.html'
+	});
+
+	var toLogin = function() {
+//		$.fire(loginPage, 'show', null);
+		setTimeout(function() {
+			localStorage.isGuide = true;
+			$.openWindow({
+			 id:'login',
+			url:'User/login.html',
+				show: {
+					aniShow: 'pop-in',
+					duration: 200
+				},
+				waiting: {
+					autoShow: false
+				}
+			});
+		}, 0);
+	};
+	var plusReady = false;
+    $.plusReady(function () {
+    	plusReady = typeof plus !== 'undefined';
+//      plus.navigator.setFullscreen(true);
+        if (plusReady) {
+            plus.navigator.closeSplashscreen();
+            // 取消ios默认的右滑返回功能
+            var curr = plus.webview.currentWebview();
+            curr.setStyle({
+                popGesture: 'none'
+            });
+        }
+
+		var backButtonPress = 0;
+		$.back = function(event) {
+			backButtonPress++;
+			if (backButtonPress > 1) {
+				plus.runtime.quit();
+			} else {
+				plus.nativeUI.toast('再按一次退出应用');
+			}
+			setTimeout(function() {
+				backButtonPress = 0;
+			}, 1000);
+			return false;
+		};
+    });
+
+    var html = [];
+    var data = [{
+    	img: '../img/index1.jpg'
+    }, {
+   	img: '../img/index2.jpg'
+    }, {
+      	img: '../img/index3.jpg'
+    }];
+	$.each(data, function(index, node) {
+		html.push({
+			// content: node
+			content: [
+				'<div class="cycle-box-item" style="height: ${height};background-image: url('+node.img+');">',
+				index==2?'<button id="close">立即体验</button>':'',
+				'</div>'
+			].join('')
+		});
+	});
+    var islider = new iSlider({
+		dom: $('#cycleBox')[0],
+		type: 'dom', // dom/pic
+		data: html,
+		isLooping: false,
+		isOverspread: true,
+		animateType: 'default', // default,rotate,flip,depth,flow,card
+		isAutoplay: false,
+		duration: 3000,
+		onslidechange: function(index) {
+//			islider.changeIndex && islider.changeIndex();
+		}
+	});
+
+	/*islider.renderIndex({
+		left: 'auto',
+		top: 'auto',
+		right: '5px',
+		bottom: '5px',
+		width: 'auto',
+		diameter: '10px',
+		borderColor: '#fff'
+	});*/
+
+    //立即体验按钮点击事件
+    $(document).on('tap', '#close', function(event) {
+    	if (typeof plus != 'undefined') {
+	        plus.storage.setItem("guide", "true");
+	        plus.navigator.setFullscreen(false);
+	        // plus.webview.currentWebview().close();
+    	}
+        toLogin();
+    }, false);
+})(mui);
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />		
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/search.css" rel="stylesheet" />
+		<link href="../../css/commdity.css" rel="stylesheet" />
+	</head>
+
+	<body style="background: #f5f5f5;">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">搜索</h1>
+		</header>
+		<div style="position: relative;margin-top: 60px;">
+		<div class="search-layout">
+			<img src="../../img/search-icon.png" />
+			
+			<input id="cname"  class="text" type="text"  placeholder="搜索关键字，如'杯'"/>
+		</div>
+		<button  id="searchBtn" class="search-btn">搜索</button>
+		</div>
+		
+		<div id="content" style="margin-top: 10px;">
+			<div class="commodity-item" v-for="(item, index)  in items" v-bind:commId="item.id" onclick="turnCommdity(this)">
+				<div class="left">
+					<img   v-bind:src="item.show_imgs" />
+				</div>
+				<div class="right">
+					<div class="title">{{item.name}}</div>
+					<div class="intergal"><label>{{item.integral_price}}</label>积分</div>
+					<div class="mark-price">市场参考价：{{item.market_price}}元</div>
+				</div>
+			</div>
+			
+			<!--<div class="commodity-item">
+				<div class="left">
+					<img src="../../img/commy.jpg" />
+				</div>
+				<div class="right">
+					<div class="title">德国高端进口</div>
+					<div class="intergal"><label>2890</label>积分</div>
+					<div class="mark-price">市场参考价：206.00元</div>
+				</div>
+			</div>
+			<div class="commodity-item">
+				<div class="left">
+					<img src="../../img/commy.jpg" />
+				</div>
+				<div class="right">
+					<div class="title">德国高端进口</div>
+					<div class="intergal"><label>2890</label>积分</div>
+					<div class="mark-price">市场参考价：206.00元</div>
+				</div>
+			</div>-->
+		</div>
+		
+		
+					
+		<script src="../../js/mui.min.js"></script>	
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+				<script src="../../js/DES3.js"></script>
+				<script src="../../js/utils.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			var listVue = new Vue({
+				el: '#content',
+				data: {
+					items: []
+				}
+			})
+			
+			
+			document.getElementById("searchBtn").addEventListener("tap", function() {
+				if(utils.isNone($("#cname").val()))
+				{
+					mui.toast("商品名不能为空");
+					return;
+				}
+				search();
+				
+			});
+			
+			/**
+			 * 购买商品跳转
+			 * @param {Object} dom
+			 */
+			function turnCommdity(dom)
+			{
+				mui.openWindow({
+				      id:'commodityDetail',
+				      url:'commodity_detail.html?commodityId='+$(dom).attr("commId")
+				    
+				  });
+
+			}
+			
+			/**
+			 * 搜索
+			 */
+			function search()
+			{
+				
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.cname = $("#cname").val();
+				obj.page = 0;
+				obj.pageSize = 1000;
+				dialog.showDialog();
+				utils.ajax(utils.getUrl("queryCommoditys"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg);
+						var result = JSON.parse(data.data);						
+						listVue.items = result
+
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+			}
+			
+			
+	
+			
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>银行卡管理</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/bank_data.css" />
+	</head>
+
+	<body style="background: white;">
+
+		<div id="headLayout" class="mui-bar  home-head" style="background: white;">
+			<img class="back-icon" id="back" src="../../img/back.png" />
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+
+			<h1 id="title" class="mytitle">银行卡管理</h1>
+
+		</div>
+
+		<div id="content" style="padding-top: 60px; ">
+			<div id="bankDataLayout" class="bank_data_item_layout" style="display: none;">
+				<img class="bank_data_item_img_logo" src="../../img/logo_min.png" />
+				<div class="bank_data_item_name">{{bankname}}</div>
+				<div class="bank_data_item_type"> 储蓄卡</div>
+				<div class="bank_data_item_state"> 已绑定</div>
+				<div class="bank_data_item_num">{{banknum}}</div>
+				<img class="bank_data_item_layout_bg" />
+			</div>
+
+			<div >
+			<div id="btn_" class="btn-layout" style="margin-top: 30px; margin-bottom: 20px;">
+
+				<button type="button" id="editBankCard" class="replace_bank_data_btn">{{btn_name}}</button>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/vue.min.js"></script>
+
+		<!--<script src="../../js/common.js"></script>
+			<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>-->
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true, //启用右滑关闭功能
+			})
+
+			mui.ready(function() {
+				queryBindBankCards(); //初始化监听
+			});
+
+			//定义五个菜单的vue数据绑定
+			var bankData = new Vue({
+				el: '#content',
+				data: {
+					btn_name: "",
+					bankname: "",
+					banknum: "",
+					subbranchBank: "",
+
+				}
+			})
+			var isAdd = true;
+
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+
+			document.getElementById("editBankCard").addEventListener("tap", function() {
+				if(isAdd) {
+					mui.openWindow({
+						id: 'replace_bank_data',
+						url: 'bind_bank_data.html',
+					});
+				} else {
+					mui.openWindow({
+						id: 'replace_bank_data',
+						url: 'replace_bank_data.html',
+						extras: {
+
+							bankname: bankData.bankname,
+							banknum: bankData.banknum,
+							subbranchBank: bankData.subbranchBank,
+							cardholder: bankData.cardholder,
+
+						}
+					});
+				}
+			});
+
+			/**
+			 *银行卡信息
+			 * @param {Object} suggestion_content  
+			 */
+			function queryBindBankCards() {
+
+				//				dialog.showDialog();
+				var obj = new Object();
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.phone = localStorage.getItem(utils.phoneNum);
+
+				utils.ajax(utils.getUrl("queryBindBankCards"), obj, function(data) {
+
+						//						dialog.closeDialog();
+						if(data.code == utils.SCUESS) {
+
+							if("{}" == data.data) {
+								nuAddBankData();
+							} else {
+								showBankData();
+								var mybankData = JSON.parse(data.data);
+								bankData.bankname = mybankData.bankName;
+								bankData.subbranchBank = mybankData.subbranchBank;
+								bankData.cardholder = mybankData.cardholder;
+
+								bankData.banknum = mybankData.bankNum;
+
+							}
+						} else {
+							mui.toast(data.msg);
+						}
+
+					},
+					function(xhr, type, errorThrown) {
+						//						dialog.closeDialog();
+						mui.toast(errorThrown);
+					})
+			}
+			/**
+			 * 还没有添加银行卡
+			 */
+			function nuAddBankData() {
+				document.getElementById("bankDataLayout").style.display = "none"; //隐藏
+				document.getElementById("btn_").style.display = "block"; //显示按钮
+				bankData.btn_name = "添加";
+				isAdd = true;
+			}
+
+			/**
+			 * 绑定银行卡！显示银卡信息
+			 */
+			function showBankData() {
+				document.getElementById("bankDataLayout").style.display = "block"; //显示
+				document.getElementById("btn_").style.display = "block"; //显示按钮
+
+				isAdd = false;
+				bankData.btn_name = "修改银行卡";
+			}
+			document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,40 @@
+.grid-layout{
+	background: white;
+	border-bottom: none;
+	padding-left: 10px;
+}
+.grid-layout :last-child{
+	border-bottom: none;
+}
+
+
+
+.cards-layout{
+	padding-left: 20px;
+	background: white;
+	overflow: hidden;
+}
+.cards{
+		overflow: hidden;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid #E5E5E5 !important;
+}
+.cards-layout .item{
+	float: left;
+	width: 20%;
+	text-align: center;
+	background: white;
+	border: 1px solid #4391e3;
+	border-radius:10px ;
+	color: #4391e3;
+	margin-right: 5%;
+	height: 30px;
+	line-height: 30px;
+}
+.cards-layout .active{
+	color: white;
+		background: #4391e3;
+}
+
+

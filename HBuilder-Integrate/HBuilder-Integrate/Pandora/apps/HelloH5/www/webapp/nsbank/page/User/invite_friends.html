@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+			<link href="../../css/invite_friends.css" rel="stylesheet" />
+					<link href="../../css/pullrefresh.css" rel="stylesheet" />
+	</head>
+
+	<body style="background: #f5f5f5;font-size: 14px;">
+		<div id="headLayout" class="mui-bar  home-head " style="background: white;">
+			<img class="head-lefticon" id="back" style="width: 14px; top: 10px;" src="../../img/back.png" />
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+			<h3 id="title" class="mytitle">邀请好友</h1>
+				
+
+
+		</div>
+			<div style="height: 44px;"></div>
+			<div id="content">
+			<div class="banner-layout">
+				<div class="left">
+					<img id="headImg" src="../../img/person.png" />
+				</div>
+				<div id="name" class="right">
+					名称：张某某
+				</div>
+			</div>
+			<div class="banner-tips">
+				<div class="item">
+					<div class="one" id="totalIncome" >0人/0.00积分</div>
+					<div class="two">总好友/总收益</div>
+				</div>
+				<div class="item">
+					<div class="one"  id="totalDirect">0人/0.00积分</div>
+					<div class="two">直接好友/直接收益</div>
+				</div>
+				<div class="item">
+					<div class="one" id="totalIndirect" >0人/0.00积分</div>
+					<div class="two">间接好友/间接收益</div>
+				</div>
+			</div>
+			
+			<div id="itemlist" style="margin-top: 20px;">
+				<div class="item"  v-for="(item, index)  in items">
+					<div class="left">{{item.directFrd_phone}}</div>
+					<div class="right">{{item.directFrd_reward_integral}}积分</div>
+				</div>
+				<!--<div class="item">
+					<div class="left">xxx好友</div>
+					<div class="right">20积分</div>
+				</div>-->
+			</div>
+			</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack:true, //启用右滑关闭功能
+				statusBarBackground: '#ffffff', 
+			})
+			var page = 0;
+			var pageSize = 20;
+			var pull; //刷新插件
+			var listVue = new Vue({
+				el: '#itemlist',
+				data: {
+					items: []
+				}
+			})
+				
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+			initUserInfo();
+			initTotalNum();
+			
+			(function($) {
+				//阻尼系数
+				var deceleration = mui.os.ios ? 0.003 : 0.0009;
+				$('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration: deceleration
+				});
+				$.ready(function() {
+
+					pull = $("#content").pullToRefresh({
+						down: {
+							callback: function() {
+								var self = this;
+								page = 0;					
+								getInviteList(self);
+							}
+						},
+						up: {
+							callback: function() {
+								var self = this;
+								getInviteList(self);
+							}
+						}
+					});
+			
+					pull.pullDownLoading();
+				});
+			})(mui);
+			
+			function initUserInfo()
+			{
+				var headImg =  localStorage.getItem(utils.headImg);
+				if(!utils.isNone(headImg))
+				{
+					$("#headImg").attr("src",headImg)
+				}
+				if(utils.isNone(localStorage.getItem(utils.username)))
+				{
+					$("#name").text("名称："+localStorage.getItem(utils.phoneNum))
+				}
+				else{
+					$("#name").text("名称："+localStorage.getItem(utils.username))
+				}
+				
+			}
+			
+			/**
+			 * 邀请好友数
+			 */
+			function initTotalNum()
+			{
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				dialog.showDialog();
+				utils.ajax(utils.getUrl("reCommendCollect"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+						var result = JSON.parse(data.data);
+						$("#totalIncome").text(result.total_count+"人/"+result.total_integral+"积分")
+						$("#totalDirect").text(result.direct_count+"人/"+result.direct_integral+"积分")
+						$("#totalIndirect").text(result.indirect_count+"人/"+result.indirect_integral+"积分")	
+						
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+			}
+			
+
+			function getInviteList(pullRefresh)
+			{
+			
+				
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.page = page;
+				obj.pageSize = pageSize
+				utils.ajax(utils.getUrl("directFriendInfo"), obj, function(data) {
+
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg);
+						var result = JSON.parse(data.data);
+						if(page == 0) {
+							//结束上啦刷新
+							if(pullRefresh != null)
+								pullRefresh.endPullDownToRefresh();
+							listVue.items = result;
+
+						} else {
+
+							$(result).each(function(index, val) {
+								listVue.items.push(val);
+							});
+							if(result.length < pageSize) //没有数据了
+							{
+								mui.toast("没有更多数据了");
+								if(pullRefresh != null)
+									pullRefresh.endPullUpToRefresh(true); //参数为true代表没有更多数据了。
+							} else {
+								if(pullRefresh != null)
+									pullRefresh.endPullUpToRefresh(false); //refresh completed
+							}
+						}
+						page++;
+
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					if(pullRefresh != null)
+						pullRefresh.endPullDownToRefresh();
+					mui.toast(errorThrown);
+				})
+			}
+			
+			
+			document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+
+
+		</script>
+	</body>
+
+</html>

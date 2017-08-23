@@ -1,0 +1,280 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link href="../../css/identity_certificate.css" rel="stylesheet" />
+		<link href="../../css/dialog/mydialog.css" rel="stylesheet" />
+		<script src="../../js/dialog/mydialog.js"></script>
+	</head>
+
+	<body style="background: #f5f5f5;font-size: 14px;">
+		<div id="headLayout" class="mui-bar  home-head " style="background: white;">
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+			<img id="back" class="head-lefticon" style="width: 10px; top: 15px;" src="../../img/back.png" />
+			<h3 id="title" class="mytitle">实名认证</h1>
+
+		</div>
+			<div style="height: 44px;"></div>
+		<div class="indicator-layout">
+			<div class="indicator-item"></div>
+				<div class="indicator-item"></div>
+					<div class="indicator-item unfinished"></div>
+		</div>
+		
+		<div style="color: #58afb6; text-align: center;margin-top: 20px;"> 请拍摄身份证正反面，信息只用于百合卡认证</div>
+		
+		<div class="pic-layout">
+			<div class="left" id="pcardFront">
+				<img id="pidImgfront" src="../../img/pic_front.png" style="height: 120px;"/>
+				<img src="../../img/photo.png" class="photo" />
+			</div>
+			
+				<div class="right" id="pcardBack">
+					<img  id="pidImgBack"  src="../../img/pic_back.png" style="height: 120px;"/>
+						<img src="../../img/photo.png" class="photo" />
+				</div>
+		</div>
+		
+		<div id="frontLayout" class="pic-text-layout" style="border-bottom: 1px solid #E5E5E5;	margin-top: 20px;display: none;">
+			<input  id="pname" type="text" class="name" value="" />
+			<input id="pid" type="text" class="pid" value="" />
+			<div class="tips">请核对您的名字和身份证号码，若有错误点击上图重新拍摄</div>
+			<div id="frontLayoutEdit" class="edit">修改</div>
+			
+		</div>
+		<div   id="backLayout" class="pic-text-layout" style="display: none;">
+			<input id="idcardIssuedBy" type="text" class="name" value="" />
+			<input id="issusedByTime" type="text" class="pid" value="" />
+			<div class="tips">请核对签发机关和有效期，若有错误点击上图重新拍摄</div>
+			<div id="backLayoutEdit" class="edit">修改</div>
+		</div>
+		<div  id="frontNoLayout"class="pic-text-layout" style="border-bottom: 1px solid #E5E5E5;	margin-top: 20px;">
+			<div class="nophoto">点击上方按钮拍摄正面</div>
+		</div>
+			<div id="backNoLayout"  class="pic-text-layout" >
+			<div class="nophoto">点击上方按钮拍摄正面</div>
+		</div>
+		
+		<div class="button-group" style="margin-top: 20px;">
+			<button class="pre" id="pre" >上一步</button>
+			<button class="next" id="next" >下一步</button>
+		</div>
+		<script src="../../js/mui.min.js"></script>
+				<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script type="text/javascript">
+			mui.init({swipeBack:true, })
+			var idcard_gender="";//性别
+			//检查是编辑还是新增
+			initEditData();
+			/**
+			 * 证件正面
+			 */
+			document.getElementById('pcardFront').addEventListener('tap', function() {
+				utils.takePhoto(function(file){
+					dialog.showDialog();
+					//上传图片后回调
+					utils.uploadImg(function(imgurl){
+						$("#pidImgfront").attr("src",imgurl);
+						identityAuthentication(imgurl,'front');
+					},file);
+				
+				});
+			});
+			
+			/**
+			 * 证件背面
+			 */
+			document.getElementById('pcardBack').addEventListener('tap', function() {
+				utils.takePhoto(function(file){
+					dialog.showDialog();
+					//上传图片后回调
+					utils.uploadImg(function(imgurl){
+						$("#pidImgBack").attr("src",imgurl);
+						identityAuthentication(imgurl,'back');
+					},file);
+				
+				});
+			});
+			
+			
+			document.getElementById('frontLayoutEdit').addEventListener('tap', function() {			
+				$("#pname").focus();
+			});
+			document.getElementById('backLayoutEdit').addEventListener('tap', function() {			
+				$("#idcardIssuedBy").focus();
+			});
+			
+			document.getElementById('pre').addEventListener('tap', function() {			
+				mui.back();
+			});
+			
+			/**
+			 * 下一步
+			 */
+			document.getElementById('next').addEventListener('tap', function() {		
+				
+				if(utils.isNone($("#pname").val()))
+				{
+					mui.toast('身份证姓名要填写');
+					return;
+				}
+					if(utils.isNone($("#pid").val()))
+				{
+					mui.toast('身份证号码要填写');
+					return;
+				}
+					if(utils.isNone($("#idcardIssuedBy").val()))
+				{
+					mui.toast('发行机构需填写');
+					return;
+				}
+					if(utils.isNone($("#issusedByTime").val()))
+				{
+					mui.toast('发行日期需填写');
+					return;
+				}
+				
+				
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.idcard_name = $("#pname").val();
+				obj.idcard_gender = idcard_gender;
+				obj.idcard_num = $("#pid").val();
+				obj.idcard_issued_by = $("#idcardIssuedBy").val();
+				obj.idcard_valid_date = $("#issusedByTime").val();
+				dialog.showDialog();
+				utils.ajax(utils.getUrl("realNameVerify"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg);
+						var bankcard_id = localStorage.getItem(utils.bankcard_id);
+						var bankcard_statue = localStorage.getItem(utils.bankcard_statue);
+						if(bankcard_statue==3 || bankcard_statue==4)//审核失败，需要修改
+						{
+							mui.openWindow({
+							id: 'identity_personinfo',
+							url: 'identity_personinfo.html?edit=1&&bankcard_id='+bankcard_id,
+		
+							});
+						}
+						else//办新卡时候提交
+						{
+							mui.openWindow({
+							id: 'identity_personinfo',
+							url: 'identity_personinfo.html'
+		
+							});
+						}
+						
+			
+					} else {
+						mui.toast(data.msg);
+					}
+			
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+			});
+			
+			/**
+			 * 进行图片比对
+			 * @param {Object} imgurl  图片url
+			 * @param {Object} idcard_side  身份证正反面
+			 */
+			function identityAuthentication(imgurl,idcard_side)
+			{
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.idcard_img_url = imgurl;
+				obj.idcard_side = idcard_side;
+				utils.ajax(utils.getUrl("identityAuthentication"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+						var obj =JSON.parse(data.data);
+						if(idcard_side=="front")
+						{
+							$("#frontNoLayout").hide();
+							$("#frontLayout").show();
+							$("#pname").val(obj.idcard_name);
+							$("#pid").val(obj.idcard_num);
+							idcard_gender = obj.idcard_gender;
+						
+						}
+						else if(idcard_side=="back"){
+							$("#backNoLayout").hide();
+							$("#backLayout").show();
+							$("#idcardIssuedBy").val(obj.idcard_issued_by);
+							$("#issusedByTime").val(obj.idcard_valid_date);
+						}
+			
+					} else {
+						mui.toast(data.msg);
+					}
+			
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+			}
+			
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+			
+			/*
+			 * 检查是否之前提交过
+			 */
+			function initEditData()
+			{
+				var edit = utils.GetQueryString("edit");
+				if(!utils.isNone(edit))//是编辑状态则去请求之前填写过的信息
+				{
+					var obj = new Object();
+					obj.phone = localStorage.getItem(utils.phoneNum);
+					obj.userid = localStorage.getItem(utils.userId);
+//					dialog.showDialog();
+					utils.ajax(utils.getUrl("queryIdentityInfo"), obj, function(data) {
+						dialog.closeDialog()
+						if(data.code == utils.SCUESS) {
+							var obj =JSON.parse(data.data);
+							$("#pidImgfront").attr("src",obj.idcard_img_font);
+							$("#pidImgBack").attr("src",obj.idcard_img_back);
+							$("#frontNoLayout").hide();
+							$("#frontLayout").show();
+							$("#backNoLayout").hide();
+							$("#backLayout").show();
+							$("#pname").val(obj.idcard_name);
+							$("#pid").val(obj.idcard_num);
+							idcard_gender = obj.idcard_gender;
+							$("#idcardIssuedBy").val(obj.idcard_issued_by);
+							$("#issusedByTime").val(obj.idcard_valid_date);
+				
+						} else {
+							mui.toast(data.msg);
+						}
+				
+					}, function(xhr, type, errorThrown) {
+						dialog.closeDialog()
+						mui.toast(errorThrown);
+					})
+				}
+			}
+			
+				document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+			
+		</script>
+	</body>
+
+</html>

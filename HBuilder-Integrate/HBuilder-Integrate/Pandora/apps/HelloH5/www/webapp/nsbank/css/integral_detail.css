@@ -1,0 +1,113 @@
+
+.bg-layout{
+	background: url(../img/integral_bg.png);
+	background-size:100% 100% ;
+	width: 100%;
+	height: 150px;
+	padding-top: 15px;
+}
+
+.bg-layout .time-layout{
+	margin: 0 auto;
+	text-align: center;
+	color: #569ae5;
+	width: 120px;
+	background: white;
+	height: 28px;
+	line-height: 30px;
+	border-radius: 20px;
+	position: relative;
+}
+.bg-layout .time-layout img{
+	width: 15px;
+	margin-left: 5px;
+}
+
+.bg-layout .integral-layout{
+	color: white;
+	text-align: center;
+	padding-top: 30px;
+}
+.bg-layout .integral-layout .integral{
+	font-size: 30px;
+}
+.integral-show{
+	overflow: hidden;
+	height: 80px;
+	background: white;
+	color: #569ae5;
+}
+
+.time-layout .mounth{
+	position: absolute;
+	left: 35%;
+	width: 120px;
+	opacity: 0;
+}
+.integral-show .item{
+	float: left;
+	width: 50%;
+	text-align: center;
+/*	line-height: 80px;*/
+	position: relative;
+	height: 100%;
+/*	border-bottom:  1px solid #569ae5;*/
+}
+.integral-show .item img{
+	width: 20px;
+	position: absolute;
+	top: 35%;
+	left: 20%;
+}
+.integral-show  .active{
+		border-bottom:  1px solid #569ae5;
+}
+.integral-show .gray {
+	color: #999999;
+}
+.integral-show .label-name{
+	position: absolute;
+	top: 25%;
+	left: 35%;
+}
+.integral-show .label-text{
+	position: absolute;
+	top: 50%;
+	left: 35%;
+	font-size: 16px;
+}
+
+#integralList{
+	background: white;
+		width: 100%;
+		position: relative;
+		padding-left: 10px;
+}
+.integral-list-item{
+	height: 70px;
+	background: white;
+	/*margin-left: 10px;*/
+	border-bottom: 1px solid #E5E5E5;
+	position: relative;
+	color: #999999;
+	font-size: 16px;
+	width: 100%;
+}
+.integral-list-item .left{
+	position: absolute;
+	top: 10px;
+	left: 10px;
+}
+.integral-list-item .right{
+	position: absolute;
+	top: 10px;
+	right: 20px;
+}
+
+.integral-list-item .text
+{
+	position: absolute;
+	top: 35px;
+	left: 10px;
+	/*width: 100%;*/
+}

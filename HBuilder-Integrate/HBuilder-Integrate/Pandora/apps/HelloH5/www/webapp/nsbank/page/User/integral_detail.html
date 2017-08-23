@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+			<link href="../../css/integral_detail.css" rel="stylesheet" />
+	</head>
+
+	<body style="background: #f5f5f5;font-size: 14px;">
+		<div id="headLayout" class="mui-bar  home-head " style="background: white;">
+			<img id="back" class="head-lefticon" style="width: 10px; top: 15px;" src="../../img/back.png" />
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+			<h3 id="title" class="mytitle">积分明细</h1>
+
+		</div>
+			<div style="height: 44px;"></div>
+	
+		<div class="bg-layout">
+			<div class="time-layout">
+				<label id="lableTime"></label>
+				<img  src="../../img/jt_jf.png"/>
+				<input class="mounth" type="month" value="2015-09"/>
+			</div>
+			<div class="integral-layout">
+				<label  id="integral_inout" class="integral">+20</label>
+				<label class="unit">积分</label>
+			</div>
+		</div>	
+		<div class="integral-show">
+			<div class="item active"  id="incomeBtn">
+				<img src="../../img/intergarl_get.png" />
+				<label class="label-name">积分获取</label>
+				<label id="incomeIntegral" class="label-text">+20积分</label>
+			</div>
+			<div class="item gray  "  id="outComeBtn">
+				<img src="../../img/integral-out.png" style="" />
+				<label  class="label-name">积分支出</label>
+				<label id="outcomeIntegral" class="label-text">-20积分</label>
+			</div>
+		</div>
+		
+		<div id="integralList">
+			<div class="integral-list-item"  v-for="(item, index)  in items">
+				<div class="one-layout">
+					<div class="left">{{item.create_time}}</div>
+					<div class="right">{{item.integral}}</div>
+				</div>
+				<div class="text">{{item.sketch}}</div>
+			</div>
+			<!--<div class="integral-list-item">
+				<div class="one-layout">
+					<div class="left">2016-06-24</div>
+					<div class="right">+90</div>
+				</div>
+				<div class="text">小积分撞大运</div>
+			</div>-->
+		</div>
+			
+			
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+					swipeBack:true, //启用右滑关闭功能
+				statusBarBackground: '#ffffff', 
+			})
+			var  incomeListData = new Array();//收入数组
+			var  outcomeListData = new Array();//支出数组
+			
+			
+			var listVue = new Vue({
+				el: '#integralList',
+				data: {
+					items: []
+				}
+			})
+				
+				
+			//初始化时间
+			$("#lableTime").html(utils.getTimeWithMounth()); 
+			$(".mounth").val(utils.getTimeWithMounth()); 
+			$('.mounth').bind('input propertychange', function() {  
+//		    		alert($(this).val());
+				console.info($(this).val())
+		    		$("#lableTime").html($(this).val()); 
+		    			getData();
+			});  
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+			
+			
+			document.getElementById("incomeBtn").addEventListener("tap", function() {
+				$("#incomeBtn").addClass("active");
+				$("#incomeBtn").removeClass("gray");
+				$("#outComeBtn").addClass("gray");
+				$("#outComeBtn").removeClass("active");
+				$("#incomeBtn img").attr("src","../../img/intergarl_get.png")
+				$("#outComeBtn img").attr("src","../../img/integral-out.png")
+				changeTab('income')
+				
+			});
+			document.getElementById("outComeBtn").addEventListener("tap", function() {
+				$("#outComeBtn").addClass("active");
+				$("#outComeBtn").removeClass("gray");
+				$("#incomeBtn").addClass("gray");
+				$("#incomeBtn").removeClass("active");
+				$("#outComeBtn img").attr("src","../../img/intergarl_get.png")
+				$("#incomeBtn img").attr("src","../../img/integral-out.png")
+				changeTab('outcome')
+			});
+			
+			getData();
+			
+			function getData()
+			{
+			
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.query_year = $("#lableTime").text().split("-")[0];
+				obj.query_month = $("#lableTime").text().split("-")[1];
+			
+				
+				dialog.showDialog()
+				utils.ajax(utils.getUrl("queryIntegralRecordCollect"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+//						mui.toast(data.msg);
+						var result =  JSON.parse(data.data)
+						$("#integral_inout").text(result.integral_in-result.integral_out);
+						$("#incomeIntegral").text(result.integral_in+"积分");
+						$("#outcomeIntegral").text(result.integral_out+"积分");
+						outcomeListData = []
+						incomeListData = [];
+						listVue.items = [];
+						$(result.integral_record_list).each(function(index,val){
+							val.create_time = val.create_time.split(" ")[0];
+						
+							//区分收入和支出
+							if(val.inorout==1)
+							{
+								val.integral = "-"+val.integral;
+								outcomeListData.push(val)
+							}
+							else{
+								val.integral = "+"+val.integral;
+								incomeListData.push(val)
+							}
+						});
+						changeTab('income')
+						
+						
+						
+						
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+			}
+			
+			function changeTab(type)
+			{
+				//收入
+				if('income'== type)
+				{
+					listVue.items =incomeListData
+				}
+				//支出
+				else{
+					listVue.items =outcomeListData
+				}
+			}
+			
+			document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+
+		</script>
+	</body>
+
+</html>

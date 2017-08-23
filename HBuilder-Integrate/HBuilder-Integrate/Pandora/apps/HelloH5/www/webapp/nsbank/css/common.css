@@ -1,0 +1,208 @@
+.head-lefticon {
+	width: 16px;
+	position: absolute;
+	top: 10px;
+	left: 10px;
+}
+
+.head-lefticon-text {
+	position: absolute;
+	top: 13px;
+	left: 32px;
+}
+
+.head-righticon {
+	position: absolute;
+	width: 25px;
+	top: 10px;
+	right: 10px;
+}
+
+body {
+	background: #ffffff;
+}
+input{
+	font-size: 14px;
+}
+
+.mytitle {
+	text-align: center;
+	font-size: 18px;
+	width: 150px;
+	margin: 0 auto;
+	margin-top: 14px;
+}
+
+.head-color {
+	background: #56b4f2;
+	color: white;
+}
+
+.home-head .back-icon {
+	width: 13px;
+	position: absolute;
+	top: 12px;
+	left: 10px;
+}
+
+.function-item{
+	height: 60px;
+	background: white;
+	line-height: 60px;
+	position: relative;
+	font-size: 14px;
+}
+.function-item input{
+	border: none;
+	margin: 0px;
+	padding: 0px;
+	font-size: 14px;
+	width: 100%;
+}
+
+.function-item .left-single{
+	position: absolute;
+	left: 15px;
+	    width: 80%;
+}
+.function-item .left-single label{
+	color: #ff4242;
+	margin-left: 10px;
+}
+
+.function-item .right-single{
+	position: absolute;
+	right: 20px;
+}
+.function-item .jiantou{
+	width: 10px;
+	position: absolute;
+	right: 20px;
+		top: 22px;
+}
+.function-item .right-text{
+	color: #999999;
+	position: absolute;
+	right: 40px;
+
+}
+
+/*******输入框*******/
+.input-layout1{
+    height: 50px;
+    line-height: 50px;
+	background: white;
+}
+.input-layout1 .left{
+	width: 25%;
+	float: left;
+	text-align: left;
+	padding-left: 10px;
+	color: #999999;
+	
+}
+.input-layout1 .right{
+      width: 75%;
+    float: left;
+    padding: 0px;
+    margin: 0px;
+    margin-top: 5px;
+    border: none;
+}
+
+.btn-layout{
+	text-align: center;
+	padding-left: 25px;
+	padding-right: 25px;
+}
+.btn-layout .btn{
+	background: #4391e3;
+	color: white;
+	height: 45px;
+	border-radius: 20px;
+	width: 100%;
+	margin: 0 auto;
+}
+
+.button-group{
+	height: 60px;
+	position: relative;
+}
+.button-group .pre
+{
+	position: absolute;
+	left: 10%;
+	width: 30%;
+	background: white;
+	border: 1px solid #4391e3;
+	color: #4391e3;
+	border-radius: 20px;
+	
+}
+.button-group .next
+{
+	position: absolute;
+	right: 10%;
+	width: 30%;
+	background: #4391e3;
+	color: white;
+	border: none;
+	border-radius: 20px;
+}
+/**********上方步骤指示器*********/
+.indicator-layout{
+	overflow: hidden;
+	text-align: center;
+	margin: 0 auto;
+	padding-left: 4%;
+}
+.indicator-layout .indicator-item
+{
+	height: 10px;
+	background: #ffa600;
+	float: left;
+	width: 32%;
+	margin: 0 auto;
+	border-right: 5px solid white;
+}
+.indicator-layout :last-child{
+	border-right: none;
+}
+.indicator-layout  .unfinished{
+	background: #dddddd;
+}
+
+
+.input-layout2{
+	height: 50px;
+	overflow: hidden;
+	border-bottom: 1px solid #E5E5E5;
+}
+.input-layout2 .left{
+	float: left;
+	width: 30%;
+	padding-top: 15px;
+}
+.input-layout2 .right1{
+	float: right;
+	width: 7%;
+	text-align: center;
+	line-height: 50px;
+	margin-right: 2%;
+}
+.input-layout2 .right2{
+	float: right;
+	width: 50%;
+
+		padding-top: 5px;
+}
+.input-layout2 .right2 input{
+		border: none;
+		text-align: right;
+	}
+
+
+.input-layout2 img{
+	width: 15px;
+	
+}

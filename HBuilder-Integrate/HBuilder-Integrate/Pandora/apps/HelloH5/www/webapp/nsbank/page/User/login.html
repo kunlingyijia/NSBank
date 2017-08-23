@@ -1,0 +1,303 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/login.css" rel="stylesheet" />
+		<link href="../../css/dialog/mydialog.css" rel="stylesheet" />
+		<script src="../../js/dialog/mydialog.js"></script>
+	</head>
+
+	<body>
+		<div class="banner">
+			<!--<img class="bg" src="../../img/login_banner.png" />-->
+			<img class="logo" src="../../img/nshicon.png" />
+		</div>
+		<div class="content">
+			<div class="input-layout" style="margin-top: 40px;">
+				<img class="pwd" style="width: 17px;margin-top: 7px;" src="../../img/phone.png" />
+				<input id="phoneNum" type="number" placeholder="请输入11位手机号" />
+			</div>
+			<div class="input-layout">
+				<img class="pwd" src="../../img/pwd.png" />
+				<input id="pwd" class="code" type="password" placeholder="请输入密码" />
+				<!--<div class="cutting"></div>
+				<div class="forget"> 忘记密码?</div>-->
+			</div>
+
+			<button id="login" class="login">登  录</button>
+
+			<div class="reg-layout">
+				<div class="left" onclick="forgetPwd()">忘记密码 |</div>
+				<div id="reg" class="right">&nbsp;&nbsp;现在注册 》</div>
+			</div>
+
+			<div class="open-login-layout">
+				<div class="text">
+					<div class="one"></div>
+					<div class="two">第三方登录</div>
+					<div class="three"></div>
+				</div>
+				<div class="open-login">
+					<div class="wechat">
+						<img style="width: 40px;" id="wechatLogin" src="../../img/umeng_socialize_wechat.png" />
+					</div>
+					<div class="alipay">
+						<img style="width: 40px;" id="qqLogin" src="../../img/umeng_socialize_qq.png" style="width: 32px;" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			var isplusReady = false;
+			var auths = {};
+			document.addEventListener('plusready', plusReady, false);
+
+			function plusReady() {
+				// 获取登录认证通道
+				plus.oauth.getServices(function(services) {
+					var txt = "登录认证通道信息：";
+					for(var i in services) {
+						var service = services[i];
+						auths[service.id] = service;
+						console.log(service.id + ": " + service.authResult + ", " + service.userInfo);
+
+					}
+
+				}, function(e) {
+					outLine("获取登录认证失败：" + e.message);
+				});
+
+				getPushInfo(); //推送
+			}
+			//记住账号
+			$("#phoneNum").val(localStorage.getItem(utils.phoneNum));
+
+			//		主页监听
+			document.getElementById('login').addEventListener('tap', function() {
+
+				loginBtn();
+			});
+			//注册
+			document.getElementById('reg').addEventListener('tap', function() {
+				//打开详情页面          
+				mui.openWindow({
+					id: 'reg',
+					url: 'reg.html'
+
+				});
+			});
+
+			//QQ登录
+			document.getElementById('qqLogin').addEventListener('tap', function() {
+				qqAndWechatLogin('qq');
+			});
+			//微信登录
+			document.getElementById('wechatLogin').addEventListener('tap', function() {
+				//				testShare();
+				qqAndWechatLogin('weixin');
+				//			
+
+			});
+
+			/**
+			 * qq或微信登录
+			 * @param {Object} id
+			 */
+			function qqAndWechatLogin(id) {
+				var auth = auths[id];
+				if(auth) {
+					var w = null;
+					if(plus.os.name == "Android") {
+						w = plus.nativeUI.showWaiting();
+					}
+					document.addEventListener("pause", function() {
+						setTimeout(function() {
+							w && w.close();
+							w = null;
+						}, 2000);
+					}, false);
+					auth.login(function() {
+						w && w.close();
+						w = null;
+						mui.toast("登录认证成功");
+						console.info(JSON.stringify(auth.authResult));
+						if(id == 'qq') {
+							localStorage.setItem(utils.qqOpenId, auth.authResult.openid);
+							postLogin('', '', auth.authResult.openid, '');
+						} else if(id == 'weixin') {
+							localStorage.setItem(utils.wechatOpenId, auth.authResult.openid);
+							postLogin('', '', '', auth.authResult.openid);
+						}
+					}, function(e) {
+						w && w.close();
+						w = null;
+						mui.toast("登录认证失败：" + "[" + e.code + "]：" + e.message);
+						plus.nativeUI.alert("详情错误信息请参考授权登录(OAuth)规范文档：http://www.html5plus.org/#specification#/specification/OAuth.html", null, "登录失败[" + e.code + "]：" + e.message);
+					});
+				} else {
+					mui.toast("无效的登录认证通道！");
+					plus.nativeUI.alert("无效的登录认证通道！", null, "登录");
+				}
+			}
+
+			var backButtonPress = 0;
+			mui.back = function(event) {
+				backButtonPress++;
+				if(backButtonPress > 1) {
+					plus.runtime.quit();
+				} else {
+					plus.nativeUI.toast('再按一次退出应用');
+				}
+				setTimeout(function() {
+					backButtonPress = 0;
+				}, 1000);
+				return false;
+			};
+			/**
+			 * 登录
+			 */
+			function loginBtn() {
+				var phoneNum = $("#phoneNum").val();
+				var pwd = $("#pwd").val();
+				if(utils.isNone(phoneNum)) {
+					mui.toast("手机号码必填");
+					return;
+				}
+				if(utils.isNone(pwd)) {
+					mui.toast("密码必填");
+					return;
+				}
+				postLogin(phoneNum, pwd, '', '');
+			}
+
+			function postLogin(phoneNum, pwd, qqopenid, wechatopenid) {
+				var obj = new Object();
+				obj.phone = phoneNum;
+				obj.pwd = pwd;
+				obj.qqOpenid = qqopenid;
+				obj.wechatOpenid = wechatopenid;
+				obj.clientid = plus.push.getClientInfo().clientid;
+				dialog.showDialog();
+
+				utils.ajax(utils.getUrl("Login"), obj, function(data) {
+
+					dialog.closeDialog();
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg);
+						var result = JSON.parse(data.data);
+						var des3en = DES3.encrypt(utils.key, pwd);
+						localStorage.setItem(utils.userId, result.userid);
+						localStorage.setItem(utils.pwd, des3en);
+						localStorage.setItem(utils.headImg, result.headImg);
+						localStorage.setItem(utils.phoneNum, result.phone);
+						localStorage.setItem(utils.blacklist_user, result.blacklist_user);
+						localStorage.setItem(utils.integral, result.integral);
+						localStorage.setItem(utils.username, result.username);
+						localStorage.setItem(utils.bankcard_id, result.bankcard_id);
+						localStorage.setItem(utils.bankcard_statue, result.bankcard_statue);
+						localStorage.setItem(utils.idcard_status, result.idcard_status);
+						localStorage.setItem(utils.credit_status, result.credit_status);
+						localStorage.setItem(utils.invite_code, result.invite_code);
+
+						if(localStorage.getItem(utils.isFirstSettingLocalPwd) != 1) //如果没设置过解锁码则跳转
+						{
+							mui.openWindow({
+								id: 'locker',
+								url: 'locker-dom.html'
+
+							});
+						} else {
+							mui.openWindow({
+								id: 'main_frame',
+								url: '../main_frame.html',
+								createNew: true,
+							});
+						}
+
+					} else if(data.code == utils.FAIL) {
+						mui.toast(data.msg);
+					} else if(data.code == 2) { //微信登录
+						mui.toast(data.msg);
+						mui.openWindow({
+							id: 'reg',
+							url: 'reg.html?wechat=' + wechatopenid + '&qq=',
+
+						});
+					} else if(data.code == 3) { //qq登录
+						mui.toast(data.msg);
+						mui.openWindow({
+							id: 'reg',
+							url: 'reg.html?wechat=&qq=' + qqopenid,
+
+						});
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog();
+					mui.toast(errorThrown);
+				})
+
+			}
+
+			function getPushInfo() {
+				var info = plus.push.getClientInfo();
+				//		    alert( "clientid: "+info.clientid );
+				console.info("clientid: " + info.clientid)
+
+			}
+
+			function forgetPwd() {
+				
+					mui.openWindow({
+					id: 'forgetpwd',
+					url: 'forgetpwd.html'
+
+				});
+				
+				// H5界面向原生界面传值
+//				var params = {
+//					name: "H5+ iOS平台插件开发",
+//					des: "http://hudqstudio.online",
+//					title: "返回"
+//				};
+//				plus.fingerprintIdent.hgdqGotoNative(params, function(data) {
+//					alert(data.name)
+//
+//					reciveData.innerText = data.name;
+//				}, function(data) {});
+			}
+
+			document.addEventListener("plusready", function() {
+				var _BARCODE = 'plugintest',
+					B = window.plus.bridge;
+				var fingerprintIdent = {
+					hgdqGotoNative: function(params, successCallback, errorCallback) {
+						var success = typeof successCallback !== 'function' ? null : function(args) {
+								successCallback(args);
+							},
+							fail = typeof errorCallback !== 'function' ? null : function(code) {
+								errorCallback(code);
+							};
+						callbackID = B.callbackId(success, fail);
+						//通知执行异步方法
+						return B.exec(_BARCODE, "hgdqGotoNative", [callbackID, params]);
+					}
+				};
+				window.plus.fingerprintIdent = fingerprintIdent;
+			}, true);
+		</script>
+	</body>
+
+</html>

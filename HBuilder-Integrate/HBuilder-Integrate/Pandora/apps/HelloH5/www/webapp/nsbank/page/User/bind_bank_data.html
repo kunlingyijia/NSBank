@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>绑定银行卡</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link href="../../css/bind_bank_data.css" rel="stylesheet" />
+	</head>
+
+	<body style="background: #f5f5f5;">
+
+		<div>
+
+			<div class="mui-bar  home-head" style="background: white;">
+				<img class="back-icon" id="back" src="../../img/back.png" />
+					<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+
+				<h1 id="title" class="mytitle">绑定银行卡</h1>
+
+			</div>
+			<div id="headLayout" style="padding-top: 45px;">
+
+				<div class="tv_prompt"> 请拍摄银行卡正面，必须使用农商行卡</div>
+				<div class="photo_layout">
+					<img id="img_bank" class="img_photo_bank_car" src="../../img/photo_bank.png" />
+					<img class="btn_photo" src="../../img/photo.png" />
+					<img class="img_watermark" src="../../img/watermark.png" />
+				</div>
+
+			</div>
+			<div id="content" class="card_layout">
+				<div class="card_num_layout">
+					<div class="tv_card_num">卡号</div>
+					<input id="input_card_num" maxlength="20" type="number" class="input_card_num" placeholder="请输入卡号" />
+				</div>
+				<div class="card_num_layout">
+					<div class="tv_card_num">卡名称</div>
+					<input id="input_card_name" type="text" class="input_card_num" align="right" placeholder="请输入卡名称" />
+				</div>
+				<div class="card_num_layout">
+					<div class="tv_card_num">卡类型</div>
+					<div class="input_card_num" style="height: 20px; margin-top: 10px;">储蓄卡</div>
+				</div>
+			</div>
+			<div class="tv_msg">请核对您的姓名和身份证号码,若有错误点击上图重新拍摄。</div>
+
+			<div class="card_layout">
+
+				<div class="card_num_layout">
+					<div class="tv_card_num">持卡人</div>
+					<input id="input_name" type="text" class="input_card_num" align="right" placeholder="请输入真实姓名" />
+				</div>
+
+				<div class="card_num_layout">
+					<div class="tv_card_num">手机号 </div>
+					<input id="input_phone" maxlength="11" type="tel" class="input_card_num" align="right" placeholder="请输入银行预留手机号" />
+				</div>
+
+				<div class="card_num_layout">
+					<div class="tv_card_num">支行</div>
+					<input id="input_bank_location" type="text" class="input_card_num" align="right" placeholder="请填写支行位置" />
+				</div>
+			</div>
+
+			<div class="btn-layout" style="margin-top: 30px; margin-bottom: 20px;">
+				<button id="btn_yes" class="btn">确定</button>
+			</div>
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/dialog/mydialog.js"></script>
+
+		<script type="text/javascript">
+			var bankimg = "";
+			mui.ready(function() {
+
+			})
+
+			document.getElementById("back").addEventListener('tap', function() {
+				mui.back();
+			});
+
+			/**
+			 * 证件正面
+			 */
+			document.getElementById('headLayout').addEventListener('tap', function() {
+				utils.takePhoto(function(file) {
+					dialog.showDialog();
+					//上传图片后回调
+					utils.uploadImg(function(imgurl) {
+						$("#img_bank").attr("src", imgurl);
+						bankimg = imgurl;
+						console.log(bankimg);
+
+					}, file);
+
+				});
+			});
+			document.getElementById('btn_yes').addEventListener('tap', function() {
+				checkFormat();
+			});
+			/**
+			 * 检查格式是否合法
+			 */
+			function checkFormat() {
+
+				if(utils.isNone(bankimg)) {
+					mui.toast("请拍摄银行卡正面");
+					return;
+				}
+				var banknum = $("#input_card_num").val();
+				if(utils.isNone(banknum)) {
+					mui.toast("请输入卡号");
+					return;
+				}
+				if(banknum.length > 20 || banknum.length < 16) {
+					mui.toast("请输入有效卡号");
+					return;
+				}
+
+				var bankname = $("#input_card_name").val();
+				if(utils.isNone(bankname)) {
+					mui.toast("请输入卡名称");
+					return;
+				}
+				var cardholder = $("#input_name").val();
+				if(utils.isNone(cardholder)) {
+					mui.toast("请输入持卡人姓名");
+					return;
+				}
+				var bank_leave_phone = $("#input_phone").val();
+				if(utils.isNone(bank_leave_phone)) {
+					mui.toast("请输入预留手机号");
+					return;
+				}
+				var subbranch_bank = $("#input_bank_location").val();
+				if(utils.isNone(subbranch_bank)) {
+					mui.toast("请输入支行位置");
+					return;
+				}
+				bindBankCard(banknum, bankname, cardholder, bank_leave_phone, subbranch_bank);
+			}
+
+			/**
+			 *绑定银行卡
+			 * @param {Object} suggestion_content  
+			 */
+			function bindBankCard(banknum, bankname, cardholder, bank_leave_phone, subbranch_bank) {
+
+				dialog.showDialog();
+				var obj = new Object();
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.bankimg = bankimg;
+				obj.banknum = banknum; //卡号
+				obj.bankname = bankname; //卡名称
+				obj.bankcard_type = "1"; //卡类型：1-储蓄卡；2信用卡
+				obj.cardholder = cardholder; //持卡人
+				obj.bank_leave_phone = bank_leave_phone; //手机号
+				obj.subbranch_bank = subbranch_bank; //支行位置
+				obj.handle_type = "1"; //操作类型：1-绑定（新增）；2-修改
+
+				utils.ajax(utils.getUrl("bindBankCard"), obj, function(data) {
+
+						dialog.closeDialog();
+						console.log(data.data);
+
+						if(data.code == utils.SCUESS) {
+							var address_manage = plus.webview.getWebviewById('bankManage');
+							if(address_manage != null)
+								address_manage.reload();
+							mui.back();
+						} else {
+							mui.toast(data.msg);
+						}
+					},
+					function(xhr, type, errorThrown) {
+						dialog.closeDialog();
+						mui.toast(errorThrown);
+					})
+			}
+			
+					document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+		</script>
+	</body>
+
+</html>

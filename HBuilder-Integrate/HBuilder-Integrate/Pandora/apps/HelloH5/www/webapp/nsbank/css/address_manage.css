@@ -1,0 +1,79 @@
+.address-item{
+	/*height: 200px;*/
+	background: white;
+	padding-left: 10px;
+	
+
+}
+
+.address-item:before {
+	background: white;
+}
+
+.address-item:active {
+	background: #f4f4f4;
+}
+
+
+
+.address-item .one{
+	padding-top: 10px;
+		height: 20px;
+}
+.address-item .one .left{
+	float: left;
+	width: 20%;
+}
+.address-item .one .right{
+	float: left;
+	width: 80%;
+	padding-right: 10px;
+}
+.address-item  .address{
+	margin-top: 16px;
+	/*height: 20px;*/
+	color: #888888;
+		padding-bottom: 20px;
+	border-bottom: 1px solid #E5E5E5;
+}
+.address-item  .bottom-layout{
+	position: relative;
+	height: 40px;
+	color: #888888;
+}
+
+.address-item  .bottom-layout .select{
+	width: 20px;
+	position: absolute;
+	top: 10px;
+}
+.address-item  .bottom-layout .normal{
+	left: 25px;
+	position: absolute;
+	top: 10px;
+	
+}
+.address-item  .bottom-layout .del-text{
+	right: 25px;
+	position: absolute;
+	top: 10px;
+	
+}
+.address-item  .bottom-layout .del-img{
+	right: 60px;
+	position: absolute;
+	top: 10px;
+	width: 16px;
+}
+.address-item  .bottom-layout .edit-text{
+	right: 90px;
+	position: absolute;
+	top: 10px;
+	
+}
+.address-item  .bottom-layout .edit-img{
+	right: 125px;
+	position: absolute;
+	top: 10px;
+	width: 20px;
+}

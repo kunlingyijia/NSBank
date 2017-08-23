@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link href="../../css/dialog/mydialog.css" rel="stylesheet" />
+		<script src="../../js/dialog/mydialog.js"></script>
+		<style>
+			.face-bg {
+				width: 100%;
+			}
+		</style>
+	</head>
+
+	<body style="background: #f5f5f5;font-size: 14px;">
+		<div id="headLayout" class="mui-bar  home-head " style="background: white;">
+			<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+			<img id="back" class="head-lefticon" style="width: 10px; top: 15px;" src="../../img/back.png" />
+			<h3 id="title" class="mytitle">人脸识别</h1>
+
+		</div>
+			<div style="height: 44px;"></div>
+		<div class="indicator-layout">
+			<div class="indicator-item"></div>
+				<div class="indicator-item unfinished"></div>
+					<div class="indicator-item unfinished"></div>
+		</div>
+		<img class="face-bg" src="../../img/face_bg.png" />
+		<div style="text-align: center; margin-top: 20px;">
+			请用前置摄像头拍照正脸，并保持光线充足
+		</div>
+		
+			<div class="btn-layout" style="margin-top: 30px; margin-bottom: 20px;">
+				<button id="takePhoto" class="btn" style="width: 80%;">开始验证</button>
+			</div>
+		<div style="text-align: center; margin-top: 20px;color: #aaaaaa;">
+			人脸验证上传的照片用于身份核实
+		</div>	
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/common.js"></script>
+			<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script type="text/javascript">
+			mui.init({
+					statusBarBackground: '#ffffff', 
+			})
+			/**
+			 * 开始拍照
+			 */
+			document.getElementById('takePhoto').addEventListener('tap', function() { 
+//				
+//					var cmr = plus.camera.getCamera();
+//						cmr.captureImage(function(p) {
+//							plus.io.resolveLocalFileSystemURL(p, function(entry) {
+//								console.info(entry.name);
+////								utils.commpressImg(p, entry.name, callBack);
+//							}, function(e) {
+//								alert('读取拍照文件错误：' + e.message);
+//							});
+//						}, function(e) {
+////							alert('失败：' + e.message);
+//						});
+//			if
+//	utils.takePhoto(function(file){
+//				
+//					dialog.showDialog();
+//					console.info(utils.obj2Str(file));
+//					upload(file);
+//					utils.uploadImg(function(imgurl){
+//						FaceAuth(imgurl);
+//					},file);
+//				
+//				});
+//return;
+				if(mui.os.android)
+				{
+					var REQUESTCODE = 1000;
+					main = plus.android.runtimeMainActivity();
+					var Intent = plus.android.importClass('android.content.Intent');
+					var FaceIdActivity = plus.android.importClass("io.dcloud.dw.FaceIdActivity");
+					var intent = new Intent(main, FaceIdActivity.class);
+					main.onActivityResult = function(requestCode, resultCode, data) {
+						if(2 == resultCode) {
+							var result = data.getStringExtra("result");
+							var urlPath = data.getStringExtra("urlPath");
+							var urlName = data.getStringExtra("urlName");
+							result = JSON.parse(result)
+						//	alert(utils.obj2Str(result))
+							
+						//alert(result.result)
+							if(result.result=='验证成功')
+							{
+								mui.toast("验证成功，正在上传图片");
+								var file = new Object();
+								file.path = urlPath;
+								file.name = urlName;
+							
+								utils.uploadImg(function(imgurl){
+											FaceAuth(imgurl);
+										},file);
+  
+								//alert(utils.obj2Str(file))
+								
+								
+							}
+							else{
+								mui.toast("验证失败，请从新检测")
+							}
+						} else {
+							
+						}
+					};
+					main.startActivityForResult(intent, REQUESTCODE);
+				}
+				else if(mui.os.ios)
+				{
+						// H5界面向原生界面传值
+						var params = {
+							name: "H5+ iOS平台插件开发",
+							des: "http://hudqstudio.online",
+							title: "返回"
+						};
+						plus.fingerprintIdent.hgdqGotoNative(params, function(data) {
+							
+							if(data.code == '-1')
+							{
+								mui.toast('识别成功');
+								var file = new Object();
+								file.path = data.path;
+								file.name = data.name;
+//								$(".face-bg").attr("src",data.path);
+								FaceAuth(data.path);
+								
+							}
+							else if(data.code == '-2')
+							{
+								mui.toast("图片上传失败")
+							}
+							else
+							{
+								mui.toast("验证失败，请从新检测")
+							}
+		
+							
+						}, function(data) {});
+				}
+
+		
+//				
+//			
+			});
+			
+			document.addEventListener("plusready", function() {
+				var _BARCODE = 'plugintest',
+					B = window.plus.bridge;
+				var fingerprintIdent = {
+					hgdqGotoNative: function(params, successCallback, errorCallback) {
+						var success = typeof successCallback !== 'function' ? null : function(args) {
+								successCallback(args);
+							},
+							fail = typeof errorCallback !== 'function' ? null : function(code) {
+								errorCallback(code);
+							};
+						callbackID = B.callbackId(success, fail);
+						//通知执行异步方法
+						return B.exec(_BARCODE, "hgdqGotoNative", [callbackID, params]);
+					}
+				};
+				window.plus.fingerprintIdent = fingerprintIdent;
+			}, true);
+			
+			
+			
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+			
+
+
+function FaceAuth(imgurl)
+{
+	var obj = new Object();
+	obj.phone = localStorage.getItem(utils.phoneNum);
+	obj.userid = localStorage.getItem(utils.userId);
+	obj.face_img_url = imgurl;
+//		alert(imgurl)
+	utils.ajax(utils.getUrl("FaceAuth"), obj, function(data) {
+		dialog.closeDialog()
+		if(data.code == utils.SCUESS) {
+			mui.toast(data.msg);
+			mui.openWindow({
+					id: 'identity_certificate',
+					url: 'identity_certificate.html'
+					
+
+				});
+
+		} else {
+			mui.toast(data.msg);
+		}
+
+	}, function(xhr, type, errorThrown) {
+		dialog.closeDialog()
+		mui.toast(errorThrown);
+	})
+}
+		document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});		
+		</script>
+	</body>
+
+</html>

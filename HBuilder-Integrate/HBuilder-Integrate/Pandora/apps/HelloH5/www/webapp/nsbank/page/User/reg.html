@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>用户注册</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/login.css" rel="stylesheet" />
+				<link href="../../css/dialog/mydialog.css" rel="stylesheet" />
+			<script src="../../js/dialog/mydialog.js"></script>
+	</head>
+
+	<body>
+		<div class="banner">
+			<img class="logo" src="../../img/nshicon.png" />
+			<img src="../../img/back_reg.png" id="back"  style="position: absolute; top: 15px; left: 15px;"/>
+		</div>
+		<div id="content" class="content">
+			<div class="input-layout" style="margin-top: 40px;">
+				<img class="pwd" src="../../img/phone.png" style="margin-top: 10px;" />
+				<input id="phoneNum" type="number" style="margin-bottom: 5px;margin-top: 7px;" placeholder="请输入11位手机号" />
+			</div>
+			<div class="input-layout">
+				<img class="pwd" src="../../img/qccode.png" />
+				<input id="verCode" class="code" style="margin-bottom: 5px" type="number" placeholder="请输入验证码" />
+				<div class="cutting"></div>
+				<button id="sendCode" class="forget"> 获取验证码</button>
+			</div>
+			<div class="input-layout" id="inputLayout">
+				<img class="pwd" src="../../img/pwd.png" style="margin-top: 15px;" />
+				<input  id="pwd" type="number"  style="margin-top: 10px;margin-bottom: 5px;" placeholder="请输入6至20位密码" />
+			</div>
+
+			<div class="xy">
+				我已阅读并同意《用户协议》
+			</div>
+			<button id="regBtn" class="login" style="margin-top: 10px;">注   册</button>
+
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			init();
+			var ischeckPwd = true;//是否检查密码
+			
+			function init()
+			{
+				var wechat = utils.GetQueryString("wechat");
+				var qq  =utils.GetQueryString("qq");
+				if(!utils.isNone(wechat) || !utils.isNone(qq))//绑定qq的情况
+				{
+					$("#pwd").val('111');
+					$("#inputLayout").hide();
+					ischeckPwd= false;
+					$("#regBtn").text('绑定');
+				}
+			
+			}
+		
+			//注册
+			document.getElementById('regBtn').addEventListener('tap', function() {
+				var phoneNum = $("#phoneNum").val();
+				var verCode = $("#verCode").val();
+				var pwd = $("#pwd").val();
+				if(utils.isNone(phoneNum)){
+						mui.toast("手机号码必填");
+						return;
+				}
+				if(utils.isNone(verCode)){
+						mui.toast("验证码必填");
+						return;
+				}
+				if(utils.isNone(pwd)){
+						mui.toast("密码必填");
+						return;
+				}
+//				
+//				if(ischeckPwd==true && pwd.length<6)
+//				{
+//						mui.toast("密码应该大于6位");
+//						return;
+//				}
+				var obj = new Object();
+				obj.phone = phoneNum;
+				obj.verifyCode = verCode;
+				obj.pwd = pwd;
+				obj.wechatOpenid = utils.GetQueryString("wechat");
+				obj.qqOpenid =utils.GetQueryString("qq");
+				obj.invite_code = '0';
+				obj.code_MAC= plus.device.uuid;
+				obj.name_MAC = plus.device.model;
+				
+				
+				dialog.showDialog()
+				utils.ajax(utils.getUrl("RegUer"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg+",请登录");
+						setTimeout(function(){
+							 mui.openWindow({
+						      id:'login',
+						      url:'login.html'						    
+						  });
+						  
+						},1000);
+						
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+			});
+			
+			//发送验证码
+			document.getElementById('sendCode').addEventListener('tap', function() {
+				 time(this);
+				 postCode();
+			});
+			
+			var wait=30;  
+			function time(o) {  
+		        if (wait == 0) {  
+		            o.removeAttribute("disabled");            
+		            o.innerHTML="发送验证码";  
+		            wait = 30;  
+		        } else {  
+		            o.setAttribute("disabled", true);  
+		            o.innerHTML="重新发送(" + wait + ")";  
+		            wait--;  
+		            setTimeout(function() {  
+		                time(o)  
+		            },  
+		            1000)  
+		        }  
+		    }  
+    		/**
+    		 * 发送验证码
+    		 */
+    		function postCode()
+    		{
+    				var obj = new Object();
+				obj.phone = $("#phoneNum").val();
+				obj.type = 1;
+				utils.ajax(utils.getUrl("sendMobileCode"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+						
+						
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+		
+    		}
+    		
+    		
+    		document.getElementById('back').addEventListener('tap', function() {
+				 mui.back()
+			});
+		</script>
+	</body>
+
+</html>

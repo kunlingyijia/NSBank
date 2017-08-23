@@ -1,0 +1,9 @@
+
+target 'HBuilder' do
+pod 'AFNetworking'
+pod 'SVProgressHUD'
+pod 'Masonry'
+pod 'SDWebImage'
+
+end
+

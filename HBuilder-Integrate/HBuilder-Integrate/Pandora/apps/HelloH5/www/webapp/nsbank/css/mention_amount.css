@@ -1,0 +1,79 @@
+.head-lefticon {
+	width: 16px;
+	position: absolute;
+	top: 10px;
+	left: 10px;
+}
+
+.mytitle {
+	text-align: center;
+	font-size: 18px;
+	width: 150px;
+	margin: 0 auto;
+	margin-top: 14px;
+} 
+
+.mytitle-message{
+	text-align: center; 
+	font-size: 12px;  
+	height: 40px; 
+	color: white; 
+	line-height: 40px;
+	background-color: #127ed8; 
+}
+.mention-amount-taske{
+	float: left;
+	height: 70px;
+	width: 100%; 
+	background: white;
+}
+
+.mention-amount-task-layout-image{
+	margin-top: 20px;
+	margin-left: 10px;
+	margin-right: 10px;
+	float: left;
+}
+
+.mention-amount-taske-item{
+	float: left;
+	width: 30%;
+	
+}
+.mention-text{
+	color: black;
+	float: left;
+}
+.title-message{
+	float: left;
+}
+
+.min-date-text{
+	width: 100%; 
+	background: white;
+	/*margin-top: 100px;*/
+	text-indent:15px; 
+	/*height: 30px;*/
+	/*margin-top: 10px;*/
+	line-height: 30px;
+	font-size: 12px;
+	color: #888888;
+}
+.mine-data-certification{
+	float: left;
+	text-align: center;
+	width: 25%;
+	background: white;  
+	position: relative;
+	    height: 76px;
+}
+.mine-data-certification-img{
+	margin-top: 10px;
+	width: 25px;
+	height: 25px;
+}
+
+.mine-data-certification-text{
+	color: #333333;
+	font-size: 12px;
+}

@@ -1,0 +1,56 @@
+.mine_head_img_layout{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: 100%;
+	background: white;
+	height: 80px;
+	position: relative;
+} 
+.mine_head_text{
+	position: absolute;
+	left: 5%; 
+	margin-top: 30px; 
+	color: #333333;
+}
+.mine_head_img{
+	position: absolute;
+    top: 15px;
+    width: 50px;
+    height: 50px;
+    right: 57px;
+    border-radius: 69px;
+}
+.mine_head_next{
+	
+	position: absolute;
+	left: 5%; 
+	top: 30px; 
+	width:10px;
+	margin-left: 85%;
+}
+.mine_name_layout{
+	
+	margin-top: 1px;
+	width: 100%;
+	background: white;
+	height: 50px;
+	position: relative;
+}
+.mine_name_text{
+	position: absolute;
+	left: 5%; 
+	font-size: 14px;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	color: #343434;
+}
+.user_name{
+	position: absolute;
+	width: 95%;
+	height: 50px;
+	line-height: 50px;
+	text-align: right;
+	font-size: 15px;
+	color: #333333;
+}

@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link href="../../css/mui.picker.css" rel="stylesheet" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+	</head>
+
+	<body style="background: #f5f5f5;font-size: 14px;">
+		<div id="headLayout" class="mui-bar  home-head " style="background: white;">
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+			<img id="back" class="head-lefticon" style="width: 10px; top: 15px;" src="../../img/back.png" />
+			<!--	<div id="citySelect2" class="head-lefticon-text">城市选择</div>-->
+			<h3 id="title" class="mytitle">新增收货地址</h1>
+		
+		</div>
+		<div style="height: 44px;"></div>
+		<div class="input-layout1" style="margin-top: 10PX;">
+			<div class="left">收货人</div>
+			<input id="personName" class="right" type="text" placeholder="请输入收货人姓名" />
+		</div>
+		
+			<div class="input-layout1" style="margin-top: 10PX;">
+			<div class="left">手机号码</div>
+			<input id="phone" class="right" type="number" placeholder="请输入手机号码" />
+		</div>
+		
+		<div class="input-layout1" style="height: 240px;margin-top: 10PX; ">
+			<div class="left">配送地址</div>
+			<div class="right" style="width: 75%;margin-top: 0px;" >
+				<div id="province" class="function-item" style=" border-bottom: 1px solid #EEEEEE;">
+					<div id="provinceText" class="left-single" >请选择省份</div>
+					<img src="../../img/jt.png"  class="jiantou"/>
+				</div>
+				<div id="city" class="function-item" style=" border-bottom: 1px solid #EEEEEE;">
+					<div id="cityText" class="left-single" >请选择城市</div>
+					<img src="../../img/jt.png"  class="jiantou"/>
+				</div>
+				<div id="area" class="function-item" style=" border-bottom: 1px solid #EEEEEE;">
+					<div id="areaText" class="left-single" >请选择区域</div>
+					<img src="../../img/jt.png"  class="jiantou"/>
+				</div>
+				<div class="function-item" style="">
+					<div class="left-single" >
+						<input id="address" type="text"  placeholder="请输入收货地址" style="border: none;"/>
+					</div>
+					
+				</div>
+				</div>
+		</div>
+		
+			<div class="input-layout1" style="margin-top: 10PX;">
+			<div class="left">邮政编码</div>
+			<input id="postcode" class="right" type="number" placeholder="请输入邮政编码" />
+		</div>
+		
+		
+			<div class="btn-layout" style="margin-top: 30px; margin-bottom: 20px;">
+				<button  id="finished" class="btn">完 成</button>
+			</div>
+		
+		<script src="../../js/mui.min.js"></script>
+			<script src="../../js/jquery-3.2.1.min.js"></script>
+			<script src="../../js/mui.picker.js"></script>
+		<script src="../../js/mui.poppicker.js"></script>
+		<script src="../../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/DES3.js"></script>
+			<script src="../../js/utils.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			var addressId='';//收货地址id  新增没有 编辑有
+			var isselectCity = false;//是否选择城市
+			initData();
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+			var cityPicker3 = new mui.PopPicker({
+						layer: 3
+			});
+			cityPicker3.setData(cityData3);
+			document.getElementById("province").addEventListener("tap", function() {
+				showCity();
+			});
+			document.getElementById("city").addEventListener("tap", function() {
+					showCity();
+			});
+			document.getElementById("area").addEventListener("tap", function() {
+					showCity();
+			});
+			
+			function initData()
+			{
+				addressId = utils.GetQueryString("addressId");
+				
+				if(utils.isNone(addressId))//新增
+				{
+					
+				}
+				else //编辑
+				{
+					addressId = addressId;
+					$("#title").text('编辑收货地址')
+					var receiverAddressEdit = JSON.parse(localStorage.getItem(utils.receiverAddressEdit))
+					console.info(localStorage.getItem(utils.receiverAddressEdit))
+					$("#personName").val(receiverAddressEdit.consignee);
+					$("#phone").val(receiverAddressEdit.contact_phone);
+					$("#provinceText").text(receiverAddressEdit.province);
+					$("#cityText").text(receiverAddressEdit.city);			
+					$("#areaText").text(receiverAddressEdit.area);	
+					$("#address").val(receiverAddressEdit.address);
+					$("#postcode").val(receiverAddressEdit.postcode);
+					isselectCity = true;
+				}
+			}
+			
+			
+			
+			/**
+			 * 显示城市
+			 */
+			function showCity()
+			{
+					cityPicker3.show(function(items) {
+//							cityResult3.innerText = "你选择的城市是:" + _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(items[2], 'text');
+//							//返回 false 可以阻止选择框的关闭
+//							//return false;
+//						});
+						isselectCity = true;
+						$("#provinceText").text(items[0].text);
+						$("#cityText").text(items[1].text);
+						$("#areaText").text(items[2].text);
+					}, false);
+			}
+			
+			/**
+			 * 添加完成
+			 */
+			document.getElementById("finished").addEventListener("tap", function() {
+					if(utils.isNone($("#personName").val()))
+					{
+						mui.toast("收货人不能为空")
+						return;
+					}
+					if(utils.isNone($("#phone").val()))
+					{
+						mui.toast("手机号不能为空")
+						return;
+					}
+					if(utils.isNone($("#postcode").val()))
+					{
+						mui.toast("邮政编码不能为空")
+						return;
+					}
+					if(utils.isNone($("#address").val()))
+					{
+						mui.toast("收货地址不能为空")
+						return;
+					}
+					if(!isselectCity)
+					{
+						mui.toast("城市未选择")
+						return;
+					}
+					
+					dialog.showDialog();
+				var obj = new Object();
+				obj.phone =  localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.consignee =$("#personName").val();
+				obj.contact_phone =$("#phone").val();
+				obj.consignee =$("#personName").val();
+				obj.province =$("#provinceText").text();
+				obj.city =$("#cityText").text();			
+				obj.area =$("#areaText").text();	
+				obj.address =$("#address").val();
+				obj.postcode =$("#postcode").val();
+				obj.receiver_id = addressId;
+				obj.default_condition = 0;//默认地址
+			
+							
+				utils.ajax(utils.getUrl("disposeReceiverAddress"), obj, function(data) {		
+					dialog.closeDialog();
+					
+					if(data.code == utils.SCUESS) {
+						mui.toast(data.msg);
+//						localStorage.setItem(utils.receiverAddress,utils.obj2Str(obj));
+						var address_manage = plus.webview.getWebviewById('address_manage');
+						if(address_manage!=null)
+                			address_manage.reload();
+                			mui.back();
+
+					} else {
+						mui.toast(data.msg);
+					}
+			
+				}, function(xhr, type, errorThrown) {
+						dialog.closeDialog();
+					mui.toast(errorThrown);
+				})	
+				
+				
+			});
+				document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+			
+		</script>
+	</body>
+
+</html>

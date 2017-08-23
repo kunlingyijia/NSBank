@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>我的消息</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />		
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		
+		<link rel="stylesheet" href="../../css/mine_message.css" />
+	
+
+	</head>
+	<body style="background: white;">
+
+		<div id="headLayout" class="mui-bar  home-head" style="background: white;">
+			<img class="back-icon" id="back" src="../../img/back.png" />
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+			<h1 id="title" class="mytitle">我的消息</h1>
+
+		</div>
+		
+		<div  style="padding-top: 45px; overflow: hidden;">
+			<h3 style="text-align: center;margin-top: 10px; margin-bottom: 10px;"> </h3>
+			<div id="content" style="margin: 8px;">
+				
+			</div>
+			
+		</div>
+		
+		
+			<script src="../../js/mui.min.js"></script>
+			<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/vue.min.js"></script>
+
+			<script>
+			mui.init({
+				swipeBack:true, //启用右滑关闭功能
+			})
+		
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+			init();
+			function init()
+			{
+				var msgTitle =localStorage.getItem(utils.msgTitle);
+				var msgContent =localStorage.getItem(utils.msgContent);
+				$('h3').text(msgTitle)	
+				$('#content').text(msgContent)
+			}
+
+			document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+		</script>
+	</body>
+</html>

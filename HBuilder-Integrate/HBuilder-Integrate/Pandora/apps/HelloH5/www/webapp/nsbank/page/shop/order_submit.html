@@ -1,0 +1,287 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>提交订单</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+			<link href="../../css/common.css" rel="stylesheet" />
+			<link href="../../css/order_submit.css" rel="stylesheet" />
+	</head>
+
+	<body style="background: #f5f5f5;font-size: 15px;">
+		<div id="headLayout" class="mui-bar  home-head " style="background: white;">
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+
+			<img id="back" class="head-lefticon" style="width: 10px; top: 15px;" src="../../img/back.png" />
+			<!--	<div id="citySelect2" class="head-lefticon-text">城市选择</div>-->
+			<h3 id="title" class="mytitle">订单填写</h1>
+		
+		</div>
+		<div style="height: 44px;"></div>
+		<div id="addAddress" class="add-address">
+			<div class="left">添加收货地址</div>
+			<img src="../../img/back_white.png" />
+		</div>
+		
+		<div id="addressLayout" class="address-layout">
+			<div class="left">
+				<div class="consignee">
+					<div id="reciverName" class="person">收货人：张三</div>
+					<div class="phone" id="reciverPhone">15005046164</div>
+				</div>
+				<div id="reciverAddress" class="address">收货地址：福建省福州市仓山区车库咖啡5009</div>
+			</div>
+			<div class="right"><img src="../../img/jt.png"/></div>
+		</div>
+		
+		<div class="commodity-item" id="commodityItem">
+			<div class="left">
+				<img id="commodityImg" src="../../img/commy.jpg" />
+			</div>
+			<div class="right">
+				<div class="one" id="commodityName">V型枕</div>
+				<div class="two"><label id="intergral">0000</label>积分</div>
+				<div class="three" id="marketPrice">市场参考价：00.00元</div>
+			</div>
+		</div>
+		
+		<div class="function-item" style="margin-top: 10px;">
+			<div class="left-single" style="color: #999999;">数量</div>
+			<div class="right-single">X 1</div>
+		</div>
+		
+		<div id="discountLayout" class="function-item" style="margin-top: 10px;">
+			<div  class="left-single" >抵扣券 <label id="discountName">正在获取中...</label></div>
+			<div class="right-text"></div>
+			<!--<img src="../../img/jt.png"  class="jiantou"/>-->
+		</div>
+		
+		<div class="buy-layout">
+			<div class="tips">单价:</div>
+			<div class="buy-intergal"> <label id="totalIntergal">2990 </label>积分</div>
+			<button id="buyNow" class="buy">立即下单</button>
+		</div>
+		
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+			<script src="../../js/dialog/mydialog.js"></script>
+			<script src="../../js/utils.js"></script>
+			<script src="../../js/jquery-3.2.1.min.js"></script>
+				<script src="../../js/vue.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			var commodityId;
+			var commodityInfo = new Object();//商品信息
+			var shopId;
+			var tickerList = new Array();//优惠券列表
+			var currentTickerId ='';//当前选择优惠券id
+			var discount_integral =0;//优惠金额
+			var currentTickerObj = null;//优惠券
+			var reciverid='';//收货地址id
+			initData();
+			initReceiverAddress();
+			
+			
+			function initData(){
+				commodityId= utils.GetQueryString('commodityId');//商品id
+				shopId= utils.GetQueryString('shopId');//店铺id
+				//检查是否有收货地址
+				if(utils.isNone(localStorage.getItem(utils.receiverAddress)))
+				{
+					$("#addAddress").show();
+					$("#addressLayout").hide();
+				}
+				else
+				{
+					$("#addressLayout").show();
+					$("#addAddress").hide();
+				}
+				commodityInfo = JSON.parse(localStorage.getItem(utils.commodityInfo));
+//				alert(localStorage.getItem(utils.commodityInfo))
+				$("#commodityName").text(commodityInfo.cm_name)
+				$("#intergral").text(commodityInfo.integral_price);
+				$("#marketPrice").text("市场参考价："+commodityInfo.market_price+"元")
+				$("#commodityImg").attr("src",commodityInfo.show_imgs);
+				
+//				dialog.showDialog();
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.shop_id =shopId;
+				utils.ajax(utils.getUrl("queryCanUseDiscountTicket"), obj, function(data) {		
+					dialog.closeDialog();
+					
+					if(data.code == utils.SCUESS) {
+						var arr = JSON.parse(data.data);
+						if(arr.length>0)
+						{
+							var availableTiceker = new Array();
+							
+							$(arr).each(function(index,val){
+								console.info(val.limit_integral)
+							
+								//可用优惠券
+							
+								if(commodityInfo.integral_price>=parseInt(val.limit_integral))
+								{
+									availableTiceker.push(val);
+								}
+							});
+							
+							$(availableTiceker).each(function(index,val){
+								//寻找最优惠的
+							
+								
+								if(parseFloat(val.discount_integral)>discount_integral)
+								{
+									
+									discount_integral = val.discount_integral;
+									currentTickerId = val.id;
+									currentTickerObj = val;
+								}
+							});
+							$("#discountName").text('满'+ currentTickerObj.limit_integral+'元可用，优惠'+currentTickerObj.discount_integral+"元");
+						}
+						else
+						{
+							$("#discountLayout").hide();
+						}
+						//总价优惠金额  
+						$("#totalIntergal").text(commodityInfo.integral_price-discount_integral)
+						
+			
+					} else {
+						mui.toast(data.msg);
+					}
+			
+				}, function(xhr, type, errorThrown) {
+						dialog.closeDialog();
+					mui.toast(errorThrown);
+				})	
+				
+			}
+			
+			
+			/**
+			 * 初始化收货地址
+			 */
+			function initReceiverAddress()
+			{
+				var receiverAddress = localStorage.getItem(utils.receiverAddress);
+				if(utils.isNone(receiverAddress))
+				{
+					$("#addAddress").show();
+					$("#addressLayout").hide();
+				}
+				else //回显示地址
+				{
+					
+					receiverAddress = JSON.parse(receiverAddress);
+					reciverid= receiverAddress.id;
+					$("#reciverName").text("收货人："+receiverAddress.consignee);
+					$("#reciverName").attr(receiverAddress.consignee)
+					$("#phone").text(receiverAddress.contact_phone);
+					$("#reciverAddress").text("收货地址："+receiverAddress.province+receiverAddress.city+receiverAddress.area+receiverAddress.address);
+
+					$("#addressLayout").show();
+					$("#addAddress").hide();
+				}
+			}
+			
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+				
+			document.getElementById('addAddress').addEventListener('tap', function() {
+						 mui.openWindow({
+					      id:'address_manage',
+					      url:'../address/address_manage.html'
+					    
+					  });
+				});
+			document.getElementById('addressLayout').addEventListener('tap', function() {
+						 mui.openWindow({
+					      id:'address_manage',
+					      url:'../address/address_manage.html'
+					    
+					  });
+				});	
+			document.getElementById('buyNow').addEventListener('tap', function() {
+					if(utils.isNone(reciverid))
+					{
+						mui.toast("默认收货地址未设置")
+						return;
+					}
+					
+						dialog.showDialog();
+						var obj = new Object();
+						obj.phone = localStorage.getItem(utils.phoneNum);
+						obj.userid = localStorage.getItem(utils.userId);
+						obj.shop_id = shopId;
+						obj.commodity_id = commodityId;
+						obj.buy_num = 1;		
+						obj.ticket_id =currentTickerId;
+						obj.order_intergal =$("#totalIntergal").text();
+						obj.receiver_id =reciverid;
+						utils.ajax(utils.getUrl("placeAnOrder"), obj, function(data) {		
+							dialog.closeDialog();
+							
+							if(data.code == utils.SCUESS) {
+								var commodity_order_id = JSON.parse(data.data).commodity_order_id;
+								mui.confirm("是否立即支付积分","提示",['确定','取消'],function(e) {
+									if(e.index ==0) //确定
+									{
+										postOrderPaying(commodity_order_id);
+									}
+									
+								});
+					
+							} else {
+								mui.toast(data.msg);
+							}
+					
+						}, function(xhr, type, errorThrown) {
+								dialog.closeDialog();
+							mui.toast(errorThrown);
+						})	
+				});
+				
+				/**
+				 * 订单支付
+				 */
+				function postOrderPaying(commodity_order_id)
+				{
+					dialog.showDialog();
+						var obj = new Object();
+						obj.phone = localStorage.getItem(utils.phoneNum);
+						obj.userid = localStorage.getItem(utils.userId);
+						obj.order_id = commodity_order_id;
+					
+						utils.ajax(utils.getUrl("OrderPaying"), obj, function(data) {		
+							dialog.closeDialog();
+							
+							if(data.code == utils.SCUESS) {
+								mui.toast(data.msg);
+								mui.back();
+					
+							} else {
+								mui.toast(data.msg);
+							}
+					
+						}, function(xhr, type, errorThrown) {
+								dialog.closeDialog();
+							mui.toast(errorThrown);
+						})	
+				}
+				
+	
+			document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+		</script>
+	</body>
+
+</html>

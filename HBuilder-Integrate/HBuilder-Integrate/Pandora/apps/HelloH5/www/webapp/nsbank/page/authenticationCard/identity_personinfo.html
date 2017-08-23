@@ -1,0 +1,542 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link href="../../css/id_personinfo.css" rel="stylesheet" />
+		<link href="../../css/mui.picker.css" rel="stylesheet" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+			<link href="../../css/dialog/mydialog.css" rel="stylesheet" />
+		<script src="../../js/dialog/mydialog.js"></script>
+
+		<style>
+			body {
+				font-size: 14px;
+				background: #f5f5f5;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="headLayout" class="mui-bar  home-head " style="background: white;">
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+			<img class="head-lefticon" id="back" style="width: 10px; top: 15px;" src="../../img/back.png" />
+			<h3 id="title" class="mytitle">个人信息</h1>
+
+		</div>
+			<div style="height: 44px;"></div>
+			<div class="indicator-layout">
+			<div class="indicator-item"></div>
+				<div class="indicator-item"></div>
+					<div class="indicator-item "></div>
+		</div>
+			<div style="color: #58afb6; text-align: center;margin-top: 20px;"> 加红色星号的为必填项</div>
+			<div style="margin-top: 10px;margin-left: 4%;">个人信息</div>
+			
+			<div class="grid-layout " style="margin-top: 10px;">
+				<div class="input-layout2">
+					<div class="left"><label style="color: red;">* </label>学历</div>
+					<div class="right1"><img src="../../img/down_yellow.png"/> </div>
+					<div class="right2"><input id="edu" type="text" readonly="true" placeholder="请填写您的学历" /> </div>
+				</div>
+				<div class="input-layout2">
+					<div class="left"><label style="color: red;">* </label>婚姻</div>
+					<div class="right1"><img src="../../img/down_yellow.png"/> </div>
+					<div class="right2"><input id="marray" type="text" readonly="true" placeholder="请选择您的婚姻状况" /> </div>
+				</div>
+				<div class="input-layout2">
+					<div class="left">邮箱(选填)</div>
+					<!--<div class="right1" style="visibility: hidden;"><img src="../../img/down_yellow.png"/> </div>-->
+					<div class="right2"><input id="email" type="text"  placeholder="请填写常用邮箱" /> </div>
+				</div>
+			</div>
+		
+			<div style="margin-top: 10px;margin-left: 4%;">工作信息</div>
+			
+			<div class="grid-layout " style="margin-top: 10px;">
+				<div class="input-layout2">
+					<div class="left">公司名称(选填)</div>
+					<!--<div class="right1" style="visibility: hidden;"><img src="../../img/down_yellow.png"/> </div>-->
+					<div class="right2"><input id="companyName" type="text"  placeholder="请填写您的公司名称" /> </div>
+				</div>				
+				<div class="input-layout2">
+				
+					<div class="left"><label style="color: red;">* </label>所在地址</div>
+					<div id="location" class="right1" style="margin-top: 5px;"><img src="../../img/location_yell.png"/> </div>
+					<div class="right2"><input id="address" type="text"  placeholder="您的地址" /> </div>
+				</div>		
+			</div>
+			<div style="margin-top: 10px;margin-left: 4%;">联系人信息</div>			
+			<div class="grid-layout " style="margin-top: 10px;">
+				<div class="input-layout2" style="position: relative;">	
+					<div class="left"><label style="color: red;">* </label>父母或配偶</div>
+				<!--	<div class="right1"><img src="../../img/down_yellow.png"/> </div>-->
+					<div class="right2"><input id="parentPhone" type="number"  placeholder="父母或配偶电话"  style="width: 80%;"/>
+					<img id="getParentsPhone" src="../../img/txl.png" style="width: 20px;position: absolute; right: 10px; top: 14px;"/> </div>
+				</div>		
+				<div class="input-layout2" style="position: relative;">	
+					<div class="left"><label style="color: red;">* </label>其他朋友电话</div>
+				<!--	<div class="right1"><img src="../../img/down_yellow.png"/> </div>-->
+					<div class="right2"><input id="otherFrendsPhone" type="number" style="width: 80%;"  placeholder="其他朋友电话电话" />
+					<img id="getFrendsPhone" src="../../img/txl.png" style="width: 20px;position: absolute; right: 10px; top: 14px;"/> 
+					</div>
+				</div>		
+				<div class="input-layout2">	
+					<div class="left">&nbsp;&nbsp;营销人员工号</div>
+				<!--	<div class="right1"><img src="../../img/down_yellow.png"/> </div>-->
+					<div class="right2"><input id="recommendMan" type="number"  placeholder="可选" /> </div>
+				</div>		
+				
+			</div>
+			<div style="margin-top: 10px;margin-left: 4%;">其他</div>			
+			<div class="grid-layout " style="margin-top: 10px;">
+				<div class="input-layout2">	
+					<div class="left"> </label>持有信用卡</div>
+					<div class="right1"><img src="../../img/down_yellow.png"/> </div>
+					<div class="right2"><input id="creditCard" type="text"  readonly="true" placeholder="(多选) 目前使用哪些银行信用卡" /> </div>
+				</div>	
+				<div id="creditCardLayout" class="cards-layout" style="display: none;">
+					<div class="cards">
+						<div class="item">工行</div>
+						<div class="item">农行</div>
+						<div class="item">中行</div>
+						<div class="item">建行</div>
+					</div>
+					<div class="cards">
+						<div class="item">招行</div>
+						<div class="item">交行</div>
+						<div class="item">广发</div>
+						<div class="item">中信</div>
+					</div>
+					<div class="cards">
+						<div class="item">光大</div>
+						<div class="item">民生</div>
+						<div class="item">平安</div>
+						<div class="item">兴业</div>
+					</div>
+					<div class="cards">
+						<div class="item">浦发</div>
+						<div class="item">华夏</div>
+						<div class="item">邮政</div>
+						<div class="item">上海银行</div>
+					</div>
+				</div>
+				
+				<div class="input-layout2">	
+					<div class="left"></label>信用卡月消费</div>
+					<div class="right1"><img src="../../img/down_yellow.png"/> </div>
+					<div class="right2"><input id="lastMouthConsume" type="text"  readonly="true" placeholder="最近一个月信用卡消费" /> </div>
+				</div>	
+				<div id="incomeLayout" class="cards-layout" style="display: none;">
+					<div class="cards">
+						<div class="item consume">1千以下</div>
+						<div class="item consume">1-3千</div>
+						<div class="item consume">3-5千</div>
+						<div class="item consume">5-1万</div>
+					</div>
+					<div class="cards">
+						<div class="item consume">1-2万</div>
+						<div class="item consume">2-3万</div>
+						<div class="item consume">3-5万</div>
+						<div class="item consume">5万以上</div>
+					</div>
+					
+				</div>
+				
+			</div>
+			
+			
+			<div class="btn-layout" style="margin-top: 30px; margin-bottom: 20px;">
+				<button  id="submit" class="btn">确认提交</button>
+			</div>
+			
+		<script src="../../js/mui.min.js"></script>
+			<script src="../../js/mui.picker.js"></script>
+			<script src="../../js/mui.poppicker.js"></script>
+			<script src="../../js/jquery-3.2.1.min.js"></script>
+				<script src="../../js/DES3.js"></script>
+			<script src="../../js/utils.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			var bankcard_id='';//百合卡主键id 默认为空，有值时说明是编辑状态
+			//学历
+			var eduArr = [{value: '0',text: '中专以下'}, {value: '1',text: '中专',}, {value: '2',text: '大专'}, {value: '3',text: '本科'}, {value: '4',text: '研究生'}, {value: '5',text: '博士或博士以上'}];
+			//婚姻状态
+			var marray =[{value: '1',text: '未婚'}, {value: '2',text: '已婚',}]
+			initEdu();
+			initMarray();
+			initEditData();//检查之前是否提交过
+			function initEdu()
+			{
+				//普通示例
+					var eduPicker = new mui.PopPicker();
+					eduPicker.setData(eduArr);
+					var eduButton = document.getElementById('edu');
+					eduButton.addEventListener('tap', function(event) {
+						eduPicker.show(function(items) {
+							$("#edu").val(items[0].text);
+							$("#edu").attr("op",items[0].value);
+						});
+					}, false);
+			}
+			function initMarray()
+			{
+				//普通示例
+					var marrayPicker = new mui.PopPicker();
+					marrayPicker.setData(marray);
+					var marrayButton = document.getElementById('marray');
+//					var userResult = document.getElementById('userResult');
+					marrayButton.addEventListener('tap', function(event) {
+						marrayPicker.show(function(items) {
+//							alert(JSON.stringify(items[0]));
+							$("#marray").val(items[0].text);
+							$("#marray").attr("op",items[0].value);
+						});
+					}, false);
+			}
+			
+			//持有信用卡布局
+			document.getElementById('creditCard').addEventListener('tap', function() {
+						$("#creditCardLayout").fadeToggle('fast');
+						
+				});
+			//信用卡月消费	
+			document.getElementById('lastMouthConsume').addEventListener('tap', function() {
+					$("#incomeLayout").fadeToggle('fast');
+					
+			});	
+			//信用卡行	
+			mui("#creditCardLayout").on('tap','.item',function(){
+				 if($(this).hasClass("active"))
+				 {
+				 	  $(this).removeClass("active");
+				 }
+				 else{
+				 	  $(this).addClass("active");
+				 }
+			
+			});
+			//月消费
+				mui("#incomeLayout").on('tap','.consume',function(){
+				  $(".consume").removeClass("active");
+				 if($(this).hasClass("active"))
+				 {
+				 	  $(this).removeClass("active");
+				 }
+				 else{
+				 	  $(this).addClass("active");
+				 }
+			
+			});
+			
+			
+
+			//定位
+			document.getElementById('location').addEventListener('tap', function() {
+				// 使用百度地图地位模块获取位置信息
+				plus.geolocation.getCurrentPosition(geoInf, function(e) {
+					alert("获取定位位置信息失败：" + e.message);
+				}, {
+					geocode: true
+				});
+					
+			});	
+			/**
+			 * 获取百度地图经纬度信息
+			 * @param {Object} position
+			 */
+			function geoInf(position) {
+
+				console.info(JSON.stringify(position));
+				addresses = position.addresses;
+				$("#address").val(addresses);
+			}
+			
+			//提交信息
+			document.getElementById('submit').addEventListener('tap', function() {	
+			
+				if(utils.isNone($("#edu").val()))
+				{
+					mui.toast("请选择学历");
+					return;
+				}
+				if(utils.isNone($("#marray").val()))
+				{
+					mui.toast("请选择婚姻状态");
+					return;
+				}
+				if(utils.isNone($("#address").val()))
+				{
+					mui.toast("请输入您的所在地址");
+					return;
+				}
+				if(utils.isNone($("#parentPhone").val()))
+				{
+					mui.toast("请输入父母或配偶的电话");
+					return;
+				}
+				if(utils.isNone($("#otherFrendsPhone").val()))
+				{
+					mui.toast("请输入其他朋友的电话");
+					return;
+				}
+//				if(utils.isNone(getCreditCard()))
+//				{
+//					mui.toast("请选择持有信用卡");
+//					return;
+//				}
+//				if(utils.isNone(getCreditCardLimit()))
+//				{
+//					mui.toast("请选择信用卡月消费额度");
+//					return;
+//				}
+				
+				var obj = new Object();
+				 obj.bankcard_id=bankcard_id;
+				 obj.userid = localStorage.getItem(utils.userId);
+				 obj.phone = localStorage.getItem(utils.phoneNum);
+				 obj.education=$("#edu").attr("op");
+				 obj.marital_status=$("#marray").attr("op");
+				 obj.email = $("#email").val();
+				 obj.company_name=$("#companyName").val();
+				 obj.address=$("#address").val();
+				 obj.parent_num=$("#parentPhone").val();
+				 obj.other_num=$("#otherFrendsPhone").val();
+				 obj.hold_credit_card=getCreditCard();
+				 obj.consume_range=getCreditCardLimit();
+				 obj.city=localStorage.getItem(utils.currentCity);
+				 obj.marketing_no= $("#recommendMan").val(); 
+				 dialog.showDialog();
+				utils.ajax(utils.getUrl("LilyCardApply"), obj, function(data) {
+						dialog.closeDialog()
+						if(data.code == utils.SCUESS) {
+							mui.toast(data.msg);
+						//设置状态
+						localStorage.setItem(utils.bankcard_statue, 2);
+						localStorage.setItem(utils.idcard_status, 2);
+						localStorage.setItem(utils.credit_status, 1);
+						
+							mui.openWindow({
+								id: 'main',
+								url: '../main_frame.html',
+								createNew:true,
+							});
+				
+						} else {
+							mui.toast(data.msg);
+						}
+				
+					}, function(xhr, type, errorThrown) {
+						dialog.closeDialog()
+						mui.toast(errorThrown);
+					})
+				
+			});	
+			
+			/**
+			 * 获取信用卡  ，分割
+			 */
+			function getCreditCard()
+			{
+			
+				var creditCards = new Array();
+				$('#creditCardLayout').find(".active").each(function(index,val){
+					creditCards.push($(val).text());
+				});
+				console.info(creditCards.join());
+				$("#creditCard").val(creditCards.join())
+				return creditCards.join()
+			}
+			
+				/**
+			 * 获取信用卡额度  ，分割
+			 */
+			function getCreditCardLimit()
+			{
+			
+				var creditCards = new Array();
+				$('#incomeLayout').find(".active").each(function(index,val){
+					creditCards.push($(val).text());
+				});
+				console.info(creditCards.join());
+				$("#lastMouthConsume").val(creditCards.join())
+				return creditCards.join()
+			}
+			
+			/*
+			 * 检查是否之前提交过
+			 */
+			function initEditData()
+			{
+				var edit = utils.GetQueryString("edit");
+				bankcard_id = utils.GetQueryString("bankcard_id");
+				
+				if(!utils.isNone(edit))//是编辑状态则去请求之前填写过的信息
+				{
+					var obj = new Object();
+					obj.phone = localStorage.getItem(utils.phoneNum);
+					obj.userid = localStorage.getItem(utils.userId);
+					obj.bankcard_id = bankcard_id;
+//					dialog.showDialog();
+					utils.ajax(utils.getUrl("queryBankCardInfo"), obj, function(data) {
+						dialog.closeDialog()
+						if(data.code == utils.SCUESS) {
+							var obj =JSON.parse(data.data);
+							var education = obj.education;
+							var marital_status = obj.marital_status;
+							$(eduArr).each(function(index,val){
+								if(val.value==education)
+								{
+									$("#edu").attr("op",val.value);
+									$("#edu").val(val.text);
+								}
+							});
+							$(marray).each(function(index,val){
+								if(val.value==marital_status)
+								{
+									$("#marray").attr("op",val.value);
+									$("#marray").val(val.text);
+								}
+							});
+							$("#email").val(obj.email);
+				 			$("#companyName").val(obj.company_name);
+				 			$("#address").val(obj.address);
+				 			$("#parentPhone").val(obj.parent_num);
+							$("#otherFrendsPhone").val(obj.other_num);
+							$("#creditCard").val( obj.hold_credit_card);	
+							$("#recommendMan").val( obj.marketing_no); 
+							$("#lastMouthConsume").val(obj.consume_range);//信用卡月消费
+							//持有信用卡
+							$('#creditCardLayout').find(".item").each(function(index,val){
+									if(obj.hold_credit_card.indexOf($(val).text())>=0)
+									{
+										$(val).addClass("active");
+									}
+							});
+							$('#incomeLayout').find(".item").each(function(index,val){
+									if(obj.consume_range.indexOf($(val).text())>=0)
+									{
+										$(val).addClass("active");
+									}
+							});
+						} else {
+							mui.toast(data.msg);
+						}
+				
+					}, function(xhr, type, errorThrown) {
+						dialog.closeDialog()
+						mui.toast(errorThrown);
+					})
+				}
+			}
+			
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+			
+				document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+			
+			document.getElementById("getParentsPhone").addEventListener("tap", function() {
+				getAddressList($("#parentPhone"));
+			});
+			
+			document.getElementById("getFrendsPhone").addEventListener("tap", function() {
+				getAddressList($("#otherFrendsPhone"));
+			});
+			
+			/**
+			 * 获取通讯录联系人
+			 * @param {Object} dom
+			 */
+			function getAddressList(dom)
+			{
+				if(mui.os.android)
+				{
+					var REQUESTCODE = 1200;
+					main = plus.android.runtimeMainActivity();
+					var Intent = plus.android.importClass('android.content.Intent');
+					var ContactsContract = plus.android.importClass('android.provider.ContactsContract');
+					var intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+					main.onActivityResult = function(requestCode, resultCode, data) { 
+					  if (REQUESTCODE == requestCode) {
+					    var phoneNumber = null;
+					    var resultString = "";
+					    var context = main;
+					    plus.android.importClass(data);		
+					    var contactData = data.getData();
+					    var resolver = context.getContentResolver();
+					    plus.android.importClass(resolver);
+					    var cursor = resolver.query(contactData, null, null, null, null);
+					    plus.android.importClass(cursor);
+					    cursor.moveToFirst();
+					    var s_ret;
+					    var givenName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+					    s_ret = givenName;
+					    var contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+					    var pCursor = resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+					     null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId,
+					     null, null);
+					    while (pCursor.moveToNext()) {
+					     phoneNumber =   pCursor.getString( pCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+					     s_ret += '\n' + phoneNumber;
+					    }
+	//				    alert(s_ret);
+						$(dom).val(removeAllSpace(phoneNumber))
+					    cursor.close();
+					    pCursor.close();
+					  }
+					};
+					main.startActivityForResult(intent, REQUESTCODE);
+				}
+				
+					else if(mui.os.ios)
+				{
+						// H5界面向原生界面传值
+						var params = {
+							name: "H5+ iOS平台插件开发",
+							des: "http://hudqstudio.online",
+							title: "返回"
+						};
+						plus.fingerprintIdent.addressBookNative(params, function(data) {
+							$(dom).val(removeAllSpace(data.phone))
+		
+							
+						}, function(data) {});
+				}
+				
+				
+			}
+			
+			function removeAllSpace(str) {
+				return str.replace(/\s+/g, "");
+				}
+			
+			
+			document.addEventListener("plusready", function() {
+				var _BARCODE = 'plugintest',
+					B = window.plus.bridge;
+				var fingerprintIdent = {
+					addressBookNative: function(params, successCallback, errorCallback) {
+						var success = typeof successCallback !== 'function' ? null : function(args) {
+								successCallback(args);
+							},
+							fail = typeof errorCallback !== 'function' ? null : function(code) {
+								errorCallback(code);
+							};
+						callbackID = B.callbackId(success, fail);
+						//通知执行异步方法
+						return B.exec(_BARCODE, "addressBookNative", [callbackID, params]);
+					}
+				};
+				window.plus.fingerprintIdent = fingerprintIdent;
+			}, true);
+		</script>
+	</body
+
+</html>

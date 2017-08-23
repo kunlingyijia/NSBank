@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>申请记录</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link href="../../css/record.css" rel="stylesheet" />
+
+	</head>
+
+	<body style="background: #f5f5f5;">
+
+		<div id="headLayout" class="mui-bar  home-head" style="background: white;">
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+
+			<img class="back-icon" id="back" src="../../img/back.png" />
+			<h1 id="title" class="mytitle">申请记录</h1>
+
+		</div>
+		<div id="content" style="padding-top: 45px;">
+		</div>
+
+		<div class="top-title">
+			<div class="top-item" id="topOpenCard">
+				<div class="top-item-text" id="tvTopOpenCard">开卡</div>
+				<div class="top-item-line" id="imTopOpenCard1"></div>
+			</div>
+			<!--<div class="top-item" id="topMentionForehead">
+				<div class="top-item-text" id="tvTopMentionForehead">提额</div>
+				<div class="top-item-line" id="imTopOpenCard2" style="visibility: none;"></div>
+
+			</div>-->
+			<div class="top-item" id="topMentionMoney">
+				<div class="top-item-text" id="tvTopMentionMoney">提现</div>
+				<div class="top-item-line" id="imTopOpenCard3" style="visibility: none;"></div>
+
+			</div>
+		</div>
+		<div id="layoutOpenCar">
+			<div v-for="(item, index)  in items">
+				<div class="record_layout">
+					<div class="record_left_text">申请开卡</div>
+					<div class="record_right_text">{{item.statusTime}}</div>
+				</div>
+				<div style="height: 1px; width: 5%; background: #ffffff;"></div>
+				<div class="record_layout">
+					<div class="record_left_text_one"> 当前状态</div>
+					<div v-if="item.status == 1" class="user_name">审核成功</div>
+					<div v-if="item.status == 2" class="user_name">银行审核中</div>
+					<div v-if="item.status == 3" class="user_name">人工审核失败</div>
+					<div v-if="item.status == 4" class="user_name">身份证信息有误</div>
+					<div v-if="item.status == 5" class="user_name">正在等待分配营销人员为您办理</div>
+					<div v-if="item.status == 6" class="user_name">已分配营销人员等待现场处理</div>
+					<div v-if="item.status == 7" class="user_name">现场处理完成等待总行批复</div>
+				
+													
+					<!--<img class="set_next_img" src="../../img/jt.png" />-->
+				</div>
+			</div>
+
+		</div>
+		<!--<div id="layoutMentionForehead">
+			<div class="record_layout">
+				<div class="record_left_text">申请提额</div>
+				<div class="record_right_text">2017-05-30</div>
+			</div>
+			<div style="height: 1px; width: 5%; background: #ffffff;"></div>
+			<div class="record_layout">
+				<div class="record_left_text_one"> 关于我们</div>
+				<div class="user_name">完善信息</div>
+				<img class="set_next_img" src="../../img/jt.png" />
+			</div>
+		</div>-->
+		<div id="layoutMentionMoney">
+			<div v-for="(item, index)  in items">
+				<div class="record_layout">
+					<div  v-if="item.status == 1"  class="record_left_text">待打款</div>
+						<div  v-if="item.status == 2"  class="record_left_text">已打款</div>
+					<div class="record_right_text">{{item.create_time}}</div>
+				</div>
+				<div style="height: 1px; width: 5%; background: #ffffff;"></div>
+				<div class="record_layout">
+					<div class="record_left_text_one">中国农商银行</div>
+					<div class="record_right_text">¥{{item.amount}}</div>
+				</div>
+				<div style="height: 1px; width: 5%; background: #ffffff;"></div>
+			</div>
+<!--			
+			<div>
+				<div class="record_layout">
+					<div class="record_left_text">提现</div>
+					<div class="record_right_text">2017-05-31</div>
+				</div>
+				<div style="height: 1px; width: 5%; background: #ffffff;"></div>
+				<div class="record_layout">
+					<div class="record_left_text_one">中国农商银行</div>
+					<div class="record_right_text">¥1200</div>
+				</div>
+			</div>-->
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		<script>
+			mui.ready(function() {
+				initTab(); //初始化监听
+				clearTopUI();
+				initTopUishow();
+				getCardRecord();
+				getDeposit();
+			});
+			//开卡记录
+			var cardVue = new Vue({
+				el: '#layoutOpenCar',
+				data: {
+					items: []
+				}
+			})
+			//提现记录
+			var mentionMoneyVue = new Vue({
+				el: '#layoutMentionMoney',
+				data: {
+					items: []
+				}
+			})
+			function initTab() {
+				document.getElementById('topOpenCard').addEventListener('tap', function() {
+					clearTopUI();
+					initTopUishow();
+				});
+				//				document.getElementById('topMentionForehead').addEventListener('tap', function() {
+				//					clearTopUI();
+				//					$("#tvTopMentionForehead").css("color", "#5999e3");
+				//					document.getElementById("imTopOpenCard2").style.display = "block"; //显示
+				//
+				//					document.getElementById("layoutOpenCar").style.display = "none"; //显示 
+				//					document.getElementById("layoutMentionForehead").style.display = "block"; //隐藏
+				//					document.getElementById("layoutMentionMoney").style.display = "none"; //显示
+				//				});
+				document.getElementById('topMentionMoney').addEventListener('tap', function() {
+					clearTopUI();
+					$("#tvTopMentionMoney").css("color", "#5999e3");
+					document.getElementById("imTopOpenCard3").style.display = "block"; //显示
+
+					document.getElementById("layoutOpenCar").style.display = "none"; //显示 
+//					document.getElementById("layoutMentionForehead").style.display = "none"; //隐藏
+					document.getElementById("layoutMentionMoney").style.display = "block"; //显示
+				});
+			}
+
+			function clearTopUI() {
+				$("#tvTopOpenCard").css("color", "#404040");
+				$("#tvTopMentionForehead").css("color", "#404040");
+				$("#tvTopMentionMoney").css("color", "#404040");
+				document.getElementById("imTopOpenCard1").style.display = "none"; //隐藏
+				//				document.getElementById("imTopOpenCard2").style.display = "none"; //隐藏
+				document.getElementById("imTopOpenCard3").style.display = "none"; //隐藏
+
+				document.getElementById("imTopOpenCard1").style.display = "none"; //隐藏
+				//				document.getElementById("imTopOpenCard2").style.display = "none"; //隐藏
+				document.getElementById("imTopOpenCard3").style.display = "none"; //隐藏
+			}
+
+			function initTopUishow() {
+				$("#tvTopOpenCard").css("color", "#5999e3");
+				document.getElementById("imTopOpenCard1").style.display = "block"; //显示layout-open-car
+				document.getElementById("layoutOpenCar").style.display = "block"; //显示 
+				//				document.getElementById("layoutMentionForehead").style.display = "none"; //隐藏
+				document.getElementById("layoutMentionMoney").style.display = "none"; //显示
+			}
+
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+
+			/**
+			 * 获取开卡记录
+			 */
+			function getCardRecord() {
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+
+				dialog.showDialog()
+				utils.ajax(utils.getUrl("queryBankCardApply"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+						var result = JSON.parse(data.data);
+						$(result).each(function(index,val){
+							val.statusTime = val.statusTime.substring(0,val.statusTime.length-2);
+						});
+						cardVue.items = result;
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+			}
+			
+			/**
+			 * 获取提现记录
+			 */
+			function getDeposit() {
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+
+				dialog.showDialog()
+				utils.ajax(utils.getUrl("lookRedPacketDeposit"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+						var result = JSON.parse(data.data);
+						$(result).each(function(index,val){
+							val.create_time = val.create_time.substring(0,val.create_time.length-2);
+						});
+						mentionMoneyVue.items = result;
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+			}
+			
+
+	
+			document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+			
+		</script>
+	</body>
+
+</html>

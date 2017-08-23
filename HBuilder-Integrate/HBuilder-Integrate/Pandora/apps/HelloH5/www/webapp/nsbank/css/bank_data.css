@@ -1,0 +1,90 @@
+.bank_data_item_layout{
+	margin-top: 10px;
+	width: 90%;
+	margin-left: 5%;
+	position: relative;
+}
+.bank_data_item_layout_bg{
+	width: 100%; 
+	height: 100px; 
+	background: #446fb3;
+	
+	border-radius:10px;	
+}
+.bank_data_item_img_logo{
+	position: absolute;
+	left: 5%; 
+	top: 5%; 
+	width:15%;
+	border-radius:15;	
+}
+.bank_data_item_name{
+	position: absolute;
+	left: 23%; 
+	font-size: 12px;
+	top: 10%; 
+	color: #fefcfd;
+}
+
+.bank_data_item_type{
+	position: absolute;
+	left: 23%; 
+	font-size: 12px;
+	top: 25%; 
+	color: #fefcfd;
+}
+
+.bank_data_item_state{
+	position: absolute;
+	left: 80%; 
+	font-size: 12px;
+	top: 18%; 
+	color: #fefcfd;
+}
+
+.bank_data_item_num{
+	position: absolute;
+	left: 23%; 
+	top: 58%; 
+	color: #fefcfd;
+	font-size: 14px; 
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+} 
+
+.button-group{
+	position: relative;
+	margin-top: 20px;
+	overflow: hidden;
+}
+
+ .button-group .left{
+	float: left;
+	width: 90%;
+	text-align: center;
+}
+.replace_bank_data{
+	width: 100%;
+	/*height: 12%;*/
+}
+.btn_layout{
+	border-radius: 20; 
+	 width: 70%;  
+	 margin-top: 70%;  
+	 margin-left: 15%; 
+	height: 12%;
+
+}
+
+
+.replace_bank_data_btn{
+	background: #4391e3;
+	height: 40px;
+	border-radius:20px ;
+	color: white;
+	margin-top: 30px;
+	font-size: 15px;
+	width: 100%;
+}
+

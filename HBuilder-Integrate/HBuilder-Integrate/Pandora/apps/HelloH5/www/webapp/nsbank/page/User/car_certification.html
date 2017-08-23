@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>车主认证</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link href="../../css/identity_certificate.css" rel="stylesheet" />
+		<link href="../../css/dialog/mydialog.css" rel="stylesheet" />
+
+		<link rel="stylesheet" href="../../css/bank_data.css" />
+	</head>
+
+	<body style="background: #f5f5f5;font-size: 14px;">
+		<div id="headLayout" class="mui-bar  home-head " style="background: white;">
+			<img id="back" class="head-lefticon" style="width: 10px; top: 15px;" src="../../img/back.png" />
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+			<h3 id="title" class="mytitle">车主认证</h1>
+ 
+		<div class="pic-layout">
+			<div  id="btn_drivingFront" class="left" id="pcardFront">
+				<img id="drivingFront" src="../../img/pic_front.png" style="height: 120px;"/>
+				<img src="../../img/photo.png" class="photo" />
+			</div>
+			
+				<div id="btn_drivingBack"  class="right" id="pcardBack">
+					<img  id="drivingBack"  src="../../img/pic_back.png" style="height: 120px;"/>
+						<img src="../../img/photo.png" class="photo" />
+				</div>
+				
+				
+			<div id="btn_" class="btn-layout" style="margin-top: 30px; margin-bottom: 20px;">
+
+				<button type="button" id="editBankCard" class="replace_bank_data_btn">确定</button>
+			</div>
+		</div>
+		</div>
+		   
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+				
+		<script src="../../js/dialog/mydialog.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		
+		
+		<script type="text/javascript">
+			
+			
+			var  drivingFront;
+			var drivingBack;
+			
+			document.getElementById("back").addEventListener('tap',function(){
+					mui.back();
+			});
+		
+	
+			/**
+			 * 点击拍照省份正面
+			 */
+			document.getElementById("btn_drivingFront").addEventListener('tap',function(){
+				utils.takePhoto(function(file) {
+					dialog.showDialog();
+					//上传图片后回调
+					utils.uploadImg(function(imgurl) {
+						$("#drivingFront").attr("src", imgurl);
+						drivingFront = imgurl;
+
+					}, file);
+
+				});
+				
+			});
+			/**
+			 * 点击拍照方面
+			 */
+			
+			document.getElementById("btn_drivingBack").addEventListener('tap',function(){
+					
+				utils.takePhoto(function(file) {
+					dialog.showDialog();
+					//上传图片后回调
+					utils.uploadImg(function(imgurl) {
+						$("#drivingBack").attr("src", imgurl);
+						drivingBack = imgurl;
+
+					}, file);
+
+				});
+			});
+			
+			
+			document.getElementById("btn_").addEventListener('tap',function(){
+				
+					if(utils.isNone(drivingFront)) {
+					mui.toast("请拍摄行驶证正面");
+					return;
+					}
+					
+					if(utils.isNone(drivingBack)) {
+					mui.toast("请拍摄行驶证背面");
+					return;
+					}
+				
+				
+				dialog.showDialog();
+				var obj = new Object();
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.drivingFront = drivingFront; //行驶证正面
+				obj.drivingBack = drivingBack; //行驶证背面
+
+				utils.ajax(utils.getUrl("bindDrivingLicense"), obj, function(data) {
+						dialog.closeDialog();
+        			         
+						if(data.code == utils.SCUESS) {
+								var address_manage = plus.webview.getWebviewById('mention_amount');
+								if(address_manage!=null)
+				                 	  address_manage.reload();
+		        			         mui.back();
+						} else {
+							mui.toast(data.msg);
+						}
+					},
+					function(xhr, type, errorThrown) {
+						dialog.closeDialog();
+						mui.toast(errorThrown);
+					})
+			});
+			
+					document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+
+		</script>
+	</body>
+
+</html>

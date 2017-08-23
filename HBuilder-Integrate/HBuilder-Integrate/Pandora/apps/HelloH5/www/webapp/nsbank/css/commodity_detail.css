@@ -1,0 +1,196 @@
+.commodity-img {
+	width: 100%;
+	height: 200px;
+	object-fit: cover;
+	background: white;
+	margin: 0px;
+	padding: 0px;
+}
+
+.commodity-tips {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.commodity-tips .title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	width: 100%;
+}
+
+.commodity-tips {
+	padding-left: 20px;
+	background: white;
+}
+
+.commodity-tips .title {
+	font-size: 16px;
+}
+
+.commodity-tips .intergal {
+	margin-top: 10px;
+	color: #aaaaaa;
+	font-size: 15px;
+}
+
+.commodity-tips .intergal img {
+	width: 15px;
+}
+
+.commodity-tips .intergal label {
+	color: #f23031;
+	font-size: 23px;
+	margin-right: 5px;
+	margin-left: 10px;
+}
+
+.commodity-tips .mark-price {
+	margin-top: 5px;
+	color: #aaaaaa;
+	font-size: 13px;
+}
+
+.discount-layout2 {
+	height: 55px;
+	margin-top: 10px;
+	background: white;
+	position: relative;
+}
+
+.discount-layout2 .left-icon {
+	position: absolute;
+	width: 20px;
+	top: 20px;
+	left: 10px
+}
+
+.discount-layout2 label {
+	position: absolute;
+	top: 18px;
+	left: 45px
+}
+
+.discount-layout2 .right-icon {
+	width: 10px;
+	position: absolute;
+	right: 15px;
+	top: 20px;
+}
+
+.commodity-content {
+	background: white;
+	margin-top: 5px;
+	min-height: 80px;
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 50px;
+}
+
+.commodity-content img {
+	width: 100%;
+}
+
+.buy-layout {
+	position: fixed;
+	height: 50px;
+	bottom: 0px;
+	width: 100%;
+	background: #f5f5f5;
+	color: #aaaaaa;
+	font-size: 14px;
+}
+
+.buy-layout .tips {
+	position: absolute;
+	left: 15px;
+	top: 15px;
+}
+
+.buy-layout label {
+	color: #f2302e;
+	font-size: 15px;
+}
+
+.buy-layout .buy-intergal {
+	position: absolute;
+	left: 65px;
+	top: 15px;
+}
+
+.buy-layout .buy {
+	position: absolute;
+	right: 10px;
+	background: #4391e3;
+	border-radius: 10px;
+	color: white;
+	top: 10px;
+	border: none;
+}
+/****************店铺红包****************/
+.alert-bg {
+	background: white;
+	position: fixed;
+	height: 80%;
+	bottom: 0px;
+	width: 100%;
+	z-index: 1000;
+}
+
+.discount-layout{
+	height: 330px;
+	padding-left: 10px;
+	padding-right: 10px;
+	overflow: auto;
+	font-size: 14px;
+}
+.discount-item{
+	height: 100px;
+	/*background: red;*/
+	color: white;
+	margin-top: 10px;
+}
+.discount-item .left{
+	float: left;
+	width: 70%;
+	height: 100%;
+	background: url(../img/discount_left.png);
+	background-size:100% 100% ;
+}
+.discount-item .left .one{
+	margin-top: 10px;
+	margin-left:20px;
+}
+.discount-item .left .two{
+	margin-top: 5px;
+	margin-left: 20px;
+}
+
+.discount-item .left  .three{
+	margin-top: 5px;
+	margin-left: 20px;
+}
+
+.discount-item .right{
+	float: left;
+	width: 30%;
+	text-align: center;
+	padding-top: 40px;
+	    height: 100%;
+	background: url(../img/discount_right.png);
+	background-size:100% 100% ;
+	
+}
+.discount-item .active{
+	color: #999999;
+	background: url(../img/discount_right_selected.png);
+	background-size:100% 100% ;
+}
+.finished{
+	background: #4391e3;
+	color: white;
+	width: 100%;
+	height: 45px;
+	border: none;
+	border-radius: 10px;
+}

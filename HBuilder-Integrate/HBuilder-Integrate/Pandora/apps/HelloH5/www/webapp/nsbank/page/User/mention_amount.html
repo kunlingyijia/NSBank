@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!--我要办卡页面-->
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我要提额</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/mention_amount.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div id="headLayout" class="mui-bar  home-head " style="background: white;">
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+			<img id="back" class="head-lefticon" style="width: 10px; top: 15px;" src="../../img/back.png" />
+			<h3 id="title" class="mytitle">我要提额</h1> 
+		</div>
+		<div style="height: 40px;"></div>
+		<div id="title-message" class="mytitle-message">保持良好信用，可以增加提额机会哦！</div> 
+		
+		<!--<div id="mention-amount-task-layout" class="mention-amount-taske" >
+			<img class="mention-amount-task-layout-image" style="width: 8%; " src="../../img/mention_amount_img.png" />
+			<div class="mention-amount-taske-item">
+				<h6 id="title-message" style="color: #323232; margin-top: 20px;">提额任务</h6> 
+				<h6 id="title-message" style="margin-top: 10px; color: #ababab; ">做任务，提额度</h6> 
+			</div>
+			<h6 class="mention-amount-taske-item" style="line-height: 50px;text-align: right; width: 48%;">暂无礼包</h6> 
+			<img   style="width: 2.5%;  margin-left: 10px; margin-top: 22px;" src="../../img/jt.png" />
+		</div>-->
+
+		<div style="margin-top: 10px;">
+			<div class="min-date-text">个人信息认证</div>
+			<div style="background: white; width: 100%;">
+				
+				<div class="mine-data-certification">
+					<img id="idcardStatue"  style="position: absolute;left: 55%; width:15px; display: none;"   src="../../img/mention_amoun_ok.png" />
+					<img class="mine-data-certification-img"  src="../../img/mention_amount_id_data.png"  />
+					<div class="mine-data-certification-text">身份信息认证</div>
+				</div>
+				<div id="btn_accumulation_fund" class="mine-data-certification">
+					<img  class="mine-data-certification-img" src="../../img/mention_amount_fund.png" />
+					<img  id="foundStatue" style="position: absolute;left: 55%; width:15px; display: none;" src="../../img/mention_amoun_ok.png" />
+					<div class="mine-data-certification-text">公积金认证</div>
+				</div>
+				<div id="car_certification"  class="mine-data-certification">
+					<img id="carStatue" style="position: absolute;left: 55%; width:15px; display: none;" src="../../img/mention_amoun_ok.png" />
+					<img   class="mine-data-certification-img"  src="../../img/mention_amount_car.png" />
+					<div class="mine-data-certification-text">车主认证</div>
+				</div>
+				<div  class="mine-data-certification">
+					<img id="creditStatue" style="position: absolute;left: 55%; width:15px; display: none;" src="../../img/mention_amoun_ok.png" />
+					<img   class="mine-data-certification-img"  src="../../img/mention_amount_add_data.png" />
+					<div class="mine-data-certification-text">征信认证</div>
+				</div>
+			</div>
+		</div>
+		<div style="margin-top: 86px;">
+			<div class="min-date-text">社交信息认证</div>
+			<div style="background: white; width: 100%; padding-bottom: 20px;">
+				<div class="mine-data-certification">
+					<img style="position: absolute;left: 55%; width:15px;" src="../../img/mention_amoun_ok.png" />
+					<img class="mine-data-certification-img"  src="../../img/mention_amount_phone.png" />
+					<div class="mine-data-certification-text">运营商</div>
+				</div>
+				<div  class="mine-data-certification" onclick="tips()">
+					<img class="mine-data-certification-img" src="../../img/mention_amount_qq.png" />
+					<img  id="qqStatue"  style="position: absolute;left: 55%; width:15px; display: none;" src="../../img/mention_amoun_ok.png" />
+					<div class="mine-data-certification-text">QQ</div>
+				</div>
+				<div  class="mine-data-certification"  onclick="tips()">
+					<img id="wechatStatue" style="position: absolute;left: 55%; width:15px; display: none;" src="../../img/mention_amoun_ok.png" />
+					<img  class="mine-data-certification-img"  src="../../img/mention_amount_weixing.png" />
+					<div class="mine-data-certification-text">微信</div>
+				</div>
+				<div  class="mine-data-certification">
+					<!--<img style="position: absolute;left: 55%; width:15px;" src="../../img/mention_amoun_ok.png" />
+					<img class="mine-data-certification-img"  src="../../img/mention_amount_weibo.png" />
+					<div class="mine-data-certification-text">微博</div>-->
+				</div>
+			</div>
+		</div>
+		
+		<!--<div style="margin-top: 70px;">
+			<div class="min-date-text">消费信息认证</div>
+			<div style="background: white; width: 100%;overflow: hidden">
+				<div class="mine-data-certification">
+					<img style="position: absolute;left: 55%; width:15px;" src="../../img/mention_amoun_ok.png" />
+					<img class="mine-data-certification-img"  src="../../img/mention_amount_ailipay.png" />
+					<div class="mine-data-certification-text">支付宝</div>
+				</div>
+				<div  class="mine-data-certification">
+					<img  class="mine-data-certification-img" src="../../img/mention_amount_jd.png" />
+					
+					<div class="mine-data-certification-text">京东</div>
+				</div>
+				<div  class="mine-data-certification">
+					
+					<img  class="mine-data-certification-img"  src="../../img/mention_amount_taobao.png" />
+					<div class="mine-data-certification-text">淘宝</div>
+				</div>
+			</div>
+		</div>-->
+			<script src="../../js/mui.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		
+		<script src="../../js/dialog/mydialog.js"></script>
+		<script type="text/javascript">
+			 var result;
+			getData();
+			
+			function getData()
+			{
+				var obj = new Object();
+				obj.phone =  localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				dialog.showDialog()
+				utils.ajax(utils.getUrl("findIDCardCreditCarerAfundQQWechatWeibo"), obj, function(data) {
+					dialog.closeDialog()
+					if(data.code == utils.SCUESS) {
+						 result =  JSON.parse(data.data);
+						
+						if(result.IDCardStatus==1)
+						{
+							$("#idcardStatue").show();							
+						}
+						if(result.AfundStatus==1)
+						{
+							$("#foundStatue").show();							
+						}
+						if(result.CarerStatus==1)
+						{
+							$("#carStatue").show();							
+						}
+						if(result.CreditStatus==1)
+						{
+						
+							$("#creditStatue").show();							
+						}
+						if(result.QQLicense==1)
+						{
+							$("#qqStatue").show();	
+							$("#qqStatue").parent().attr("onclick","");
+						}
+						if(result.WechatLicense==1)
+						{
+							$("#wechatStatue").show();		
+							$("#wechatStatue").parent().attr("onclick","");
+						}
+						
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					dialog.closeDialog()
+					mui.toast(errorThrown);
+				})
+		
+			}
+			
+				document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+			
+			document.getElementById("car_certification").addEventListener("tap",function(){
+				if(result!=undefined && result.CarerStatus==1)
+				{
+					mui.toast("已认证")
+					return;
+				}
+				mui.openWindow({
+					id:"car_certification",
+					url:"car_certification.html",
+					extras:{
+						
+					}
+				})
+			});
+			
+			document.getElementById("btn_accumulation_fund").addEventListener('tap',function(){
+				if(result!=undefined && result.AfundStatus==1)
+				{
+					mui.toast("已认证")
+					return;
+				}
+				mui.openWindow(({
+					id:"accumulation_fund",
+					url:"accumulation_fund.html",
+					extras:{
+						
+					}
+				}))
+			});
+			
+			function tips()
+			{
+				mui.toast("请到登录页用QQ或微信关联登录")
+			}
+			
+			document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+			
+		</script>	
+	</body>
+	
+	
+</html>

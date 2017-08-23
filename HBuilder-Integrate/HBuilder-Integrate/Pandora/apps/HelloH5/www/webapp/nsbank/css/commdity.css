@@ -1,0 +1,105 @@
+.commodity-item{
+	
+	position: relative;
+	background: white;
+	overflow: hidden;
+	border-bottom: 1px solid #E5E5E5;
+
+}
+.commodity-item:before {
+	background: white;
+}
+
+.commodity-item:active {
+	background: #f4f4f4;
+}
+
+
+.commodity-item .left{
+	float: left;
+	width: 30%;
+	height: 130px;
+	text-align: center;
+}
+.commodity-item .left img{
+	width: 90%;
+	height: 100px;
+	margin: 0 auto;
+	margin-top: 15px;
+}
+.commodity-item .right{
+	float: left;
+		width: 70%;
+	height: 130px;
+}
+.commodity-item .right .title
+{
+	margin-top: 25px;
+	overflow: hidden;
+text-overflow:ellipsis;
+white-space: nowrap;
+width: 100%;
+padding-right
+}
+
+.commodity-item .right .intergal{
+	margin-top: 20px;
+	color: #aaaaaa;
+	font-size: 15px;
+}
+
+.commodity-item .right .intergal label{
+	color: #f23031;
+	font-size: 23px;
+	margin-right: 5px;
+}
+.commodity-item .right .mark-price{
+	margin-top: 5px;
+	color: #aaaaaa;
+	font-size: 15px;
+}
+
+
+.status-layout{
+	height: 50px;
+    border-bottom: 1px solid #E5E5E5;
+    border-top: 1px solid #E5E5E5;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
+.status-layout .item{
+	float: right;
+	margin: 5px;
+	margin-right: 10px;
+	margin-top: 8px;
+	padding: 3px;
+	padding-left: 10px;
+	padding-right: 10px;
+	font-size: 13px;
+	border: 1px solid #56b4f2;
+	color: #56b4f2;
+	border-radius: 15px;
+}
+
+.leader-tab{
+    height: 50px;
+    overflow: hidden;
+    position: fixed;
+    top: 44.5px;
+    width: 100%;
+    background: white;
+    border-bottom: 1px solid #E5E5E5;
+    z-index: 100;
+}
+.leader-tab .item{
+	float: left;
+	width: 20%;
+	line-height: 48px;
+	margin-bottom: 2px;
+	text-align: center;
+}
+.leader-tab .active{
+	color: #56b4f2;
+	border-bottom: 1px solid #56b4f2;
+}

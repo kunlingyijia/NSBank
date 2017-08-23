@@ -1,0 +1,53 @@
+.content{
+	background: white;
+	padding-top: 50px;
+}
+.tips{
+	position: relative;
+	overflow: hidden;
+    margin-top: 10px;
+}
+.tips .oneline{
+	float: left;
+	width: 5%;
+	height: 1px;
+	background: #E5E5E5;
+	margin-top: 10px;
+}
+
+.tips .two{
+	float: left;
+	width: 35%;
+	height: 40px;
+	text-align: left;
+}
+
+.tips .threeline{
+	float: left;
+	width: 60%;
+	height: 1px;
+	background: #E5E5E5;
+	margin-top: 10px;
+}
+.location{
+	overflow: hidden;
+	/*margin-left: 20px;*/
+}
+.item-layout{
+	float: left;
+	width: 33.33%;
+}
+.item-layout .item{
+	margin: 0 auto;
+	border: 1px solid #E5E5E5;
+	text-align: center;
+	line-height: 45px;
+	height: 45px;
+	border-radius: 5px;
+	margin: 10px;
+}
+
+.item-active{
+	border: 1px solid #127ed8 !important;
+	color: #127ed8;
+}

@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>指纹密码</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style>
+		.content {
+				background: white;
+				height: 200px;
+				margin-top: 45px;
+				text-align: center;
+				color: #57b1b2;
+			}
+			
+			.content img {
+				width: 100px;
+				margin-top: 20px;
+			}
+			
+			.content .tips {
+				margin-top: 20px;
+			}
+			
+			.item-layout {
+				background: white;
+				margin-top: 10px;
+				position: relative;
+				height: 50px;
+			}
+			
+			.item-layout .left {
+				position: absolute;
+				left: 20px;
+				top: 15px;
+			}
+			
+			.item-layout .right {
+				position: absolute;
+				right: 7px;
+				top: 6px;
+				width: 80px;
+				height: 35px;
+			}
+			#turnNext{
+				position: absolute;
+				right: 20px;
+				top: 12px;
+			}
+		}
+		</style>
+	</head>
+
+	<body>
+			<header class="mui-bar mui-bar-nav" style="background: white;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">指纹密码</h1>
+			<label id="turnNext">下一步</label>
+		</header>
+		<div class="content">
+			<img src="../../img/fingger.png" />
+			<div class="tips">指纹密码仅对本机有效</div>
+		</div>
+
+		<div class="item-layout">
+			<div class="left">指纹解锁</div>
+			<div class="right mui-table-view-cell">
+				<span></span>
+				<div id="switch" class="mui-switch mui-switch-mini ">
+					<div class="mui-switch-handle"></div>
+				</div>
+			</div>
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+				<script src="../../js/utils.js"></script>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack:true, //启用右滑关闭功能
+				statusBarBackground: '#ffffff', //设置状态栏颜色,仅iOS可用
+			});
+	
+			if(localStorage.getItem(utils.fingerprint)== 1)
+			{
+			
+				$("#switch").addClass("mui-active");
+			}
+			mui('.mui-switch').each(function() { //循环所有toggle
+				/*
+				 * toggle 事件监听
+				 */
+				this.addEventListener('toggle', function(event) {
+					if(event.detail.isActive )
+					{
+						localStorage.setItem(utils.fingerprint,1);
+					}
+					else
+					{
+						localStorage.setItem(utils.fingerprint,0);
+					}
+			
+				});
+			});
+			
+			document.getElementById('turnNext').addEventListener('tap', function() {
+				 mui.openWindow({
+				      id:'main_frame',
+				      url:'../main_frame.html',
+				    	createNew:true,
+				  });
+			});
+		</script>
+	</body>
+
+</html>

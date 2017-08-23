@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>我的消息</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />		
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		
+		<link rel="stylesheet" href="../../css/mine_message.css" />
+		<link href="../../css/pullrefresh.css" rel="stylesheet" />
+
+	</head>
+	<body style="background: #f5f5f5;">
+
+		<div id="headLayout" class="mui-bar  home-head" style="background: white;">
+			<img class="back-icon" id="back" src="../../img/back.png" />
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+			<h1 id="title" class="mytitle">我的消息</h1>
+
+		</div>
+		
+		<div id="content" style="padding-top: 45px; overflow: hidden;">
+			<div>
+			<div class="message_item_layout" v-for="(item, index)  in items" onclick="lookMore(this)"  >
+				<div class="message_item_img_logo" >{{item.title}} </div>
+				<div class="message_item_text"> {{item.push_time}}</div>
+				<div class="message_item_line"></div>
+				<div class="message_item_content"> {{item.content}}</div>
+				<img class="message_item_layout_bg"  src="../../img/mine_message_gb.png" />
+			</div>
+				
+			</div>
+		
+<!--			
+			<div class="message_item_layout" >
+				<div class="message_item_img_logo" >信息标题 </div>
+				<div class="message_item_text"> 2017-04-28 11:12</div>
+				<div class="message_item_line"></div>
+				<div class="message_item_content"> 消息文字   消息文字   消息文字   消息文字   消息文字   消息文字   消息文字   消息文字   消</div>
+				<img class="message_item_layout_bg"  src="../../img/mine_message_gb.png" />
+			</div>
+			
+			<div class="message_item_layout" >
+				<div class="message_item_img_logo" >信息标题 </div>
+				<div class="message_item_text"> 2017-04-28 11:12</div>
+				<div class="message_item_line"></div>
+				<div class="message_item_content"> 消息文字   消息文字   消息文字   消息文字   消息文字   消息文字   消息文字   消息文字   消</div>
+				<img class="message_item_layout_bg"  src="../../img/mine_message_gb.png" />
+			</div>
+			
+			<div class="message_item_layout" >
+				<div class="message_item_img_logo" >信息标题 </div>
+				<div class="message_item_text"> 2017-04-28 11:12</div>
+				<div class="message_item_line"></div>
+				<div class="message_item_content"> 消息文字   消息文字   消息文字   消息文字   消息文字   消息文字   消息文字   消息文字   消</div>
+				<img class="message_item_layout_bg"  src="../../img/mine_message_gb.png" />
+			</div>-->
+			
+		</div>
+		
+		
+			<script src="../../js/mui.min.js"></script>
+			<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+			<script>
+			mui.init({
+				swipeBack:true, //启用右滑关闭功能
+			})
+			var pull;
+			var page = 0;
+			var pageSize = 20;
+			var listVue = new Vue({
+				el: '#content',
+				data: {
+					items: []
+				}
+			})
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+			(function($) {
+				//阻尼系数
+				var deceleration = mui.os.ios ? 0.003 : 0.0009;
+				$('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration: deceleration
+				});
+				$.ready(function() {
+
+					pull = $("#content").pullToRefresh({
+						down: {
+							callback: function() {
+								var self = this;
+								page = 0;
+								getData(self);
+
+							}
+						},
+						up: {
+							callback: function() {
+								var self = this;
+								getData(self);
+							}
+						}
+					});
+				
+					pull.pullDownLoading();
+				});
+			})(mui);
+			
+			function getData(pullRefresh)
+			{
+				var obj = new Object();
+				obj.phone = localStorage.getItem(utils.phoneNum);
+				obj.userid = localStorage.getItem(utils.userId);
+				obj.page = page;
+				obj.pageSize = pageSize;
+			
+				utils.ajax(utils.getUrl("queryMyMsg"), obj, function(data) {
+					
+					if(data.code == utils.SCUESS) {
+//						mui.toast(data.msg);
+						var result =  JSON.parse(data.data)
+						$(result).each(function(index,val){
+							val.push_time = val.push_time.split(" ")[0]
+						
+						});
+						
+						if(page == 0) {
+							//结束上啦刷新
+							if(pullRefresh != null)
+								pullRefresh.endPullDownToRefresh();
+							listVue.items = result;
+
+						} else {
+
+							$(result).each(function(index, val) {
+								listVue.items.push(val);
+							});
+							if(result.length < pageSize) //没有数据了
+							{
+								mui.toast("没有更多数据了");
+								if(pullRefresh != null)
+									pullRefresh.endPullUpToRefresh(true); //参数为true代表没有更多数据了。
+							} else {
+								if(pullRefresh != null)
+									pullRefresh.endPullUpToRefresh(false); //refresh completed
+							}
+						}
+						page++;
+						
+					
+						
+						
+					} else {
+						mui.toast(data.msg);
+					}
+
+				}, function(xhr, type, errorThrown) {
+					if(pullRefresh != null)
+						pullRefresh.endPullDownToRefresh();
+					mui.toast(errorThrown);
+				})
+			}
+			
+			function lookMore(dom)
+			{
+				localStorage.setItem(utils.msgTitle,$(dom).find(".message_item_img_logo").text())
+				localStorage.setItem(utils.msgContent,$(dom).find(".message_item_content").text())
+				mui.openWindow({
+					id: 'mine_message_more',
+					url: 'mine_message_more.html'
+					
+
+				});
+			}
+			
+			
+			document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+
+		</script>
+	</body>
+</html>

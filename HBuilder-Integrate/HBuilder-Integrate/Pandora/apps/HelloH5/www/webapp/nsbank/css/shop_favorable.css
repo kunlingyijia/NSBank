@@ -1,0 +1,8 @@
+.alert-bg{
+	background: white;
+	position: fixed;
+	height: 400px;
+	bottom: 0px;
+	    width: 100%;
+	    z-index: 1000;
+}

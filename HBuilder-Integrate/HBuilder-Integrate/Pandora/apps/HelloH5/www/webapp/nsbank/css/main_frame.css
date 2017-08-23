@@ -1,0 +1,525 @@
+body{
+	font-size: 14px;
+	line-height: none !important;
+}
+.home-head{
+	background: #56b4f2;
+	height: 45px;
+	position: fixed;
+	color: white !important;
+}
+h1{
+	color: white !important;
+}
+
+.home-icon{
+	
+	width: 22px; 
+	height: 24px;
+	display: block;
+	text-align: center;
+	margin: 0 auto;
+	margin-top: 5px;
+} 
+ .shop-img{
+	width: 26px;
+}
+.xysc-img{
+	width: 28px;
+}
+.home-content{
+	position: relative;
+	background: white;
+}
+
+.banner-ad1{
+	background: #127ed8;
+	position: absolute;
+	height: 30px;
+	line-height: 30px;
+	width: 100%;
+	color: white;
+	text-align: center;
+	    margin-top: 45px;
+}
+
+.no-card-layout {
+	overflow: hidden;
+	padding-top: 90px;
+	text-align: center;
+	
+}
+.no-card-layout  .bankcard
+{
+	    width: 90%;
+    margin-left: 2%;
+}
+.no-card-layout  .tips
+{
+	position: absolute;
+    top: 49%;
+    left: 10%;
+    font-size: 18px;
+    color: #8f5605;
+    width: 80%;
+    text-align: center;
+}
+.button-group{
+	position: relative;
+	margin-top: 20px;
+	overflow: hidden;
+}
+
+ .button-group .left{
+	float: left;
+	width: 50%;
+	text-align: center;
+}
+ .button-group .right{
+	float: left;
+	width: 50%;
+		text-align: center;
+}
+ .button-group button{
+	background: #127ed8;
+	color: white;
+	border: 1px solid #127ed8;
+	border-radius:20px ;
+	width: 120px;
+}
+
+.cardtips-statue-layout{
+	position: fixed;
+bottom: 135px;
+width: 100%;
+color: #888888;
+font-size: 13px;
+}
+.cardtips-statue-layout .left{
+	position: absolute;
+	left: 10px;
+	
+}
+.cardtips-statue-layout .right{
+		position: absolute;
+	right: 10px;
+	
+}
+.cardtips-statue-layout label{
+	color: #fa1a1a;
+	font-size: 16px;
+}
+.have-card-layout{
+	background: #e5e5e5;
+	margin-bottom: 60px;
+	    padding-top: 45px;
+}
+.have-card-layout .cards
+{
+	padding-top: 20px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+.have-card-layout .cards .card-intro{
+	height: 40px;
+	background: #97d2fa;
+	/*margin-left: 15px;
+	margin-right: 15px;*/
+	margin-top: 25px;
+	border-top-right-radius: 8px;
+	border-top-left-radius: 8px;
+	position: relative;
+}
+
+.have-card-layout .cards .card-intro .icon-bank
+{
+	width: 30px;
+	position: absolute;
+	margin-left: 10px;
+	margin-top: 3px;
+}
+.have-card-layout .cards .card-intro label{
+	color: white;
+	margin-left: 50px;
+	display: block;
+    padding-top: 10px;
+}
+.have-card-layout .cards .card-intro .vip
+{
+	width: 30px;
+	position: absolute;
+	right: 55px;
+	top: 12px;
+}
+.have-card-layout .cards .card-intro p{
+	color: white;
+	position: absolute;
+	right: 15px;
+	top: 10px;;
+}
+
+
+.have-card-layout .cards .bank-card
+{
+	background: #f8f8f8;
+	/*height: 250px;*/
+}
+.bank-card .card-img
+{
+	width: 90%;
+	margin: 10%;
+	margin-top: 5%;
+	margin-left: 6%;
+	margin-bottom: 5%;
+}
+.bank-card{
+	position: relative;
+}
+.bank-card .card-num{
+	position: absolute;
+	width: 85%;
+	left: 20%;
+	top: 50%;
+	font-size: 20px;
+	color: #dac58c;
+	font-weight: bold;
+	text-shadow:3px 2px 3px #000;
+}
+.cards .bankcark-info{
+	background: white;
+	position: relative;
+}
+.bankcark-info .item
+{
+	background: white;
+		position: relative;
+		height: 40px;
+}
+.bankcark-info .item .left{
+	position: absolute;
+	left: 20px;
+	top: 8px;
+}
+.bankcark-info .item .right{
+	position: absolute;
+	right: 20px;
+		top: 8px;
+}
+.bankcark-info .item  span{
+	color: #f23132;
+	font-size: 18px;
+}
+.themore {
+	height: 40px;
+	background: white;
+	text-align: center;
+	color: #ababab;
+	position: relative;
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
+}
+.themore .gray-line{
+	background: #EEEEEE;
+	margin-left: 20px;
+	margin-right:20px ;
+	height: 1px;
+}
+.themore  #themoreText
+{
+	float: left;
+	width: 53%;
+	text-align: right;
+	padding-top: 8px;
+}
+.themore  .right
+{
+		float: left;
+	width: 47%;
+	text-align: left;
+	padding-top: 10px;
+	padding-left: 5px;;
+}
+.themore span{
+	position: absolute;
+	left: 40%;
+	top: 10px;
+}
+.themore .jt
+{
+	width: 15px;
+	
+}
+
+.my-tab-bar{
+    position: fixed;
+    bottom: 0px;
+    height: 50px;
+    width: 100%;
+    z-index: 2;
+}
+.my-tab-bar .tab-item
+{
+	float: left;
+	width: 25%;
+	position: relative;
+	height: 100%;
+	    text-align: center;
+}
+
+
+/***********我的界面***********/
+.me-layout
+{
+	position: relative;
+}
+.me-layout .banner{
+		background: white;
+}
+.me-layout .banner .integral-detail{
+	position: absolute;
+	width: 20px;
+	right: 20px;
+	top: 35px;
+}
+.me-layout .banner .integral-detail-text{
+	position: absolute;
+	color: white;
+	right: 10px;
+	top: 65px;
+	font-size: 12px;
+}
+.me-layout .banner-bg
+{
+	height: 120px;
+	width: 100%;
+}
+ .me-layout .order-layout
+ {
+ 	height: 100px;
+ 	background: white;
+ }
+
+.all-order{
+	position: relative;
+	padding-top: 10px;
+	margin-left: 20px;
+	border-bottom: 1px solid #E5E5E5;
+	height: 40px;
+}
+.all-order .left{
+	position: absolute;
+	left: 10px;
+}
+.all-order .right{
+	position: absolute;
+	right: 10px;
+	color: #a9a9a9;
+	
+}
+.statue-order{
+	margin-left: 20px;
+	margin-right: 20px;
+	position: relative;
+	overflow: hidden;
+	font-size: 13px;
+}
+
+.statue-order .item{
+	float: left;
+	width: 25%;
+	/*height: 45px;*/
+	text-align: center;
+}
+.statue-order .item img
+{
+	width: 25px;
+	display: block;
+	margin: 0 auto;
+	margin-top: 10px;
+}
+.row-item{
+	height: 45px;
+	background: white;
+	position: relative;
+	margin-left: 15px;
+	border-bottom:1px solid #E5E5E5 ;
+	
+}
+.row-item .left-icon{
+	position: absolute;
+	left: 10px;
+	width: 20px;
+	top:10px;
+}
+.row-item .right-icon
+{
+		position: absolute;
+	right: 15px;
+	width: 10px;
+	top:12px;
+}
+
+.row-item .text{
+	position: absolute;
+	left: 45px;
+	top:12px;
+}
+.row-item:last-child
+{ 
+	border-bottom:none;
+}
+
+.me-layout .banner .head-img{
+	    position: absolute;
+    width: 55px;
+    top: 23px;
+    left: 35px;
+    height: 55px;
+    border-radius: 50px;
+}
+.me-layout .banner  .username
+{
+	position: absolute;
+	color: white;
+	top:24px;
+	left: 105px;
+	 width:180px;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+.me-layout .banner  .phone
+{
+	position: absolute;
+	color: white;
+	top:48px;
+	left: 105px;
+		 width:180px;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+.me-layout .banner  .integral
+{
+	position: absolute;
+	color: white;
+	top:72px;
+	left: 105px;
+	 width:180px;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+
+/**==================商城=================*/
+.search-layout{
+	margin-top: 60px;
+	margin-left: 20px;
+	margin-right: 20px;
+	position: relative;
+	background: white;
+	border: 1px solid #E5E5E5;
+	border-radius: 5px;
+	height: 40px;
+	}
+.search-layout img{
+	width: 20px;
+	position: absolute;
+	top: 10px;
+	left: 10px;
+}
+.search-layout .text{
+	color: #b8b8b8;
+	position: absolute;
+	left: 40px;
+	top: 8px;
+}
+
+.shop-classify-grid{
+	position: relative;
+	height: 200px;
+	margin: 5px;
+	background: white;
+		border:1px solid #E5E5E5 ;
+	border-radius: 5px;	
+}
+
+.shop-classify-grid .left{
+	float: left;
+	width: 30%;
+	height: 100%;
+	padding-left: 7px;
+	padding-top: 10px;
+}
+.shop-classify-grid .left img{
+	width: 100%;
+	    height: 177px;
+}
+.shop-classify-grid .left .text{
+	position: absolute;
+	margin: 0 auto;
+	bottom: 32%;
+	font-size: 16px;
+	color: white;
+	/*left: 5%;*/
+	width: 100%;
+	text-align: center;
+	height: 100%;
+}
+.shop-classify-grid .right{
+		float: left;
+	width: 70%;
+	height: 100%;
+}
+
+.shop-classify-grid .hor-layouy
+{
+	position: relative;
+	overflow: hidden;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+		border-bottom:1px solid #E5E5E5 ;
+}
+.shop-classify-grid .right :last-child{
+	border-bottom:none ;
+}
+.shop-classify-grid .hor-item{
+	float: left;
+	width: 33.33%;
+	height: 80px;
+	margin-bottom: 10px;
+}
+.shop-classify-grid .hor-item img{
+	    height: 50px;
+	width: 50px;
+	display: block;
+	margin: 0 auto;
+}
+.shop-classify-grid .hor-item .text{
+	font-size: 12px;
+	text-align: center;
+}
+
+.hor-layouy .hor-item-img-large{
+	float: left;
+	width: 70%;
+	height: 82px;
+	margin-bottom: 10px;
+}
+.hor-layouy .hor-item-smart{
+	float: left;
+	width: 30%;
+	height: 82px;
+	margin-bottom: 10px;
+}
+.hor-layouy .hor-item-img-large img{
+	width: 100%;
+	height: 100%;
+	
+}
+.hor-layouy .hor-item-smart img{
+	width: 100%;
+	height: 100%;
+}
