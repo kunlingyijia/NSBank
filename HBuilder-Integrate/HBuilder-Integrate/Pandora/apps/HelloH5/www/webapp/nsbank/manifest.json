@@ -382,7 +382,8 @@
 					"page/shop/search.html",
 					"page/User/mention_amount.html",
 					"page/record/record.html",
-					"page/User/mine_data.html"
+					"page/User/mine_data.html",
+					"page/User/help.html"
 				],
 				"priority": 0
 			},
@@ -428,7 +429,8 @@
 					"page/main_frame.html",
 					"page/User/reg.html",
 					"page/User/locker-dom.html",
-					"page/User/forgetpwd.html"
+					"page/User/forgetpwd.html",
+					"page/User/bing_phone.html"
 				],
 				"priority": 0
 			},
@@ -654,10 +656,12 @@
 					"css/dialog/mydialog.css",
 					"js/DES3.js",
 					"js/dialog/mydialog.js",
-					"js/utils.js"
+					"js/utils.js",
+					"img/txl.png"
 				],
 				"refer": [
-					"page/main_frame.html"
+					"page/main_frame.html",
+					"page/webview.html"
 				],
 				"priority": 0
 			},
@@ -714,7 +718,8 @@
 					"js/vue.min.js"
 				],
 				"refer": [
-					"page/User/replace_bank_data.html"
+					"page/User/replace_bank_data.html",
+					"page/User/bind_bank_data.html"
 				],
 				"priority": 0
 			},
@@ -883,7 +888,10 @@
 					"img/jt.png",
 					"js/dialog/mydialog.js"
 				],
-				"refer": [],
+				"refer": [
+					"page/User/accumulation_fund.html",
+					"page/User/car_certification.html"
+				],
 				"priority": 0
 			},
 			"page/User/account_safe.html": {
@@ -894,7 +902,8 @@
 				],
 				"refer": [
 					"page/User/change_phone_pwd.html",
-					"page/User/locker-dom.html"
+					"page/User/locker-dom.html",
+					"page/User/fingerSetting.html"
 				],
 				"priority": 0
 			},
@@ -946,6 +955,108 @@
 					"css/mui.min.css"
 				],
 				"refer": [],
+				"priority": 0
+			},
+			"page/User/accumulation_fund.html": {
+				"resources": [
+					"js/utils.js",
+					"js/mui.min.js",
+					"css/common.css",
+					"js/DES3.js",
+					"css/mention_amount.css",
+					"css/mui.min.css",
+					"js/jquery-3.2.1.min.js",
+					"js/dialog/mydialog.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"page/User/car_certification.html": {
+				"resources": [
+					"js/utils.js",
+					"css/dialog/mydialog.css",
+					"css/identity_certificate.css",
+					"js/mui.min.js",
+					"css/common.css",
+					"js/DES3.js",
+					"css/mui.min.css",
+					"js/jquery-3.2.1.min.js",
+					"css/bank_data.css",
+					"js/dialog/mydialog.js",
+					"img/photo.png",
+					"img/pic_back.png",
+					"img/pic_front.png"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"page/User/bind_bank_data.html": {
+				"resources": [
+					"js/utils.js",
+					"js/mui.min.js",
+					"css/common.css",
+					"js/DES3.js",
+					"css/mui.min.css",
+					"js/jquery-3.2.1.min.js",
+					"img/photo_bank.png",
+					"js/dialog/mydialog.js",
+					"img/watermark.png",
+					"img/photo.png",
+					"css/bind_bank_data.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"page/User/change_phone_pwd.html": {
+				"resources": [
+					"js/utils.js",
+					"js/mui.min.js",
+					"css/login.css",
+					"js/DES3.js",
+					"css/mui.min.css",
+					"js/jquery-3.2.1.min.js",
+					"js/dialog/mydialog.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"page/User/bing_phone.html": {
+				"resources": [
+					"js/utils.js",
+					"img/back.png",
+					"img/bindphone.png",
+					"js/mui.min.js",
+					"css/common.css",
+					"css/login.css",
+					"js/DES3.js",
+					"css/mui.min.css",
+					"js/jquery-3.2.1.min.js",
+					"js/dialog/mydialog.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"page/webview.html": {
+				"resources": [
+					"css/common.css",
+					"css/mui.min.css",
+					"js/utils.js",
+					"js/mui.min.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"page/User/help.html": {
+				"resources": [
+					"css/mui.min.css",
+					"js/utils.js",
+					"js/mui.min.js",
+					"js/DES3.js",
+					"css/set.css"
+				],
+				"refer": [
+					"page/webview.html"
+				],
 				"priority": 0
 			}
 		},

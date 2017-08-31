@@ -189,11 +189,15 @@
 				obj.phone = localStorage.getItem(utils.phoneNum);
 				obj.userid = localStorage.getItem(utils.userId);
 
-				dialog.showDialog()
+//				dialog.showDialog()
 				utils.ajax(utils.getUrl("queryBankCardApply"), obj, function(data) {
 					dialog.closeDialog()
 					if(data.code == utils.SCUESS) {
 						var result = JSON.parse(data.data);
+						if(result.length==0)
+						{
+							mui.toast('无申请记录')
+						}
 						$(result).each(function(index,val){
 							val.statusTime = val.statusTime.substring(0,val.statusTime.length-2);
 						});
@@ -216,7 +220,7 @@
 				obj.phone = localStorage.getItem(utils.phoneNum);
 				obj.userid = localStorage.getItem(utils.userId);
 
-				dialog.showDialog()
+//				dialog.showDialog()
 				utils.ajax(utils.getUrl("lookRedPacketDeposit"), obj, function(data) {
 					dialog.closeDialog()
 					if(data.code == utils.SCUESS) {

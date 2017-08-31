@@ -87,7 +87,7 @@
 				<img class="set_next_img" src="../../img/jt.png" />
 			</div>
 
-			<button id="loginOut" class="login-out">退出登录</button>
+		<!--	<button id="loginOut" class="login-out">退出登录</button>-->
 		</div>
 		<script src="../../js/mui.min.js"></script>
 		<script src="../../js/utils.js"></script>
@@ -101,17 +101,7 @@
 			document.getElementById("back").addEventListener("tap", function() {
 				mui.back();
 			});
-			/**
-			 * 退出登录
-			 */
-			document.getElementById("loginOut").addEventListener("tap", function() {
-				utils.loginOut();
-				mui.openWindow({
-					id: 'login',
-					url: 'login.html'
-
-				});
-			});
+			
 
 			/**
 			 * 个人信息

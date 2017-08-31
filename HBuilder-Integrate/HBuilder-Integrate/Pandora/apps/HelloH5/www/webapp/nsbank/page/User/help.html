@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>帮助中心</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link href="../../css/set.css" rel="stylesheet" />
+
+	</head>
+
+	<body style="background: #f5f5f5; text-align: center;">
+
+		<div id="headLayout" class="mui-bar  home-head" style="background: white;">
+				<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+
+			<img class="back-icon" id="back" src="../../img/back.png" />
+
+			<h1 id="title" class="mytitle">帮助中心</h1>
+
+		</div>
+
+		<div id="content" style="padding-top: 45px;">
+			<div class="set_layout" id="lookContract">
+				<div class="set_left_text"> 查看合同</div>
+				<!--<div class="user_name"  >用户1234</div>-->
+				<img class="set_next_img" src="../../img/jt.png" />
+			</div>
+
+			
+
+
+		<!--	<button id="loginOut" class="login-out">退出登录</button>-->
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/DES3.js"></script>
+		<script src="../../js/utils.js"></script>
+		<script>
+			mui.init({
+				swipeBack: false, //启用右滑关闭功能
+				statusBarBackground: '#ffffff', //设置状态栏颜色,仅iOS可用
+
+			});
+
+			document.getElementById("back").addEventListener("tap", function() {
+				mui.back();
+			});
+			
+
+			/**
+			 * 查看合同
+			 */
+			document.getElementById("lookContract").addEventListener("tap", function() {
+				
+				var obj = new Object();
+				 obj.userid = localStorage.getItem(utils.userId);
+				
+				 dialog.showDialog();
+				utils.ajax(utils.getUrl("suportDAndV"), obj, function(data) {
+						dialog.closeDialog()
+						if(data.code == utils.SCUESS) {
+//							mui.toast(data.msg);
+							var result = JSON.parse(data.data)
+							localStorage.setItem("fadadaUrl",result.viewpdfurl)
+									mui.openWindow({
+										id: 'webview.html',
+										url: '../webview.html',
+										createNew:true,								
+									});
+							
+						
+				
+						} else {
+							mui.toast(data.msg);
+						}
+				
+					}, function(xhr, type, errorThrown) {
+						dialog.closeDialog()
+						mui.toast(errorThrown);
+					})
+				
+
+			});
+		
+					document.getElementById("back2").addEventListener("tap", function() {
+				mui.back();
+			});
+		</script>
+	</body>
+
+</html>

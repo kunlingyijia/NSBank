@@ -1,7 +1,7 @@
 (function(w, utils) {
 				utils.path = "http://106.15.52.138:8011/nsbank";
-//		utils.path = "http://192.168.1.23:8082/nsbank";
-		//		utils.path ="http://192.168.88.217:8080/nsbank";
+//		utils.path = "http://192.168.1.88:8082/nsbank";
+
 //		utils.ImagePath = "http://106.14.64.21:8380/image";
 	    utils.ImagePath = "http://106.15.52.138:8778/file/image";
 		
@@ -52,7 +52,8 @@
 		utils.invite_code = 'invite_code'; //推荐码
 		utils.msgTitle = 'msgTitle'; 
 		utils.msgContent = 'msgContent'; 
-
+	    utils.customer_id = 'customer_id'; //法大大合同客户编号
+	    utils.contract_id = 'contract_id'; //法大大合同编号
 		//地址配置
 		var urls = {
 			RegUer: '/User/register.do',
@@ -104,6 +105,8 @@
 			queryBankCardApply:'/LilyCardApply/queryBankCardApply.do',//查询申请卡记录
 			lookRedPacketDeposit:'/RedPacketDeposit/lookRedPacketDeposit.do',//提现记录
 			forgetPassword:'/User/forgetPassword.do',//忘记密码
+			fadada:'/Contract/extFDDSignContract.do',//法大大
+			suportDAndV :'/Contract/suportDAndV.do',//查看签署合同
 		}
 		//获取访问地址
 		utils.getUrl = function(key) {
@@ -256,6 +259,8 @@
 			localStorage.removeItem(utils.switchGesture);
 			localStorage.removeItem(utils.isFirstSettingLocalPwd);
 			localStorage.removeItem(utils.keyGesture);
+			localStorage.removeItem(utils.customer_id);
+			localStorage.removeItem(utils.contract_id);
 			
 		}
 

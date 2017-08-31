@@ -42,10 +42,10 @@
 				<div class="left">手势密码</div>
 				<div class="right1"><img src="../../img/jt.png" style="width: 10px;"/> </div>
 			</div>
-			<!--<div class="input-layout2">
+			<div class="input-layout2" id="zw">
 				<div class="left">指纹</div>
 				<div class="right1"><img src="../../img/jt.png" style="width: 10px;"/> </div>
-			</div>-->
+			</div>
 		</div>
 		
 		
@@ -67,6 +67,16 @@
 						      url:'change_phone_num.html'						    
 						  });
 			});
+			/**
+			 * 指纹
+			 */
+			document.getElementById("zw").addEventListener("tap", function() {
+				 mui.openWindow({
+						      id:'fingerSetting',
+						      url:'fingerSetting.html'						    
+						  });
+			});
+			
 		/**
 		 * 修改登录密码
 		 */

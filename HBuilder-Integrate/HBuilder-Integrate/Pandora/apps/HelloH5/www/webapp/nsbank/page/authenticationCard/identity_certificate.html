@@ -157,7 +157,7 @@
 						mui.toast(data.msg);
 						var bankcard_id = localStorage.getItem(utils.bankcard_id);
 						var bankcard_statue = localStorage.getItem(utils.bankcard_statue);
-						if(bankcard_statue==3 || bankcard_statue==4)//审核失败，需要修改
+						if(bankcard_statue==3 || bankcard_statue==4  ||bankcard_statue==0)//审核失败，需要修改
 						{
 							mui.openWindow({
 							id: 'identity_personinfo',

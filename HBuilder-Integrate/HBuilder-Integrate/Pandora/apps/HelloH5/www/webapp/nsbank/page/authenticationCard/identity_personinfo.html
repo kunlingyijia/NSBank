@@ -49,7 +49,7 @@
 					<div class="right2"><input id="marray" type="text" readonly="true" placeholder="请选择您的婚姻状况" /> </div>
 				</div>
 				<div class="input-layout2">
-					<div class="left">邮箱(选填)</div>
+					<div class="left"><label style="color: red;">* </label>邮箱</div>
 					<!--<div class="right1" style="visibility: hidden;"><img src="../../img/down_yellow.png"/> </div>-->
 					<div class="right2"><input id="email" type="text"  placeholder="请填写常用邮箱" /> </div>
 				</div>
@@ -65,19 +65,23 @@
 				</div>				
 				<div class="input-layout2">
 				
-					<div class="left"><label style="color: red;">* </label>所在地址</div>
+					<div class="left"><label style="color: red;">* </label>常住地址</div>
 					<div id="location" class="right1" style="margin-top: 5px;"><img src="../../img/location_yell.png"/> </div>
-					<div class="right2"><input id="address" type="text"  placeholder="您的地址" /> </div>
+					<div class="right2"><input id="address" type="text"  placeholder="法律文书送达地址" /> </div>
 				</div>		
 			</div>
 			<div style="margin-top: 10px;margin-left: 4%;">联系人信息</div>			
 			<div class="grid-layout " style="margin-top: 10px;">
+				
+				
 				<div class="input-layout2" style="position: relative;">	
 					<div class="left"><label style="color: red;">* </label>父母或配偶</div>
 				<!--	<div class="right1"><img src="../../img/down_yellow.png"/> </div>-->
 					<div class="right2"><input id="parentPhone" type="number"  placeholder="父母或配偶电话"  style="width: 80%;"/>
 					<img id="getParentsPhone" src="../../img/txl.png" style="width: 20px;position: absolute; right: 10px; top: 14px;"/> </div>
 				</div>		
+			
+				
 				<div class="input-layout2" style="position: relative;">	
 					<div class="left"><label style="color: red;">* </label>其他朋友电话</div>
 				<!--	<div class="right1"><img src="../../img/down_yellow.png"/> </div>-->
@@ -150,6 +154,12 @@
 			</div>
 			
 			
+			<!--<div style="height: 45px; background: white; margin-top: 10px;">
+				<div style="float: left;width: 70%;line-height: 45px;padding-left: 10px;"> 农商行开卡合同</div>
+				<div id="lookContract" style="float: left;width: 30%;line-height: 45px; color: #4391e3;">签约合同</div>
+			</div>
+			-->
+			
 			<div class="btn-layout" style="margin-top: 30px; margin-bottom: 20px;">
 				<button  id="submit" class="btn">确认提交</button>
 			</div>
@@ -163,6 +173,7 @@
 		<script type="text/javascript">
 			mui.init()
 			var bankcard_id='';//百合卡主键id 默认为空，有值时说明是编辑状态
+//			var isSign= false;//签约状态
 			//学历
 			var eduArr = [{value: '0',text: '中专以下'}, {value: '1',text: '中专',}, {value: '2',text: '大专'}, {value: '3',text: '本科'}, {value: '4',text: '研究生'}, {value: '5',text: '博士或博士以上'}];
 			//婚姻状态
@@ -170,6 +181,13 @@
 			initEdu();
 			initMarray();
 			initEditData();//检查之前是否提交过
+			
+			
+//			function initCustomer()
+//			{
+//				
+//			}
+			
 			function initEdu()
 			{
 				//普通示例
@@ -269,6 +287,12 @@
 					mui.toast("请选择婚姻状态");
 					return;
 				}
+				
+				if(utils.isNone($("#email").val()))
+				{
+					mui.toast("请输入邮箱");
+					return;
+				}
 				if(utils.isNone($("#address").val()))
 				{
 					mui.toast("请输入您的所在地址");
@@ -294,6 +318,11 @@
 //					mui.toast("请选择信用卡月消费额度");
 //					return;
 //				}
+//				if(!isSign)
+//				{
+//					mui.toast("请签约合同");
+//					return;
+//				}
 				
 				var obj = new Object();
 				 obj.bankcard_id=bankcard_id;
@@ -302,10 +331,11 @@
 				 obj.education=$("#edu").attr("op");
 				 obj.marital_status=$("#marray").attr("op");
 				 obj.email = $("#email").val();
-				 obj.company_name=$("#companyName").val();
-				 obj.address=$("#address").val();
-				 obj.parent_num=$("#parentPhone").val();
-				 obj.other_num=$("#otherFrendsPhone").val();
+				 obj.companyname=$("#companyName").val();
+				 
+				 obj.lifeaddress=$("#address").val();
+				 obj.kinshipmobile=$("#parentPhone").val();
+				 obj.friendmobile=$("#otherFrendsPhone").val();
 				 obj.hold_credit_card=getCreditCard();
 				 obj.consume_range=getCreditCardLimit();
 				 obj.city=localStorage.getItem(utils.currentCity);
@@ -314,17 +344,38 @@
 				utils.ajax(utils.getUrl("LilyCardApply"), obj, function(data) {
 						dialog.closeDialog()
 						if(data.code == utils.SCUESS) {
-							mui.toast(data.msg);
-						//设置状态
-						localStorage.setItem(utils.bankcard_statue, 2);
-						localStorage.setItem(utils.idcard_status, 2);
-						localStorage.setItem(utils.credit_status, 1);
+//							mui.toast(data.msg);
+							var result = JSON.parse(data.data)
+							if(result.signtype==1)//需要签署合同
+							{
+									bankcard_id = result.bankcard_id;
+//									localStorage.setItem(utils.customer_id,signUrl.customer_id)
+//									localStorage.setItem(utils.contract_id,signUrl.contract_id)
+									localStorage.setItem(utils.bankcard_statue, 0);
+									localStorage.setItem("fadadaUrl",result.returnurl)
+									mui.openWindow({
+										id: 'webview.html',
+										url: '../webview.html',
+										createNew:true,
+										 extras: {
+										        url: result.returnurl
+										 }									
+									});
+							}
+							else if(result.signtype==2){//无需签署
+								//设置状态
+								localStorage.setItem(utils.bankcard_statue, 2);
+								localStorage.setItem(utils.idcard_status, 2);
+								localStorage.setItem(utils.credit_status, 1);
+								
+									mui.openWindow({
+										id: 'main',
+										url: '../main_frame.html',
+										createNew:true,
+									});
+							}
+							
 						
-							mui.openWindow({
-								id: 'main',
-								url: '../main_frame.html',
-								createNew:true,
-							});
 				
 						} else {
 							mui.toast(data.msg);
@@ -377,6 +428,7 @@
 				
 				if(!utils.isNone(edit))//是编辑状态则去请求之前填写过的信息
 				{
+//					isSign= true;
 					var obj = new Object();
 					obj.phone = localStorage.getItem(utils.phoneNum);
 					obj.userid = localStorage.getItem(utils.userId);
@@ -403,10 +455,10 @@
 								}
 							});
 							$("#email").val(obj.email);
-				 			$("#companyName").val(obj.company_name);
-				 			$("#address").val(obj.address);
-				 			$("#parentPhone").val(obj.parent_num);
-							$("#otherFrendsPhone").val(obj.other_num);
+				 			$("#companyName").val(obj.companyname);
+				 			$("#address").val(obj.lifeaddress);
+				 			$("#parentPhone").val(obj.kinshipmobile);
+							$("#otherFrendsPhone").val(obj.friendmobile);
 							$("#creditCard").val( obj.hold_credit_card);	
 							$("#recommendMan").val( obj.marketing_no); 
 							$("#lastMouthConsume").val(obj.consume_range);//信用卡月消费
@@ -536,6 +588,111 @@
 				};
 				window.plus.fingerprintIdent = fingerprintIdent;
 			}, true);
+			
+			
+			/**
+			 * 请求电子合同
+			 */
+//			document.getElementById("lookContract").addEventListener("tap", function() {
+//				
+//				if(utils.isNone($("#email").val()))
+//				{
+//					mui.toast("请输入电子邮箱");
+//					return;
+//				}
+//				if(utils.isNone($("#address").val()))
+//				{
+//					mui.toast("请输入常住地址");
+//					return;
+//				}
+//				
+//				if(utils.isNone($("#parentPhone").val()))
+//				{
+//					mui.toast("请输入父母电话");
+//					return;
+//				}
+//					if(utils.isNone($("#otherFrendsPhone").val()))
+//				{
+//					mui.toast("请输入朋友电话");
+//					return;
+//				}
+//				
+//				
+//				
+//				
+//				var obj = new Object();
+//				obj.phone = localStorage.getItem(utils.phoneNum);
+//				obj.userid = localStorage.getItem(utils.userId);
+//				obj.customer_id = utils.notNone(localStorage.getItem(utils.customer_id));
+//				obj.contract_id = utils.notNone (localStorage.getItem(utils.contract_id));
+//				obj.lifeaddress =  $("#address").val();
+//				obj.email = $("#email").val();
+//				obj.companyname = $("#companyName").val();
+//			    obj.kinshipmobile = $("#parentPhone").val();// 亲属电话
+//			    	obj.friendmobile = $("#otherFrendsPhone").val();// 朋友电话
+//				
+//				dialog.showDialog();
+//				utils.ajax(utils.getUrl("fadada"), obj, function(data) {
+//					dialog.closeDialog()
+//					if(data.code == utils.SCUESS) {
+////						mui.toast(data.msg);
+//						var signUrl = JSON.parse(data.data);
+//						localStorage.setItem("fadadaUrl",signUrl.signUrl)
+//						//已签约的合同
+////						if(localStorage.getItem(utils.contract_id) == signUrl.contract_id)
+////						{
+////							mui.toast("您已签署过合同");
+////							$("#lookContract").text("已签约");
+////							return;
+////						}
+//						
+//						localStorage.setItem(utils.customer_id,signUrl.customer_id)
+//						localStorage.setItem(utils.contract_id,signUrl.contract_id)
+//
+//						mui.openWindow({
+//							id: 'webview.html',
+//							url: '../webview.html',
+////							createNew:true,
+//							 extras: {
+//							        url: signUrl.signUrl
+//							   }
+//						
+//				
+//						});
+//						
+//			
+//					} else {
+//						mui.toast(data.msg);
+//					}
+//			
+//				}, function(xhr, type, errorThrown) {
+//					dialog.closeDialog()
+//					mui.toast(errorThrown);
+//				})
+//			});
+					
+					
+					
+
+	window.addEventListener('getFadadaScuess', function(event) {
+	
+//		console.info("接受参数" + event.detail.city);
+		//		  console.info(utils.obj2Str($("#citySelect")));
+//			alert("ok")
+//			$("#lookContract").text("已签约");
+//			isSign = true;
+
+			mui.openWindow({
+				id: 'main',
+				url: '../main_frame.html',
+				createNew:true,
+			});
+	
+	});
+			
+			
+			
+			
 		</script>
 	</body
 

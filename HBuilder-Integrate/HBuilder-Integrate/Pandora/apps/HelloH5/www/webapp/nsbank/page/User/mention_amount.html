@@ -58,8 +58,8 @@
 		<div style="margin-top: 86px;">
 			<div class="min-date-text">社交信息认证</div>
 			<div style="background: white; width: 100%; padding-bottom: 20px;">
-				<div class="mine-data-certification">
-					<img style="position: absolute;left: 55%; width:15px;" src="../../img/mention_amoun_ok.png" />
+				<div class="mine-data-certification"  onclick="operator()">
+					<img style="position: absolute;left: 55%; width:15px; display: none;" src="../../img/mention_amoun_ok.png" />
 					<img class="mine-data-certification-img"  src="../../img/mention_amount_phone.png" />
 					<div class="mine-data-certification-text">运营商</div>
 				</div>
@@ -203,6 +203,21 @@
 			document.getElementById("back2").addEventListener("tap", function() {
 				mui.back();
 			});
+			
+			/**
+			 * 运营商认证
+			 */
+			function operator()
+			{
+				
+					localStorage.setItem("fadadaUrl",signUrl.signUrl)
+					mui.openWindow({
+							id: 'webview.html',
+							url: '../webview.html',
+							createNew:true,
+				
+						});
+			}
 			
 		</script>	
 	</body>

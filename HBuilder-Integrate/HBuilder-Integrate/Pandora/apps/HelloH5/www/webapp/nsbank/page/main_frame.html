@@ -62,10 +62,18 @@
 				-webkit-box-shadow: none;
 				box-shadow: none;
 			}
+			.login-out{
+				width: 90%;
+			    margin: 0 auto;
+			    margin-top: 30px;
+			    height: 45px;
+			    margin-bottom: 30px;
+			    margin-left: 5%;
+			}
 		</style>
 	</head>
 
-	<body style="height: 100%;line-height: none ;">
+	<body style="height: 100%;line-height: none ;position: relative;">
 		<div id="headLayout" class="mui-bar  home-head">
 			<img id="location" class="head-lefticon" src="../img/citylocation.png" />
 			<div id="citySelect2" class="head-lefticon-text">城市选择</div>
@@ -124,7 +132,8 @@
 
 									<div class="bank-card">
 										<img src="../img/have_card.png" class="card-img" />
-										<div class="card-num">{{item.CARD_NO}}</div>
+										<div class="card-num" style="left: 15% !important;font-size: 24px !important;">{{item.CARD_NO}}</div>
+										<div style="position: absolute;left: 45%;bottom: 23%; font-weight: bold;">{{item.OUT_DATE}}</div>
 									</div>
 									<div class="bankcark-info">
 										<div class="item">
@@ -136,7 +145,7 @@
 											<div class="right">¥&nbsp;<span>{{item.CREDIT_LIMIT}}</span></div>
 										</div>
 										<div class="item">
-											<div class="left">利率</div>
+											<div class="left">利率(日)</div>
 											<div class="right">{{item.INTEREST_TYPE}}%</div>
 										</div>
 
@@ -149,7 +158,8 @@
 
 									<div class="bank-card">
 										<img src="../img/have_card.png" class="card-img" />
-										<div class="card-num">{{item.CARD_NO}}</div>
+										<div style="left: 15% !important;font-size: 24px !important;" class="card-num">{{item.CARD_NO}}</div>
+									<div style="position: absolute;left: 45%;bottom: 23%; font-weight: bold;">{{item.OUT_DATE}}</div>
 									</div>
 									<div class="bankcark-info">
 										<div class="item">
@@ -161,7 +171,7 @@
 											<div class="right">¥&nbsp;<span>{{item.CREDIT_LIMIT}}</span></div>
 										</div>
 										<div class="item">
-											<div class="left">利率</div>
+											<div class="left">利率(日)</div>
 											<div class="right">{{item.INTEREST_TYPE}}%</div>
 										</div>
 
@@ -245,7 +255,7 @@
 				<div style="text-align: center;margin-top: 30%;">
 					<img src="../img/online.png" style="width: 30%;" />
 				</div>
-				<div style="color: #ababab;text-align: center; margin-top: 20px;">即将上线，尽请期待</div>
+				<div onclick="testFadada()" style="color: #ababab;text-align: center; margin-top: 20px;">即将上线，尽请期待</div>
 
 			</div>
 			<div id="mine" class="mui-control-content   mui-slider ">
@@ -254,7 +264,7 @@
 						<img src="../img/login_banner.png" class="banner-bg" />
 						<img id="headurl" src="../img/head-normal.png" class="head-img" />
 						<div id="username" class="username">用户</div>
-						<div id="userPhone" class="phone">123*23232323</div>
+						<div id="userPhone" class="phone"></div>
 						<div id="integral" class="integral">当前积分:0</div>
 						<img id="integralDetailImg" class="integral-detail " src="../img/intergal.png" />
 						<div id="integralDetail" class="integral-detail-text ">积分明细</div>
@@ -277,6 +287,11 @@
 						<div class="row-item" id="myApplyCard">
 							<img class="left-icon" src="../img/wybk.png" />
 							<div class="text">我要办卡</div>
+							<img class="right-icon" src="../img/jt.png" />
+						</div>
+							<div class="row-item" id="myCardForehead" >
+							<img class="left-icon" src="../img/wybk.png" />
+							<div class="text">我要提额</div>
 							<img class="right-icon" src="../img/jt.png" />
 						</div>
 						<div class="row-item" id="myRedPakge">
@@ -324,13 +339,14 @@
 							<div class="text">设置</div>
 							<img class="right-icon" src="../img/jt.png" />
 						</div>
-						<div class="row-item">
+						<div class="row-item" id="help">
 							<img class="left-icon" src="../img/help.png" />
 							<div class="text">帮助中心</div>
 							<img class="right-icon" src="../img/jt.png" />
 						</div>
-
+						
 					</div>
+						<button id="loginOut" class="login-out">退出登录</button>
 				</div>
 
 			</div>
@@ -353,10 +369,10 @@
 			</div>
 		</div>	
 			
-		<div id="sharelayout" style="display: none;" >
-				<div id="shareBg" style="position: absolute;background: #4a4a4a; width: 100%;height: 200%;top: 0px;z-index: 20; opacity: 0.8;">		
+		<div id="sharelayout" style="display: none;  position: absolute; top: 0px; left: 0px;width: 100%;height: 100%;">
+				<div id="shareBg" style="position: absolute;background: #4a4a4a; width: 100%;top: 0px;z-index: 21; opacity: 0.8;">		
 				</div>
-					<div class="shareContent" style="height: 200px; background: white;position: absolute;bottom: -200px;width: 100% ; z-index: 21;">
+					<div class="shareContent" style="height: 200px; background: white;position: absolute;top:420px; width: 100% ; z-index: 21;">
 						<div id="shareWeChat" style=" float: left; width: 25%;text-align: center;margin-top: 20px;">
 							<img src="../img/umeng_socialize_wechat.png" style="width: 50px;"/>
 							<div>微信好友</div>
@@ -554,6 +570,18 @@
 
 			}, false);
 
+		}
+		
+		
+		function testFadada()
+		{
+//				mui.openWindow({
+//							id: 'webview.html',
+//							url: 'webview.html'
+//				
+//						});
+//			return;
+			
 		}
 		
 		

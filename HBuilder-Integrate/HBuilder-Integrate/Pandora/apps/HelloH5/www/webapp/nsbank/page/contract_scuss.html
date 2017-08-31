@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/common.css" rel="stylesheet" />
+		<METAHTTP-EQUIV="Pragma"CONTENT="no-cache">
+
+<METAHTTP-EQUIV="Cache-Control"CONTENT="no-cache">
+
+<METAHTTP-EQUIV="Expires"CONTENT="0">
+	</head>
+
+	<body>
+		<!--<div id="headLayout" class="mui-bar  home-head " style="background: white;">
+			<div style="width: 40px; height: 100%; position: absolute;" id="back2"></div>
+			<img id="back" class="head-lefticon" style="width: 10px; top: 15px;" src="../img/back.png" />
+			<h3 id="title" class="mytitle">签约成功</h1>
+
+		</div>-->
+		<div id="content" style="padding-top: 50px; text-align: center;">
+			
+			<img src="../img/success.png" style="width: 60px; margin-top: 20px;" />
+			<div style="padding: 10px;">喜您签约成功，具体合同可在帮助菜单里查看</div>
+			
+				<div class="btn-layout" style="margin-top: 30px; margin-bottom: 20px;">
+				<button  id="submit" class="btn" style="background: #46cef6;">确定</button>
+			</div>
+			
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/utils.js"></script>
+		<script type="text/javascript">
+			
+		
+			
+			
+//			  
+//			  document.getElementById("back2").addEventListener("tap", function() {
+//			  	
+//				mui.back();
+//			});
+//			 document.getElementById("back").addEventListener("tap", function() {
+//				mui.back();
+//			});
+			  document.getElementById("submit").addEventListener("tap", function() {
+			  	
+			  		//设置状态
+					localStorage.setItem(utils.bankcard_statue, 2);
+					localStorage.setItem(utils.idcard_status, 2);
+					localStorage.setItem(utils.credit_status, 1);
+					
+			  		var identity_personinfo = plus.webview.getWebviewById("identity_personinfo");
+			  		//传值给详情页面，通知加载新数据
+					mui.fire(identity_personinfo, 'getFadadaScuess', {
+						city: ''
+					});
+//					identity_personinfo.show();
+//			  	
+					mui.back();
+
+				
+//					
+//						mui.openWindow({
+//							id: 'main',
+//							url: '../main_frame.html',
+//							createNew:true,
+//						});
+
+			});
+			
+			
+		</script>
+	</body>
+
+</html>

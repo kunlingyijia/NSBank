@@ -211,35 +211,41 @@
 						localStorage.setItem(utils.credit_status, result.credit_status);
 						localStorage.setItem(utils.invite_code, result.invite_code);
 
-						if(localStorage.getItem(utils.isFirstSettingLocalPwd) != 1) //如果没设置过解锁码则跳转
-						{
-							mui.openWindow({
-								id: 'locker',
-								url: 'locker-dom.html'
-
-							});
-						} else {
+//						if(localStorage.getItem(utils.isFirstSettingLocalPwd) != 1) //如果没设置过解锁码则跳转
+//						{
+//							mui.openWindow({
+//								id: 'locker',
+//								url: 'locker-dom.html'
+//
+//							});
+//						} else {
+//							mui.openWindow({
+//								id: 'main_frame',
+//								url: '../main_frame.html',
+//								createNew: true,
+//							});
+//						}
 							mui.openWindow({
 								id: 'main_frame',
 								url: '../main_frame.html',
 								createNew: true,
 							});
-						}
+							
 
 					} else if(data.code == utils.FAIL) {
 						mui.toast(data.msg);
 					} else if(data.code == 2) { //微信登录
 						mui.toast(data.msg);
 						mui.openWindow({
-							id: 'reg',
-							url: 'reg.html?wechat=' + wechatopenid + '&qq=',
+							id: 'bing_phone',
+							url: 'bing_phone.html?wechat=' + wechatopenid + '&qq=',
 
 						});
 					} else if(data.code == 3) { //qq登录
 						mui.toast(data.msg);
 						mui.openWindow({
-							id: 'reg',
-							url: 'reg.html?wechat=&qq=' + qqopenid,
+							id: 'bing_phone',
+							url: 'bing_phone.html?wechat=&qq=' + qqopenid,
 
 						});
 					}

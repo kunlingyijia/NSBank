@@ -74,7 +74,7 @@
 		<div class="title">
 			<img src="../../img/back_reg.png" id="back"  style="position: absolute; top: 10px; left: 15px;"/>
 			<div class="content">设置手势密码</div>
-				<label id="turnNext">下一步</label>
+				<label id="turnNext">清除手势</label>
 		</div>
 		<div class="mui-content" style="background: #5778c7;height: 100%; opacity: 1;padding-top: 105px;">
 			<!--<div id='holder' class="mui-locker" data-locker-options='{"ringColor":"rgba(210,210,210,1)","fillColor":"#ffffff","pointColor":"rgba(0,136,204,1)","lineColor":"rgba(0,136,204,1)"}' data-locker-width='300' data-locker-height='300'></div>-->
@@ -96,7 +96,7 @@
 				var isgue = false;
 				if(isEditGues =="true")
 				{
-					jQuery("#turnNext").hide();
+//					jQuery("#turnNext").hide();
 					var localGesture =  localStorage.getItem(utils.keyGesture);
 					console.info(localGesture);
 					if(utils.isNone(localGesture))//没有设置原始密码
@@ -159,6 +159,7 @@
 							if(isEditGues =="true")
 							{
 								mui.toast("修改成功")
+								
 								mui.back();
 							}
 							else{
@@ -184,11 +185,16 @@
 
 			//跳过
 			document.getElementById('turnNext').addEventListener('tap', function() {
-				mui.openWindow({
-					id: 'fingerSetting',
-					url: 'fingerSetting.html'
-
-				});
+//				mui.openWindow({
+//					id: 'fingerSetting',
+//					url: 'fingerSetting.html'
+//
+//				});
+				localStorage.setItem(utils.isFirstSettingLocalPwd, 0);
+				localStorage.setItem(utils.switchGesture, 0); 
+				localStorage.setItem(utils.keyGesture, '');
+				
+				mui.back();
 			});
 			document.getElementById('back').addEventListener('tap', function() {
 				 mui.back()
