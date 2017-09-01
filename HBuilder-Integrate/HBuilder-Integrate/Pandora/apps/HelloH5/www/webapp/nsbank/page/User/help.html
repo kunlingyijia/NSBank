@@ -65,9 +65,10 @@
 						if(data.code == utils.SCUESS) {
 //							mui.toast(data.msg);
 							var result = JSON.parse(data.data)
+                           
 							localStorage.setItem("fadadaUrl",result.viewpdfurl)
 									mui.openWindow({
-										id: 'webview.html',
+										id: 'webview',
 										url: '../webview.html',
 										createNew:true,								
 									});
